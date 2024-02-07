@@ -57,6 +57,10 @@ export const adminLogin = async (req, res, next) => {
 
 /* ADMIN LOGOUT */
 export const adminLogout = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
   try {
     await Admin.findOneAndUpdate(
       {
@@ -75,11 +79,9 @@ export const adminLogout = async (req, res, next) => {
 
 /* GET ALL BUYERS */
 export const getAllBuyers = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const allBuyers = await Buyer.find();
@@ -91,11 +93,9 @@ export const getAllBuyers = async (req, res, next) => {
 
 /* DELETE  A BUYER BY ID*/
 export const deleteSingleBuyer = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const { id } = req.params;
@@ -115,11 +115,9 @@ export const deleteSingleBuyer = async (req, res, next) => {
 
 /* GET A SINGLE BUYER BY ID */
 export const getSingleBuyer = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const { id } = req.params;
@@ -136,11 +134,9 @@ export const getSingleBuyer = async (req, res, next) => {
 
 /* BLOCK A BUYER */
 export const blockBuyer = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const { id } = req.params;
@@ -161,11 +157,9 @@ export const blockBuyer = async (req, res, next) => {
 
 /* UN-BLOCK A BUYER */
 export const unBlockBuyer = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const { id } = req.params;
@@ -185,13 +179,66 @@ export const unBlockBuyer = async (req, res, next) => {
   }
 };
 
+/* GET ALL SELLERS */
+export const getAllSellers = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
+  try {
+    const allSellers = await Seller.find();
+    res.status(200).json(allSellers);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET A SELLER BY ID */
+export const getSingleSeller = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
+  try {
+    const { id } = req.params;
+    const seller = await Seller.findById(id);
+    if (!seller) {
+      return next(errorUtil(404, "No User found with given id"));
+    }
+    const { password: pass, ...rest } = seller._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* DELETE A SELLER BY ID */
+export const deleteSingleSeller = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
+  try {
+    const { id } = req.params;
+    const seller = await Seller.findById(id);
+    if (!seller) {
+      return next(errorUtil(404, "No User found with given id"));
+    }
+    const deleteSeller = await Seller.findByIdAndDelete(id);
+    if (!deleteSeller) {
+      return next(errorUtil(404, "Something Went Wrong, Please Try Again!"));
+    }
+    res.status(200).json("Account Deleted!");
+  } catch (error) {
+    next(error);
+  }
+};
+
 /* BLOCK A SELLER */
 export const blockSeller = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const { id } = req.params;
@@ -212,11 +259,9 @@ export const blockSeller = async (req, res, next) => {
 
 /* UN-BLOCK A SELLER */
 export const unBlockSeller = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const { id } = req.params;
@@ -238,11 +283,9 @@ export const unBlockSeller = async (req, res, next) => {
 
 /* GET ALL PENDING SELLER APPROVALS  */
 export const gellAllPendingSellerApprovals = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const pendingApprovals = await PendingApproval.find();
@@ -254,11 +297,9 @@ export const gellAllPendingSellerApprovals = async (req, res, next) => {
 
 /* GET A PENDING SELLER APPROVAL BY ID */
 export const getSinglePendingSellerApproval = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const requestId = req.params.id;
@@ -276,11 +317,9 @@ export const getSinglePendingSellerApproval = async (req, res, next) => {
 
 /* ACCEPT SELLER REQUEST */
 export const acceptSellerRequest = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const requestId = req.params.id;
@@ -311,11 +350,9 @@ export const acceptSellerRequest = async (req, res, next) => {
 
 /* REJECT SELLER REQUEST */
 export const declineSellerRequest = async (req, res, next) => {
-  const { id } = req.user;
-  if (!id) {
-    return next(
-      errorUtil(403, "Forbidden, You Are Not Allowed To Perform This!")
-    );
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
     const requestId = req.params.id;

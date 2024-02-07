@@ -9,7 +9,10 @@ export const verifyToken = (req, res, next) => {
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return next(errorUtil(403, "Forbidden!"));
+    console.log(user);
+    if (user.role !== "buyer") return next(errorUtil(403, "Not a Buyer!"));
     req.user = user;
+    req.user.role = user.role;
     next();
   });
 };
@@ -22,8 +25,10 @@ export const isAdmin = (req, res, next) => {
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return next(errorUtil(403, "Forbidden!"));
+    console.log(user);
     if (user.role !== "admin") return next(errorUtil(403, "Not an Admin!"));
     req.user = user;
+    req.user.role = user.role;
     next();
   });
 };
@@ -36,8 +41,10 @@ export const isSeller = (req, res, next) => {
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return next(errorUtil(403, "Forbidden!"));
+    console.log(user);
     if (user.role !== "seller") return next(errorUtil(403, "Not a Seller!"));
     req.user = user;
+    req.user.role = user.role;
     next();
   });
 };

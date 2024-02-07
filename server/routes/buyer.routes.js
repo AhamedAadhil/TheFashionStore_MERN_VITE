@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post("/auth/register", registerBuyer);
 router.post("/auth/login", loginBuyer);
-router.post("/auth/logout", logoutBuyer);
+router.post("/auth/logout", verifyToken, logoutBuyer);
 router.get("/actions/allBuyers", verifyToken, getAllBuyers);
 router.get("/actions/getBuyer/:id", verifyToken, getSingleBuyer);
 router.delete("/actions/deleteBuyer/:id", verifyToken, deleteSingleBuyer);

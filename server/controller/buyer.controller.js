@@ -45,31 +45,36 @@ export const loginBuyer = async (req, res, next) => {
     if (!isValidPass) {
       return next(errorUtil(401, "Invalid Credentials!"));
     }
-    const refreshToken = generateRefreshToken(
-      isBuyerExist?._id,
-      isBuyerExist?.role
-    );
-    const updateBuyer = await Buyer.findByIdAndUpdate(
-      isBuyerExist._id,
-      {
-        refreshtoken: refreshToken,
-      },
-      { new: true }
-    );
-    await updateBuyer.save();
-    const token = generateToken(isBuyerExist?._id, isBuyerExist?.role);
-    const { password: pass, ...rest } = updateBuyer._doc;
-    res
-      .cookie("access_token", token, {
-        httpOnly: true,
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      })
-      .cookie("refresh_token", refreshToken, {
-        httpOnly: true,
-        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      })
-      .status(200)
-      .json(rest);
+    const accountStatus = isBuyerExist.status;
+    if (accountStatus === "active") {
+      const refreshToken = generateRefreshToken(
+        isBuyerExist?._id,
+        isBuyerExist?.role
+      );
+      const updateBuyer = await Buyer.findByIdAndUpdate(
+        isBuyerExist._id,
+        {
+          refreshtoken: refreshToken,
+        },
+        { new: true }
+      );
+      await updateBuyer.save();
+      const token = generateToken(isBuyerExist?._id, isBuyerExist?.role);
+      const { password: pass, ...rest } = updateBuyer._doc;
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        })
+        .cookie("refresh_token", refreshToken, {
+          httpOnly: true,
+          expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        })
+        .status(200)
+        .json(rest);
+    } else {
+      return next(errorUtil(401, "You  Are Not Authorized To Login!"));
+    }
   } catch (error) {
     next(error);
   }
@@ -101,6 +106,10 @@ export const handleRefreshToken = async (req, res, next) => {
 
 /* LOGOUT BUYER */
 export const logoutBuyer = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "buyer") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
   try {
     await Buyer.findOneAndUpdate(
       {
@@ -121,6 +130,10 @@ export const logoutBuyer = async (req, res, next) => {
 export const updateBuyer = async (req, res, next) => {
   const { id } = req.params;
   validateMongoDbId(id);
+  const user = req.user;
+  if (!user.role === "buyer") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
   if (req.user.id !== id) {
     return next(errorUtil(401, "You Can Only Update Your Own Profile!"));
   }
@@ -152,6 +165,10 @@ export const updateBuyer = async (req, res, next) => {
 
 /* GET ALL BUYERS */
 export const getAllBuyers = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "buyer") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
   try {
     const allBuyers = await Buyer.find();
     res.status(200).json(allBuyers);
@@ -162,6 +179,10 @@ export const getAllBuyers = async (req, res, next) => {
 
 /* GET A SINGLE BUYER BY ID */
 export const getSingleBuyer = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "buyer") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
   try {
     const { id } = req.params;
     const buyer = await Buyer.findById(id);
@@ -177,6 +198,10 @@ export const getSingleBuyer = async (req, res, next) => {
 
 /* DELETE A BUYER BY ID*/
 export const deleteSingleBuyer = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "buyer") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
   const { id } = req.params;
   validateMongoDbId(id);
   if (req.user.id != id) {

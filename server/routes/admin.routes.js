@@ -13,6 +13,9 @@ import {
   getSinglePendingSellerApproval,
   acceptSellerRequest,
   declineSellerRequest,
+  getAllSellers,
+  getSingleSeller,
+  deleteSingleSeller,
 } from "../controller/admin.controller.js";
 import { isAdmin } from "../middlewares/authentication.middleware.js";
 
@@ -30,6 +33,9 @@ router.put("/actions/blockBuyer/:id", isAdmin, blockBuyer);
 router.put("/actions/unblockBuyer/:id", isAdmin, unBlockBuyer);
 
 /* SELLER ACTIONS */
+router.get("/actions/allSellers", isAdmin, getAllSellers);
+router.get("/actions/getSeller/:id", isAdmin, getSingleSeller);
+router.delete("/actions/deleteSeller", isAdmin, deleteSingleSeller);
 router.put("/actions/blockSeller/:id", isAdmin, blockSeller);
 router.put("/actions/unblockSeller/:id", isAdmin, unBlockSeller);
 router.get(
