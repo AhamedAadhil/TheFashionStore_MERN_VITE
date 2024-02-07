@@ -150,7 +150,6 @@ export const updateBuyer = async (req, res, next) => {
           mobile: req.body.mobile,
           avatar: req.body.avatar,
           address: req.body.address,
-          points: req.body.points,
           theme: req.body.theme,
         },
       },

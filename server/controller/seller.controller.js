@@ -102,3 +102,88 @@ export const logoutSeller = async (req, res, next) => {
     next(error);
   }
 };
+
+/* UPDATE SELLER BY ID */
+export const updateSeller = async (req, res, next) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+  const user = req.user;
+  if (!user.role === "seller") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
+  if (req.user.id !== id) {
+    return next(errorUtil(401, "You Can Only Update Your Own Profile!"));
+  }
+  try {
+    if (req.body.password) {
+      req.body.password = bcryptjs.hashSync(req.body.password, 10);
+    }
+    const updatedSeller = await Seller.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          password: req.body.password,
+          mobile: req.body.mobile,
+          avatar: req.body.avatar,
+          address: req.body.address,
+          theme: req.body.theme,
+        },
+      },
+      { new: true }
+    );
+    const { password: pass, ...rest } = updatedSeller._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* DELETE SELLER BY ID */
+export const deleteSingleSeller = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "seller") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
+  const { id } = req.params;
+  validateMongoDbId(id);
+  if (req.user.id != id) {
+    return next(errorUtil(401, "You Can Only Delete Your Own Profile!"));
+  }
+  try {
+    const seller = await Seller.findById(id);
+    if (!seller) {
+      return next(errorUtil(404, "No User found with given id"));
+    }
+    const deleteSeller = await Seller.findByIdAndDelete(id);
+    if (!deleteSeller) {
+      return next(errorUtil(404, "Something Went Wrong, Please Try Again!"));
+    }
+    res.status(200).json("Account Deleted!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* HANDLE REFRESH TOKEN */
+export const handleRefreshToken = async (req, res, next) => {
+  const refreshToken = req.cookies?.refresh_token;
+  if (!refreshToken) {
+    return next(errorUtil(403, "No Refresh Token in Cookies!"));
+  }
+  const seller = await Seller.findOne({ refreshtoken: refreshToken });
+  if (!seller) {
+    return next(errorUtil(404, "User not Found!"));
+  }
+  jwt.verify(refreshToken, process.env.JWT_SECRET, (err, decoded) => {
+    if (err || seller._id !== decoded.id) {
+      return next(errorUtil(404, "There is Something Wrong with the Token!"));
+    }
+    const accessToken = generateToken(seller?._id, seller?.role);
+    res
+      .cookie("access_token", accessToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      })
+      .status(200);
+  });
+};
