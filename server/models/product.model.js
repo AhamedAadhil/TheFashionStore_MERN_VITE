@@ -1,0 +1,109 @@
+import mongoose from "mongoose";
+
+const productSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    imageUrls: {
+      type: Array,
+      required: true,
+      default:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png",
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    status: {
+      type: String,
+      enum: ["hold", "live"],
+      default: "hold",
+    },
+    brand: {
+      type: String,
+      required: true,
+    },
+    quality: {
+      type: String,
+      enum: ["original", "a_grade"],
+      required: true,
+    },
+    size: {
+      type: [
+        {
+          type: String,
+          enum: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
+        },
+      ],
+      default: [],
+    },
+    color: {
+      type: [
+        {
+          type: String,
+        },
+      ],
+      default: [],
+    },
+    category: {
+      //   type: [
+      //     {
+      //       type: mongoose.Schema.Types.ObjectId,
+      //       ref: "Category",
+      //     },
+      //   ],
+      //   default: [],
+      type: String,
+      required: true,
+    },
+    stock: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    sold: {
+      type: Number,
+      default: 0,
+    },
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Seller",
+      required: true,
+    },
+    orderhistory: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Order",
+        },
+      ],
+      default: [],
+    },
+    reviewhistory: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Review",
+        },
+      ],
+      default: [],
+    },
+  },
+  { timestamps: true }
+);
+
+// Define indexes if needed
+productSchema.index({ name: 1, category: 1 });
+
+// Export the model
+const Product = mongoose.model("Product", productSchema);
+export default Product;

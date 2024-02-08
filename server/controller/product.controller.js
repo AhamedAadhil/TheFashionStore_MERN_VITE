@@ -1,0 +1,190 @@
+import Product from "../models/product.model.js";
+import Seller from "../models/seller.model.js";
+import slugify from "slugify";
+import { errorUtil } from "../utils/error.utils.js";
+import PendingApproval from "../models/pending.approval.model.js";
+
+/* CREATE A PRODUCT */
+export const createProduct = async (req, res, next) => {
+  const sellerId = req.user.id;
+  try {
+    const createProduct = await Product.create({
+      ...req.body,
+      seller: sellerId,
+      status: "hold",
+    });
+    if (!createProduct) {
+      return next(errorUtil(405, "Cannot Create Product"));
+    }
+    const pendingApproval = new PendingApproval({
+      seller: sellerId,
+      product: createProduct._id,
+      purpose: "product",
+    });
+    await pendingApproval.save();
+    res.status(201).json(" Product Under Review!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET A SINGLE PRODUCT BY ID */
+export const getSingleProduct = async (req, res, next) => {
+  try {
+    const getProduct = await Product.findById(req.params.id);
+    if (!getProduct) {
+      return next(errorUtil(404, "Product Not Found!"));
+    }
+    if (!getProduct.status === "live") {
+      return next(errorUtil(403, "This Product is Still Under  Review"));
+    }
+    res.status(200).json(getProduct);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET ALL PRODUCTS AND FILTER PRODUCTS */
+export const getAllProducts = async (req, res, next) => {
+  try {
+    // Create a base query with the 'status' field set to 'live'
+    let query = { status: "live" };
+
+    // Define an array of allowed query parameters
+    const allowedParams = [
+      "brand",
+      "name",
+      "price",
+      "quality",
+      "size",
+      "color",
+      "category",
+      "seller",
+    ];
+
+    // Iterate over allowed parameters and include them in the query if they exist in req.query
+    allowedParams.forEach((param) => {
+      if (req.query[param]) {
+        // If the parameter is 'price', handle price range
+        if (param === "price") {
+          const priceParam = req.query[param];
+          if (priceParam.gt) query.price = { $gt: parseFloat(priceParam.gt) };
+          if (priceParam.gte)
+            query.price = { ...query.price, $gte: parseFloat(priceParam.gte) };
+          if (priceParam.lt)
+            query.price = { ...query.price, $lt: parseFloat(priceParam.lt) };
+          if (priceParam.lte)
+            query.price = { ...query.price, $lte: parseFloat(priceParam.lte) };
+        } else {
+          // For other parameters, directly include them in the query
+          query[param] = req.query[param];
+        }
+      }
+    });
+
+    // Define sort options based on the 'sort' query parameter
+    let sortOptions = {};
+    if (req.query.sort) {
+      // Split the sort query parameter by comma to handle multiple fields
+      const sortByFields = req.query.sort.split(",");
+      sortByFields.forEach((field) => {
+        // Check if the field starts with '-' indicating descending order
+        if (field.startsWith("-")) {
+          sortOptions[field.substring(1)] = -1; // Use -1 for descending order
+        } else {
+          sortOptions[field] = 1; // Use 1 for ascending order
+        }
+      });
+    }
+
+    // Define the limit based on the 'limit' query parameter (default to 10 if not provided)
+    const limit = parseInt(req.query.limit) || 10;
+    const page = req.query.page || 1;
+    const startIndex = (page - 1) * limit || 0;
+
+    // Define the fields to select based on the 'fields' query parameter
+    let selectFields = {};
+    if (req.query.fields) {
+      const selectedFields = req.query.fields.split(",");
+      selectedFields.forEach((field) => {
+        selectFields[field] = 1; // Include the field
+      });
+    }
+
+    const allProducts = await Product.find(query)
+      .select(selectFields)
+      .sort(sortOptions)
+      .limit(limit)
+      .skip(startIndex);
+
+    if (req.query.page) {
+      const productCount = await Product.countDocuments();
+      if (skip >= productCount) {
+        return next(errorUtil("This Page Does Not Exist!"));
+      }
+    }
+    res.status(200).json(allProducts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/*  UPDATE A PRODUCT BY ID */
+export const updateProduct = async (req, res, next) => {
+  const productId = req.params.id;
+  const selletId = req.user.id;
+  try {
+    const product = await Product.findById(productId);
+    if (!product.status === "live") {
+      return next(errorUtil(403, "This Product is Still Under  Review"));
+    }
+    if (selletId !== product.seller.toString()) {
+      return next(errorUtil(403, "You Can Only Update Your Products!"));
+    }
+    const updateProduct = await Product.findByIdAndUpdate(
+      productId,
+      {
+        $set: {
+          name: req.body.name,
+          description: req.body.description,
+          imageUrls: req.body.imageUrls,
+          price: req.body.price,
+          category: req.body.category,
+          brand: req.body.brand,
+          size: req.body.size,
+          color: req.body.color,
+          stock: req.body.stock,
+        },
+      },
+      { new: true }
+    );
+    if (!updateProduct)
+      return next(errorUtil(405, "Cannot Update The Product Now!"));
+
+    res.status(200).json(updateProduct);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/*  DELETE A PRODUCT BY ID */
+export const deleteProduct = async (req, res, next) => {
+  const productId = req.params.id;
+  const selletId = req.user.id;
+  try {
+    const product = await Product.findById(productId);
+    if (!product.status === "live") {
+      return next(errorUtil(403, "This Product is Still Under  Review"));
+    }
+    if (selletId !== product.seller.toString()) {
+      return next(errorUtil(403, "You Can Only Delete Your Products!"));
+    }
+    const deleteProduct = await Product.findByIdAndDelete(productId);
+    if (!deleteProduct)
+      return next(errorUtil(405, "Cannot Update The Product Now!"));
+
+    res.status(200).json("Product Deleted");
+  } catch (error) {
+    next(error);
+  }
+};

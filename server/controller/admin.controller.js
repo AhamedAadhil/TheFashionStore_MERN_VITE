@@ -6,6 +6,7 @@ import { generateRefreshToken } from "../config/refreshToken.js";
 import { generateToken } from "../config/jwtToken.js";
 import { errorUtil } from "../utils/error.utils.js";
 import PendingApproval from "../models/pending.approval.model.js";
+import Product from "../models/product.model.js";
 
 /* ADMIN LOGIN */
 export const adminLogin = async (req, res, next) => {
@@ -186,7 +187,7 @@ export const getAllSellers = async (req, res, next) => {
     return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
-    const allSellers = await Seller.find();
+    const allSellers = await Seller.find({ status: "active" });
     res.status(200).json(allSellers);
   } catch (error) {
     next(error);
@@ -282,13 +283,15 @@ export const unBlockSeller = async (req, res, next) => {
 };
 
 /* GET ALL PENDING SELLER APPROVALS  */
-export const gellAllPendingSellerApprovals = async (req, res, next) => {
+export const getAllPendingSellerApprovals = async (req, res, next) => {
   const user = req.user;
   if (!user.role === "admin") {
     return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
-    const pendingApprovals = await PendingApproval.find();
+    const pendingApprovals = await PendingApproval.find({
+      purpose: "registration",
+    });
     res.status(200).json(pendingApprovals);
   } catch (error) {
     next(error);
@@ -305,10 +308,19 @@ export const getSinglePendingSellerApproval = async (req, res, next) => {
     const requestId = req.params.id;
     let request = await PendingApproval.findById(requestId);
     if (!request) {
-      return next(errorUtil(404, "No Request Found With The Given ID"));
+      return next(errorUtil(404, "No Request Found With The Given ID!"));
     }
-    const requestedSeller = await Seller.findById(request.seller);
-    const { password: pass, ...rest } = requestedSeller._doc;
+    const pendingApproval = await request.populate("seller");
+
+    if (!pendingApproval.seller) {
+      return next(errorUtil(404, "No Seller  Associated With This Request!"));
+    }
+
+    if (!pendingApproval.seller.status === "hold") {
+      return next(errorUtil(404, "Seller Status Is Not Hold!"));
+    }
+
+    const { password: pass, ...rest } = pendingApproval.seller._doc;
     res.status(200).json(rest);
   } catch (error) {
     next(error);
@@ -377,6 +389,123 @@ export const declineSellerRequest = async (req, res, next) => {
     const deleteRequest = await PendingApproval.findByIdAndDelete(requestId);
     const deleteSeller = await Seller.findByIdAndDelete(sellerId);
     res.status(200).json("Seller Rejected!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET ALL PENDING PRODUCT APPROVALS  */
+export const getAllPendingProductApprovals = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
+  try {
+    const pendingApprovals = await PendingApproval.find({
+      purpose: "product",
+    });
+    res.status(200).json(pendingApprovals);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET A PENDING SELLER APPROVAL BY ID */
+export const getSinglePendingProductApproval = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
+  try {
+    const requestId = req.params.id;
+    let request = await PendingApproval.findById(requestId);
+    if (!request) {
+      return next(errorUtil(404, "No Request Found With The Given ID"));
+    }
+    // Find the pending approval entry and populate the 'product' field
+    const pendingApproval = await request.populate("product");
+
+    // Check if a product is associated with this pending approval
+    if (!pendingApproval.product) {
+      return next(
+        errorUtil(404, "No Product Associated With The Pending Approval")
+      );
+    }
+
+    // Check if the product status is "hold"
+    if (pendingApproval.product.status !== "hold") {
+      return next(errorUtil(404, "Product Status Is Not 'hold'"));
+    }
+
+    // Respond with the product associated with the pending approval
+    res.status(200).json(pendingApproval.product);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* ACCEPT PRODUCT REQUEST */
+export const acceptProductRequest = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
+  try {
+    const requestId = req.params.id;
+    const request = await PendingApproval.findById(requestId);
+    if (!request) {
+      return next(errorUtil(404, "The Request Is No Longer Available"));
+    }
+    const productId = request.product;
+    const approveRequest = await Product.findByIdAndUpdate(
+      productId,
+      {
+        $set: {
+          status: "live",
+        },
+      },
+      { new: true }
+    );
+    if (!approveRequest) {
+      return next(errorUtil(500, "Internal Server Error"));
+    }
+
+    await PendingApproval.findByIdAndDelete(requestId);
+    res.status(200).json("Product Approved!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* REJECT PRODUCT REQUEST */
+export const declineProductRequest = async (req, res, next) => {
+  const user = req.user;
+  if (!user.role === "admin") {
+    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  }
+  try {
+    const requestId = req.params.id;
+    const request = await PendingApproval.findById(requestId);
+    if (!request) {
+      return next(errorUtil(404, "The Request Is No Longer Available"));
+    }
+    const productId = request.product;
+    const approveRequest = await Product.findByIdAndUpdate(
+      productId,
+      {
+        $set: {
+          status: "live",
+        },
+      },
+      { new: true }
+    );
+    if (!approveRequest) {
+      return next(errorUtil(500, "Internal Server Error"));
+    }
+
+    await PendingApproval.findByIdAndDelete(requestId);
+    await Product.findByIdAndDelete(productId);
+    res.status(200).json("Product Rejected!");
   } catch (error) {
     next(error);
   }

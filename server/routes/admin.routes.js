@@ -9,13 +9,17 @@ import {
   adminLogout,
   blockSeller,
   unBlockSeller,
-  gellAllPendingSellerApprovals,
+  getAllPendingSellerApprovals,
   getSinglePendingSellerApproval,
   acceptSellerRequest,
   declineSellerRequest,
   getAllSellers,
   getSingleSeller,
   deleteSingleSeller,
+  getAllPendingProductApprovals,
+  getSinglePendingProductApproval,
+  acceptProductRequest,
+  declineProductRequest,
 } from "../controller/admin.controller.js";
 import { isAdmin } from "../middlewares/authentication.middleware.js";
 
@@ -41,7 +45,7 @@ router.put("/actions/unblockSeller/:id", isAdmin, unBlockSeller);
 router.get(
   "/actions/getAllPendingSellerApprovals",
   isAdmin,
-  gellAllPendingSellerApprovals
+  getAllPendingSellerApprovals
 );
 router.get(
   "/actions/getSinglePendingSellerApproval/:id",
@@ -50,5 +54,24 @@ router.get(
 );
 router.put("/actions/acceptSellerRequest/:id", isAdmin, acceptSellerRequest);
 router.put("/actions/declineSellerRequest/:id", isAdmin, declineSellerRequest);
+
+/* PRODUCT ACTIONS */
+router.get(
+  "/actions/getAllPendingProductApprovals",
+  isAdmin,
+  getAllPendingProductApprovals
+);
+router.get(
+  "/actions/getSinglePendingProductApproval/:id",
+  isAdmin,
+  getSinglePendingProductApproval
+);
+
+router.put("/actions/acceptProductRequest/:id", isAdmin, acceptProductRequest);
+router.put(
+  "/actions/declineProductRequest/:id",
+  isAdmin,
+  declineProductRequest
+);
 
 export default router;

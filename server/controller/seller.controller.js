@@ -20,13 +20,20 @@ export const registerSeller = async (req, res, next) => {
     if (isSellerExist || isBuyerExist || isAdminExist) {
       return next(errorUtil(405, "User Already Exists!"));
     }
+    const shopname = await Seller.findOne({ shopname: req.body.shopname });
+    if (shopname) {
+      return next(errorUtil(405, "Shop Name Already Taken!"));
+    }
     const genSalt = bcryptjs.genSaltSync(10);
     const hashedPassword = bcryptjs.hashSync(req.body.password, genSalt);
     const newSeller = new Seller({ ...req.body, password: hashedPassword });
     await newSeller.save();
-    const pendingApproval = new PendingApproval({ seller: newSeller._id });
+    const pendingApproval = new PendingApproval({
+      seller: newSeller._id,
+      purpose: "registration",
+    });
     await pendingApproval.save();
-    res.status(201).json("Your Document is Under Review!");
+    res.status(201).json("Your Profile is Under Review!");
   } catch (error) {
     next(error);
   }
@@ -74,7 +81,7 @@ export const loginSeller = async (req, res, next) => {
         .status(200)
         .json(rest);
     } else {
-      return next(errorUtil(401, "You  Are Not Authorized To Login!"));
+      return next(errorUtil(401, "You Are Not Authorized To Login!"));
     }
   } catch (error) {
     next(error);

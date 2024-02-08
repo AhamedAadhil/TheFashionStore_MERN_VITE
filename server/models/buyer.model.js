@@ -10,7 +10,7 @@ const addressSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  road: {
+  street: {
     default: "",
     type: String,
     required: true,
@@ -21,11 +21,6 @@ const addressSchema = new mongoose.Schema({
     required: true,
   },
   state: {
-    default: "",
-    type: String,
-    required: true,
-  },
-  postalcode: {
     default: "",
     type: String,
     required: true,

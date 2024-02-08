@@ -87,7 +87,14 @@ const pendingApprovalSchema = new mongoose.Schema(
       ref: "Seller",
       required: true,
     },
-    // Add any other fields you need for pending approvals
+    purpose: {
+      type: String,
+      enum: ["registration", "product"],
+    },
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
   },
   { timestamps: true }
 );
