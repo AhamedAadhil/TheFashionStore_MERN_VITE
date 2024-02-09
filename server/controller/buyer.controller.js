@@ -267,7 +267,7 @@ export const forgotPasswordToken = async (req, res, next) => {
   try {
     const token = await buyer.createPasswordResetToken();
     await buyer.save();
-    const resetURL = `Hi Please follow this link to reset Your Password. This link is valid for 10 minutes from now. <a href='http://localhost:3001/api/buyer/auth/resetPassword/${token}'>Click Here</a>`;
+    const resetURL = `Hi ${buyer.username}, Please follow this link to reset Your Password. This link is valid for 10 minutes from now. <a href='http://localhost:3001/api/buyer/auth/resetPassword/${token}'>Click Here</a>`;
     const data = {
       to: email,
       subject: "Forgot Password Link",

@@ -6,6 +6,8 @@ import buyerRoutes from "./routes/buyer.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import sellerRoutes from "./routes/seller.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
+import brandRoutes from "./routes/brand.routes.js";
 import { errorHandleMiddleware } from "./middlewares/errorHandle.middleware.js";
 dotenv.config();
 
@@ -26,6 +28,8 @@ app.use("/api/buyer", buyerRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/category", categoryRoutes);
+app.use("/api/brand", brandRoutes);
 
 /* ERROR HANDLE MIDDLEWARE */
 app.use(errorHandleMiddleware);

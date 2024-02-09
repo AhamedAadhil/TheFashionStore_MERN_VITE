@@ -55,13 +55,13 @@ const productSchema = new mongoose.Schema(
       default: [],
     },
     category: {
-      //   type: [
-      //     {
-      //       type: mongoose.Schema.Types.ObjectId,
-      //       ref: "Category",
-      //     },
-      //   ],
-      //   default: [],
+      // type: [
+      //   {
+      //     type: mongoose.Schema.Types.ObjectId,
+      //     ref: "Category",
+      //   },
+      // ],
+      // default: [],
       type: String,
       required: true,
     },
