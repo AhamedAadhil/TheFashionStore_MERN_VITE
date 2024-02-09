@@ -7,6 +7,8 @@ import { generateRefreshToken } from "../config/refreshToken.js";
 import { validateMongoDbId } from "../utils/validateMongoDbId.utils.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+import crypto from "crypto";
+import { sendEmail } from "../utils/sendEmail.utils.js";
 
 /* REGISTER A NEW BUYER */
 export const registerBuyer = async (req, res, next) => {
@@ -216,6 +218,98 @@ export const deleteSingleBuyer = async (req, res, next) => {
       return next(errorUtil(404, "Something Went Wrong, Please Try Again!"));
     }
     res.status(200).json("Account Deleted!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* UPDATE PASSWORD */
+export const updatePassword = async (req, res, next) => {
+  const { id } = req.user;
+  const { password } = req.body;
+  validateMongoDbId(id);
+  try {
+    const buyer = await Buyer.findById(id);
+    if (!buyer) {
+      return next(errorUtil(404, "User not Found"));
+    }
+    if (password) {
+      const genSalt = bcryptjs.genSaltSync(10);
+      const hashedPassword = bcryptjs.hashSync(password, genSalt);
+      const token = crypto.randomBytes(32).toString("hex");
+      const passwordResetToken = crypto
+        .createHash("sha256")
+        .update(token)
+        .digest("hex");
+      buyer.passwordResetToken = passwordResetToken;
+      buyer.passwordResetExpires = Date.now() + 10800000;
+      buyer.password = hashedPassword;
+      const updatedBuyer = await buyer.save();
+      res.status(200).json(updatedBuyer);
+    } else {
+      return next(errorUtil(404, "New Password Is Required!"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* FORGOT PASSWORD TOKEN */
+export const forgotPasswordToken = async (req, res, next) => {
+  const email = req.body.email;
+  if (!email) {
+    return next(errorUtil(400, "Please Enter An Email Address!"));
+  }
+  const buyer = await Buyer.findOne({ email });
+  if (!buyer) {
+    return next(errorUtil(400, "No User With This Email Address!"));
+  }
+  try {
+    const token = await buyer.createPasswordResetToken();
+    await buyer.save();
+    const resetURL = `Hi Please follow this link to reset Your Password. This link is valid for 10 minutes from now. <a href='http://localhost:3001/api/buyer/auth/resetPassword/${token}'>Click Here</a>`;
+    const data = {
+      to: email,
+      subject: "Forgot Password Link",
+      text: `Hello ${buyer.username}, \n\n Please Keep this URL Safe`,
+      html: resetURL,
+    };
+    await sendEmail(data);
+    res.status(200).json("Please Check Your Email For Reset Link!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* RESET PASSWORD */
+export const resetPassword = async (req, res, next) => {
+  try {
+    const { password } = req.body;
+    const { token } = req.params;
+    if (!password) {
+      return next(errorUtil(404, "Password Not Found!"));
+    }
+    if (!token) {
+      return next(errorUtil(404, "Token Not Found!"));
+    }
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const buyer = await Buyer.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() },
+    });
+    if (!buyer) {
+      return next(errorUtil(404, "User Not Found!"));
+    }
+    if (!buyer.passwordResetExpires > Date.now()) {
+      return next(errorUtil(404, "Token Expired Please Try Again!"));
+    }
+    const genSalt = bcryptjs.genSaltSync(10);
+    const hashedPassword = bcryptjs.hashSync(password, genSalt);
+    buyer.password = hashedPassword;
+    buyer.passwordResetToken = undefined;
+    buyer.passwordResetExpires = undefined;
+    await buyer.save();
+    res.status(200).send("Your Password Has Been Changed Successfully");
   } catch (error) {
     next(error);
   }

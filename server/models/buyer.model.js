@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
 
 const addressSchema = new mongoose.Schema({
   label: {
@@ -120,9 +121,22 @@ const buyerSchema = new mongoose.Schema(
     refreshtoken: {
       type: String,
     },
+    passwordcChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
   { timestamps: true }
 );
+
+buyerSchema.methods.createPasswordResetToken = async function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // expire in 10 mins
+  return resetToken;
+};
 
 //Export the model
 const Buyer = mongoose.model("Buyer", buyerSchema);
