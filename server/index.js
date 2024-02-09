@@ -8,6 +8,8 @@ import sellerRoutes from "./routes/seller.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import brandRoutes from "./routes/brand.routes.js";
+import reviewRoutes from "./routes/review.routes.js";
+import couponRoutes from "./routes/coupon.routes.js";
 import { errorHandleMiddleware } from "./middlewares/errorHandle.middleware.js";
 dotenv.config();
 
@@ -30,6 +32,8 @@ app.use("/api/seller", sellerRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/brand", brandRoutes);
+app.use("/api/review", reviewRoutes);
+app.use("/api/coupon", couponRoutes);
 
 /* ERROR HANDLE MIDDLEWARE */
 app.use(errorHandleMiddleware);

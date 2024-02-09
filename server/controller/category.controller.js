@@ -7,6 +7,7 @@ export const createCategory = async (req, res, next) => {
   try {
     const category = new Category({
       title: req.body.title,
+      logo: req.body.logo,
     });
     await category.save();
     res.status(201).json("New Category Created");
@@ -28,6 +29,7 @@ export const updateCategory = async (req, res, next) => {
       {
         $set: {
           title: req.body.title,
+          logo: req.body.logo,
         },
       },
       { new: true }
@@ -56,7 +58,7 @@ export const deleteCategory = async (req, res, next) => {
   }
 };
 
-/* CREATE SINGLE CATEGORY BY ID */
+/* GET SINGLE CATEGORY BY ID */
 export const getSingleCategory = async (req, res, next) => {
   const { id } = req.params;
   validateMongoDbId(id);

@@ -1,6 +1,5 @@
 import Product from "../models/product.model.js";
-import Seller from "../models/seller.model.js";
-import slugify from "slugify";
+import Buyer from "../models/buyer.model.js";
 import { errorUtil } from "../utils/error.utils.js";
 import PendingApproval from "../models/pending.approval.model.js";
 
@@ -119,7 +118,7 @@ export const getAllProducts = async (req, res, next) => {
 
     if (req.query.page) {
       const productCount = await Product.countDocuments();
-      if (skip >= productCount) {
+      if (startIndex >= productCount) {
         return next(errorUtil("This Page Does Not Exist!"));
       }
     }
@@ -184,6 +183,38 @@ export const deleteProduct = async (req, res, next) => {
       return next(errorUtil(405, "Cannot Update The Product Now!"));
 
     res.status(200).json("Product Deleted");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* ADD PRODCT TO WISH LIST */
+export const addToWishList = async (req, res, next) => {
+  const { id } = req.user;
+  const { productId } = req.body;
+  if (!productId) {
+    return next(errorUtil(404, "Please Provide Product Id"));
+  }
+  try {
+    const buyer = await Buyer.findById(id.toString());
+    const alreadyAdded = buyer.wishlist.find(
+      (id) => id.toString() === productId
+    );
+    if (alreadyAdded) {
+      let removeFromList = await Buyer.findByIdAndUpdate(
+        id,
+        { $pull: { wishlist: productId } },
+        { new: true }
+      );
+      res.status(200).json(removeFromList);
+    } else {
+      let addInList = await Buyer.findByIdAndUpdate(
+        id,
+        { $push: { wishlist: productId } },
+        { new: true }
+      );
+      res.status(200).json(addInList);
+    }
   } catch (error) {
     next(error);
   }

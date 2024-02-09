@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Review from "./review.model.js";
 
 const addressSchema = new mongoose.Schema({
   label: {
@@ -95,6 +96,10 @@ const sellerSchema = new mongoose.Schema(
       type: String,
       default: "pending",
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
     reviewhistory: {
       type: [
         {
@@ -114,9 +119,42 @@ const sellerSchema = new mongoose.Schema(
     refreshtoken: {
       type: String,
     },
+    stars: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
+
+// Define a method to recalculate and update the stars field
+sellerSchema.methods.calculateStars = async function () {
+  const seller = this;
+
+  // Find all reviews for this seller
+  const reviews = await Review.find({ seller: seller._id });
+
+  // Calculate the total rating sum and count of reviews
+  let totalRating = 0;
+  let reviewCount = reviews.length;
+
+  if (reviewCount > 0) {
+    // Calculate the total rating sum
+    totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+
+    // Calculate the average rating (stars)
+    const averageRating = totalRating / reviewCount;
+
+    // Update the stars field of the seller
+    seller.stars = averageRating;
+  } else {
+    // If there are no reviews, stars will remain 0
+    seller.stars = 0;
+  }
+
+  // Save the updated product
+  await seller.save();
+};
 
 //Export the model
 const Seller = mongoose.model("Seller", sellerSchema);

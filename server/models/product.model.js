@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Review from "./review.model.js";
 
 const productSchema = new mongoose.Schema(
   {
@@ -97,12 +98,45 @@ const productSchema = new mongoose.Schema(
       ],
       default: [],
     },
+    stars: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
 
 // Define indexes if needed
 productSchema.index({ name: 1, category: 1 });
+
+// Define a method to recalculate and update the stars field
+productSchema.methods.calculateStars = async function () {
+  const product = this;
+
+  // Find all reviews for this product
+  const reviews = await Review.find({ product: product._id });
+
+  // Calculate the total rating sum and count of reviews
+  let totalRating = 0;
+  let reviewCount = reviews.length;
+
+  if (reviewCount > 0) {
+    // Calculate the total rating sum
+    totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+
+    // Calculate the average rating (stars)
+    const averageRating = totalRating / reviewCount;
+
+    // Update the stars field of the product
+    product.stars = averageRating;
+  } else {
+    // If there are no reviews, stars will remain 0
+    product.stars = 0;
+  }
+
+  // Save the updated product
+  await product.save();
+};
 
 // Export the model
 const Product = mongoose.model("Product", productSchema);
