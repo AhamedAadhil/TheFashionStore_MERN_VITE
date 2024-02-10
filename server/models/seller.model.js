@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Review from "./review.model.js";
+import crypto from "crypto";
 
 const addressSchema = new mongoose.Schema({
   label: {
@@ -123,6 +124,9 @@ const sellerSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    passwordcChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
   { timestamps: true }
 );
@@ -154,6 +158,16 @@ sellerSchema.methods.calculateStars = async function () {
 
   // Save the updated product
   await seller.save();
+};
+
+sellerSchema.methods.createPasswordResetToken = async function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // expire in 10 mins
+  return resetToken;
 };
 
 //Export the model

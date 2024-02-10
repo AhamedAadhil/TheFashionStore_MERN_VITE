@@ -1,6 +1,9 @@
 import Buyer from "../models/buyer.model.js";
 import Admin from "../models/admin.model.js";
 import Seller from "../models/seller.model.js";
+import Product from "../models/product.model.js";
+import Cart from "../models/cart.model.js";
+import Coupon from "../models/coupon.model.js";
 import { errorUtil } from "../utils/error.utils.js";
 import { generateToken } from "../config/jwtToken.js";
 import { generateRefreshToken } from "../config/refreshToken.js";
@@ -287,7 +290,7 @@ export const forgotPasswordToken = async (req, res, next) => {
     const resetURL = `Hi ${buyer.username}, Please follow this link to reset Your Password. This link is valid for 10 minutes from now. <a href='http://localhost:3001/api/buyer/auth/resetPassword/${token}'>Click Here</a>`;
     const data = {
       to: email,
-      subject: "Forgot Password Link",
+      subject: "Password Reset Link",
       text: `Hello ${buyer.username}, \n\n Please Keep this URL Safe`,
       html: resetURL,
     };
@@ -425,6 +428,140 @@ export const updateAddress = async (req, res, next) => {
       await buyer.save();
       return res.status(200).json("Address Updated Successfully");
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* ADD TO CART */
+export const addToCart = async (req, res, next) => {
+  const { cart } = req.body;
+  const { id } = req.user;
+  validateMongoDbId(id);
+  try {
+    let products = [];
+    const buyer = await Buyer.findById(id);
+    if (!buyer) {
+      return next(errorUtil(404, "Buyer Not Found!"));
+    }
+    const alreadyExistCart = await Cart.findOne({ orderby: buyer._id }).exec();
+    if (alreadyExistCart) {
+      await Cart.deleteOne({ _id: alreadyExistCart._id });
+    }
+    for (let i = 0; i < cart.length; i++) {
+      let object = {};
+      object.product = cart[i]._id;
+      object.count = cart[i].count;
+      object.color = cart[i].color || "N/A";
+      object.size = cart[i].size || "N/A";
+      let getPrice = await Product.findById(cart[i]._id).select("price").exec();
+      object.price = getPrice.price;
+      products.push(object);
+    }
+    let cartTotal = 0;
+    for (let i = 0; i < products.length; i++) {
+      cartTotal += products[i].count * products[i].price;
+    }
+    let newCart = new Cart({
+      products,
+      carttotal: cartTotal,
+      orderby: buyer._id,
+    });
+    await newCart.save();
+    res.status(201).json(newCart);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET BUYER CART */
+export const getUserCart = async (req, res, next) => {
+  const { id } = req.user;
+  validateMongoDbId(id);
+  try {
+    const cart = await Cart.findOne({ orderby: id }).populate(
+      "products.product"
+    );
+    if (!cart) {
+      return next(errorUtil(404, "Cannot Get The Cart!"));
+    }
+    res.status(200).json(cart);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* EMPTY CART */
+export const emptyCart = async (req, res, next) => {
+  const { id } = req.user;
+  validateMongoDbId(id);
+  try {
+    const buyer = await Buyer.findById(id);
+    if (!buyer) {
+      return next(errorUtil(404, "Cannot Find The User!"));
+    }
+    const cart = await Cart.findOneAndDelete({ orderby: buyer._id });
+    if (!cart) {
+      return next(errorUtil(404, "Unable To Delete The Cart!"));
+    }
+    res.status(200).json("Cart Cleared!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* APPLY COUPON */
+export const applyCoupon = async (req, res, next) => {
+  const { coupon } = req.body;
+  const { id } = req.user;
+  validateMongoDbId(id);
+  try {
+    const validCoupon = await Coupon.findOne({ name: coupon });
+    if (!validCoupon) {
+      return next(errorUtil(400, "Invalid Coupon!"));
+    }
+    const buyer = await Buyer.findById(id);
+    if (!buyer) {
+      return next(errorUtil(404, "Buyer Not Found!"));
+    }
+    let cart = await Cart.findOne({ orderby: buyer._id }).populate(
+      "products.product"
+    );
+    // Check if the cart exists and has products
+    if (!cart || cart.products.length === 0) {
+      return next(errorUtil(400, "No Products In The Cart!"));
+    }
+
+    // Find the eligible product in the cart
+    const eligibleProduct = cart.products.find(
+      (product) =>
+        product.product.seller.toString() === validCoupon.seller.toString()
+    );
+
+    // Check if an eligible product is found
+    if (!eligibleProduct) {
+      return next(
+        errorUtil(400, "No eligible product found in the cart for the coupon!")
+      );
+    }
+    // Apply the discount to the eligible product
+    const discount = validCoupon.discount;
+    const discountedPrice = eligibleProduct.product.price - discount;
+    eligibleProduct.product.price = discountedPrice;
+
+    // Calculate the total cart price after applying the discount
+    let cartTotal = 0;
+    for (let product of cart.products) {
+      cartTotal += product.count * product.product.price;
+    }
+    // Update the cart total with the new discounted prices
+    cart.carttotal = cartTotal;
+
+    // Save the updated cart
+    await cart.save();
+
+    // Respond with the total cart price after the discount
+    res.status(200).json(cart);
   } catch (error) {
     next(error);
   }

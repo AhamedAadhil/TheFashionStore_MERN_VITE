@@ -7,6 +7,8 @@ import {
   deleteSingleSeller,
   updateSeller,
   handleRefreshToken,
+  forgotPasswordToken,
+  resetPassword,
 } from "../controller/seller.controller.js";
 
 const router = express.Router();
@@ -14,6 +16,8 @@ const router = express.Router();
 router.post("/auth/register", registerSeller);
 router.post("/auth/login", loginSeller);
 router.post("/auth/logout", isSeller, logoutSeller);
+router.post("/auth/forgotPasswordToken", forgotPasswordToken);
+router.put("/auth/resetPassword/:token", resetPassword);
 router.delete("/actions/deleteSeller/:id", isSeller, deleteSingleSeller);
 router.put("/actions/updateSeller/:id", isSeller, updateSeller);
 router.put("/actions/refresh", isSeller, handleRefreshToken);

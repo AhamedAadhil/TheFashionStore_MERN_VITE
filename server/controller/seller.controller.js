@@ -202,3 +202,64 @@ export const handleRefreshToken = async (req, res, next) => {
       .status(200);
   });
 };
+
+/* FORGOT PASSWORD TOKEN */
+export const forgotPasswordToken = async (req, res, next) => {
+  const email = req.body.email;
+  if (!email) {
+    return next(errorUtil(400, "Please Enter An Email Address!"));
+  }
+  const seller = await Seller.findOne({ email });
+  if (!seller) {
+    return next(errorUtil(400, "No User With This Email Address!"));
+  }
+  try {
+    const token = await seller.createPasswordResetToken();
+    await seller.save();
+    const resetURL = `Hi ${seller.sellername}, Please follow this link to reset Your Password. This link is valid for 10 minutes from now. <a href='http://localhost:3001/api/seller/auth/resetPassword/${token}'>Click Here</a>`;
+    const data = {
+      to: email,
+      subject: "Password Reset Link",
+      text: `Hello ${seller.sellername}, \n\n Please Keep this URL Safe`,
+      html: resetURL,
+    };
+    await sendEmail(data);
+    res.status(200).json("Please Check Your Email For Reset Link!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* RESET PASSWORD */
+export const resetPassword = async (req, res, next) => {
+  try {
+    const { password } = req.body;
+    const { token } = req.params;
+    if (!password) {
+      return next(errorUtil(404, "Password Not Found!"));
+    }
+    if (!token) {
+      return next(errorUtil(404, "Token Not Found!"));
+    }
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const seller = await Seller.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() },
+    });
+    if (!seller) {
+      return next(errorUtil(404, "User Not Found!"));
+    }
+    if (!seller.passwordResetExpires > Date.now()) {
+      return next(errorUtil(404, "Token Expired Please Try Again!"));
+    }
+    const genSalt = bcryptjs.genSaltSync(10);
+    const hashedPassword = bcryptjs.hashSync(password, genSalt);
+    seller.password = hashedPassword;
+    seller.passwordResetToken = undefined;
+    seller.passwordResetExpires = undefined;
+    await seller.save();
+    res.status(200).send("Your Password Has Been Changed Successfully");
+  } catch (error) {
+    next(error);
+  }
+};
