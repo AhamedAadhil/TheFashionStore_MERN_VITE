@@ -2,7 +2,6 @@ import Product from "../models/product.model.js";
 import Buyer from "../models/buyer.model.js";
 import { errorUtil } from "../utils/error.utils.js";
 import PendingApproval from "../models/pending.approval.model.js";
-import { cloudinaryUploadImg } from "../utils/cloudinary.utils.js";
 
 /* CREATE A PRODUCT */
 export const createProduct = async (req, res, next) => {

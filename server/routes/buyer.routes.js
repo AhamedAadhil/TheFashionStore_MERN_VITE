@@ -12,6 +12,7 @@ import {
   updatePassword,
   forgotPasswordToken,
   resetPassword,
+  getWishList,
 } from "../controller/buyer.controller.js";
 
 const router = express.Router();
@@ -27,5 +28,6 @@ router.get("/actions/getBuyer/:id", verifyToken, getSingleBuyer);
 router.delete("/actions/deleteBuyer/:id", verifyToken, deleteSingleBuyer);
 router.put("/actions/updateBuyer/:id", verifyToken, updateBuyer);
 router.put("/actions/refresh", verifyToken, handleRefreshToken);
+router.get("/actions/getWishList", verifyToken, getWishList);
 
 export default router;

@@ -197,6 +197,20 @@ export const getSingleBuyer = async (req, res, next) => {
   }
 };
 
+/* GET BUYER WISHLIST */
+export const getWishList = async (req, res, next) => {
+  const buyerId = req.user.id;
+  try {
+    const buyer = await Buyer.findById(buyerId).populate("wishlist");
+    if (!buyer) {
+      return next(errorUtil(404, "Buyer not Found!"));
+    }
+    res.status(200).json(buyer.wishlist);
+  } catch (error) {
+    next(error);
+  }
+};
+
 /* DELETE A BUYER BY ID*/
 export const deleteSingleBuyer = async (req, res, next) => {
   const user = req.user;
