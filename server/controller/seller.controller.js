@@ -6,6 +6,7 @@ import bcryptjs from "bcryptjs";
 import { errorUtil } from "../utils/error.utils.js";
 import { generateRefreshToken } from "../config/refreshToken.js";
 import { generateToken } from "../config/jwtToken.js";
+import { sendEmail } from "../utils/sendEmail.utils.js";
 
 /* SELLER REGISTER  */
 export const registerSeller = async (req, res, next) => {
@@ -33,6 +34,13 @@ export const registerSeller = async (req, res, next) => {
       purpose: "registration",
     });
     await pendingApproval.save();
+    const data = {
+      to: req.body.email,
+      subject: "Account Registration Acknowledgement",
+      text: `Dear ${newSeller.sellername},`,
+      html: `Dear ${newSeller.sellername},<br/><br/> Thank you for registering with us. Your account is currently under review by our administrators. You will be notified of the status within the next 8 hours.<br/><br/>Best regards,<br/>TFS Fashions`,
+    };
+    await sendEmail(data);
     res.status(201).json("Your Profile is Under Review!");
   } catch (error) {
     next(error);

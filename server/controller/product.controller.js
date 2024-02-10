@@ -2,6 +2,7 @@ import Product from "../models/product.model.js";
 import Buyer from "../models/buyer.model.js";
 import { errorUtil } from "../utils/error.utils.js";
 import PendingApproval from "../models/pending.approval.model.js";
+import { cloudinaryUploadImg } from "../utils/cloudinary.utils.js";
 
 /* CREATE A PRODUCT */
 export const createProduct = async (req, res, next) => {
@@ -215,6 +216,15 @@ export const addToWishList = async (req, res, next) => {
       );
       res.status(200).json(addInList);
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* UPLOAD IMAGES */
+export const uploadImages = async (req, res, next) => {
+  try {
+    console.log(req.files);
   } catch (error) {
     next(error);
   }

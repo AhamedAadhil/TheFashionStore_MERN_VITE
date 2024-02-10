@@ -35,7 +35,7 @@ const sellerSchema = new mongoose.Schema(
       required: true,
       index: true,
       minlength: 3,
-      maxlength: 20,
+      maxlength: 30,
     },
     shopname: {
       type: String,

@@ -7,6 +7,7 @@ import { generateToken } from "../config/jwtToken.js";
 import { errorUtil } from "../utils/error.utils.js";
 import PendingApproval from "../models/pending.approval.model.js";
 import Product from "../models/product.model.js";
+import { sendEmail } from "../utils/sendEmail.utils.js";
 
 /* ADMIN LOGIN */
 export const adminLogin = async (req, res, next) => {
@@ -352,8 +353,19 @@ export const acceptSellerRequest = async (req, res, next) => {
     if (!approveRequest) {
       return next(errorUtil(500, "Internal Server Error"));
     }
-
+    const sellerDetails = await Seller.findById(sellerId).select(
+      "email sellername shopname"
+    );
     const deleteRequest = await PendingApproval.findByIdAndDelete(requestId);
+    const data = {
+      to: sellerDetails.email,
+      subject: "Account Approval Status",
+      text: `Dear ${sellerDetails.sellername},`,
+      html: `Dear ${sellerDetails.sellername},<br/><br/> Thank you for registering with us. We are pleased to inform you that your account has been approved and is now active.<br/><br/>
+      You can now start using our platform to list your products and manage your sales.<br/><br/> Shop Name:  ${sellerDetails.shopname} <br/><br/> 
+       If you have any questions or need assistance, please feel free to contact our support team.<br/><br/>Best regards,<br/>TFS Fashions`,
+    };
+    await sendEmail(data);
     res.status(200).json("Seller Approved!");
   } catch (error) {
     next(error);
@@ -385,8 +397,19 @@ export const declineSellerRequest = async (req, res, next) => {
     if (!approveRequest) {
       return next(errorUtil(500, "Internal Server Error"));
     }
-
+    const sellerDetails = await Seller.findById(sellerId).select(
+      "email sellername shopname"
+    );
     const deleteRequest = await PendingApproval.findByIdAndDelete(requestId);
+
+    const data = {
+      to: sellerDetails.email,
+      subject: "Account Approval Status",
+      text: `Dear ${sellerDetails.sellername},`,
+      html: `Dear ${sellerDetails.sellername},<br/><br/> Thank you for registering with us. We regret to inform you that your account registration has been denied.<br/><br/> 
+       If you have any questions or need assistance, please feel free to contact our support team.<br/><br/>Best regards,<br/>TFS Fashions`,
+    };
+    await sendEmail(data);
     const deleteSeller = await Seller.findByIdAndDelete(sellerId);
     res.status(200).json("Seller Rejected!");
   } catch (error) {
@@ -469,7 +492,20 @@ export const acceptProductRequest = async (req, res, next) => {
     if (!approveRequest) {
       return next(errorUtil(500, "Internal Server Error"));
     }
-
+    const productName = await Product.findById(productId).select("name");
+    const sellerDetails = await Product.findById(productId).populate(
+      "seller",
+      "email sellername"
+    );
+    const data = {
+      to: sellerDetails.seller.email,
+      subject: "Your Product has been Approved!",
+      text: `Dear ${sellerDetails.seller.sellername},`,
+      html: `Dear ${sellerDetails.seller.sellername},<br/><br/> We are pleased to inform you that your product, <b>${productName.name}</b>, has been approved and is now live on our platform. Customers can now view and purchase your product.<br/><br/>
+     Thank you for listing your product with us. If you have any questions or need further assistance, feel free to contact our support team. <br/><br/> 
+      Best regards,<br/>TFS Fashions`,
+    };
+    await sendEmail(data);
     await PendingApproval.findByIdAndDelete(requestId);
     res.status(200).json("Product Approved!");
   } catch (error) {
@@ -502,7 +538,21 @@ export const declineProductRequest = async (req, res, next) => {
     if (!approveRequest) {
       return next(errorUtil(500, "Internal Server Error"));
     }
-
+    const productName = await Product.findById(productId).select("name");
+    const sellerDetails = await Product.findById(productId).populate(
+      "seller",
+      "email sellername"
+    );
+    const data = {
+      to: sellerDetails.seller.email,
+      subject: "Product Approval Status: Not Approved",
+      text: `Dear ${sellerDetails.seller.sellername},`,
+      html: `Dear ${sellerDetails.seller.sellername},<br/><br/> We regret to inform you that your product, <b>${productName.name}</b>, has not been approved for listing on our platform. Our team has reviewed your product and determined that it does not meet our quality standards or guidelines.<br/><br/>
+     If you have any questions or would like more information about why your product was not approved, please don't hesitate to contact our support team. <br/><br/> 
+     Thank you for your understanding.<br/><br/> 
+     Best regards,<br/>TFS Fashions`,
+    };
+    await sendEmail(data);
     await PendingApproval.findByIdAndDelete(requestId);
     await Product.findByIdAndDelete(productId);
     res.status(200).json("Product Rejected!");
