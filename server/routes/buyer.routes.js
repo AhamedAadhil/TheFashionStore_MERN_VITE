@@ -13,6 +13,10 @@ import {
   forgotPasswordToken,
   resetPassword,
   getWishList,
+  askAddress,
+  getAllAddress,
+  deleteAddress,
+  updateAddress,
 } from "../controller/buyer.controller.js";
 
 const router = express.Router();
@@ -23,6 +27,10 @@ router.post("/auth/logout", verifyToken, logoutBuyer);
 router.put("/auth/updatePassword", verifyToken, updatePassword);
 router.post("/auth/forgotPasswordToken", forgotPasswordToken);
 router.put("/auth/resetPassword/:token", resetPassword);
+router.put("/actions/askAddress", verifyToken, askAddress);
+router.put("/actions/deleteAddress/:id", verifyToken, deleteAddress);
+router.get("/actions/getAllAddress", verifyToken, getAllAddress);
+router.put("/actions/updateAddress/:id", verifyToken, updateAddress);
 router.get("/actions/allBuyers", verifyToken, getAllBuyers);
 router.get("/actions/getBuyer/:id", verifyToken, getSingleBuyer);
 router.delete("/actions/deleteBuyer/:id", verifyToken, deleteSingleBuyer);

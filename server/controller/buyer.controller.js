@@ -242,6 +242,9 @@ export const updatePassword = async (req, res, next) => {
   const { id } = req.user;
   const { password } = req.body;
   validateMongoDbId(id);
+  if (req.user.id !== id) {
+    return next(errorUtil(401, "You Can Only Update Your Own Password!"));
+  }
   try {
     const buyer = await Buyer.findById(id);
     if (!buyer) {
@@ -324,6 +327,104 @@ export const resetPassword = async (req, res, next) => {
     buyer.passwordResetExpires = undefined;
     await buyer.save();
     res.status(200).send("Your Password Has Been Changed Successfully");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* ASK BUYER ADDRESS POPUP WHEN CHECKOUT */
+export const askAddress = async (req, res, next) => {
+  let userId = req.user.id;
+  validateMongoDbId(userId);
+  try {
+    const buyer = await Buyer.findById(userId);
+    if (!buyer) {
+      return next(errorUtil(404, "Buyer not found"));
+    }
+    const newAddress = {
+      label: req.body.label || "Home",
+      housenumber: req.body.housenumber || "",
+      street: req.body.street || "",
+      city: req.body.city || "",
+      state: req.body.state || "",
+    };
+    buyer.address.push(newAddress);
+    await buyer.save();
+    return res.status(200).json("New Address Added!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET ALL ADDRESS OF BUYER */
+export const getAllAddress = async (req, res, next) => {
+  const buyerId = req.user.id;
+  try {
+    const buyer = await Buyer.findById(buyerId);
+    if (!buyer) {
+      return next(errorUtil(404, "Buyer Not Found!"));
+    }
+    const buyerAddress = buyer.address;
+    res.status(200).json(buyerAddress);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* DELETE ADDRESS BY ID */
+export const deleteAddress = async (req, res, next) => {
+  const addressId = req.params.id;
+  const userId = req.user.id;
+  try {
+    const buyer = await Buyer.findById(userId);
+    if (!buyer) {
+      return next(errorUtil(404, "No buyer found with the provided user ID"));
+    }
+    const index = buyer.address.findIndex(
+      (address) => address._id.toString() === addressId
+    );
+    if (index === -1) {
+      // If the address ID doesn't match any address in the array
+      return next(errorUtil(404, "No Such Address In This Account"));
+    } else {
+      // If the address ID matches, remove it from the array
+      buyer.address.splice(index, 1);
+      await buyer.save();
+
+      return res.status(200).json({ message: "Address deleted successfully" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* UPDATE EXISTING ADDRESS BY ID */
+export const updateAddress = async (req, res, next) => {
+  const addressId = req.params.id;
+  const userId = req.user.id;
+  const { label, housenumber, street, city, state } = req.body;
+  try {
+    const buyer = await Buyer.findById(userId);
+    if (!buyer) {
+      return next(errorUtil(404, "No buyer found with the provided user ID"));
+    }
+    const index = buyer.address.findIndex(
+      (address) => address._id.toString() === addressId
+    );
+    if (index === -1) {
+      return next(errorUtil(404, "No Such Address In This Account"));
+    } else {
+      buyer.address[index] = {
+        ...buyer.address[index],
+        label: label || buyer.address[index].label,
+        housenumber: housenumber || buyer.address[index].housenumber,
+        street: street || buyer.address[index].street,
+        city: city || buyer.address[index].city,
+        state: state || buyer.address[index].state,
+      };
+      await buyer.save();
+      return res.status(200).json("Address Updated Successfully");
+    }
   } catch (error) {
     next(error);
   }
