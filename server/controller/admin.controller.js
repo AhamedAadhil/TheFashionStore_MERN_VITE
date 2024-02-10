@@ -510,3 +510,38 @@ export const declineProductRequest = async (req, res, next) => {
     next(error);
   }
 };
+
+/* TOGGLE VERIFY SELLER */
+export const verifySeller = async (req, res, next) => {
+  const sellerId = req.params.id;
+  try {
+    const seller = await Seller.findById(sellerId);
+    if (!seller) {
+      return next(errorUtil(404, "Seller Not Found!"));
+    }
+    let isVerified = seller.verified;
+    isVerified = !isVerified;
+    const updatedSeller = await Seller.findByIdAndUpdate(
+      sellerId,
+      { verified: isVerified },
+      { new: true }
+    );
+    if (!updatedSeller) {
+      return next(
+        errorUtil(
+          500,
+          "Server error when updating the seller's verified status"
+        )
+      );
+    }
+    res
+      .status(200)
+      .json(
+        `${seller.shopname} ${
+          isVerified ? "Verified" : "Unverified"
+        } Successfully!`
+      );
+  } catch (error) {
+    next(error);
+  }
+};

@@ -20,6 +20,7 @@ import {
   getSinglePendingProductApproval,
   acceptProductRequest,
   declineProductRequest,
+  verifySeller,
 } from "../controller/admin.controller.js";
 import { isAdmin } from "../middlewares/authentication.middleware.js";
 
@@ -54,6 +55,7 @@ router.get(
 );
 router.put("/actions/acceptSellerRequest/:id", isAdmin, acceptSellerRequest);
 router.put("/actions/declineSellerRequest/:id", isAdmin, declineSellerRequest);
+router.put("/actions/toggleVerifySeller/:id", isAdmin, verifySeller);
 
 /* PRODUCT ACTIONS */
 router.get(
