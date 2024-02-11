@@ -462,6 +462,11 @@ export const addToCart = async (req, res, next) => {
     if (!product) {
       return next(errorUtil(404, "This Product Is Not Found!"));
     }
+    if (item.count > product.stock) {
+      return next(
+        errorUtil(400, "Not Enough Stock Available For This Product!")
+      );
+    }
     const cart = await Cart.findOne({ orderby: id });
     if (!cart) {
       const price = product.price;

@@ -5,6 +5,7 @@ import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
 import PendingApproval from "../models/pending.approval.model.js";
 import bcryptjs from "bcryptjs";
+import { validateMongoDbId } from "../utils/validateMongoDbId.utils.js";
 import { errorUtil } from "../utils/error.utils.js";
 import { generateRefreshToken } from "../config/refreshToken.js";
 import { generateToken } from "../config/jwtToken.js";
@@ -289,12 +290,69 @@ export const getAllOrders = async (req, res, next) => {
   }
 };
 
-// /* UPDATE ORDER STATUS */
-// export const updateOrderStatus = async(req,res,next)=>{
-//   const sellerId=req.user.id
-//   try {
-//     const order = await
-//   } catch (error) {
-//     next(error)
-//   }
-// }
+/* UPDATE ORDER STATUS */
+export const updateOrderStatus = async (req, res, next) => {
+  const sellerId = req.user.id;
+  validateMongoDbId(sellerId);
+  const orderId = req.params.id;
+  validateMongoDbId(sellerId);
+  const status = req.body.status;
+  try {
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return next(errorUtil(404, "This Order Is Not Exist!"));
+    }
+    const updateOrder = await Order.findByIdAndUpdate(
+      orderId,
+      {
+        $set: {
+          orderstatus: status,
+          lastupdate: new Date(),
+          paymentintent: {
+            ...order.paymentintent,
+            status: status,
+          },
+        },
+      },
+      { new: true }
+    );
+    // Update user's order history
+    const buyer = await Buyer.findOneAndUpdate(
+      { _id: updateOrder.orderby },
+      {
+        $push: {
+          orderhistory: updateOrder._id,
+        },
+      },
+      { new: true }
+    );
+
+    if (status === "delivered") {
+      const pointsForTheOrder = updateOrder.paymentintent.amount / 100;
+      // Increase points for seller
+      const seller = await Seller.findByIdAndUpdate(
+        sellerId,
+        {
+          $inc: { points: pointsForTheOrder },
+        },
+        { new: true }
+      );
+
+      // Increase points for buyer
+      buyer.points += pointsForTheOrder;
+      await buyer.save();
+    }
+    if (status === "canceled") {
+      // Restore stock and decrease sold values for products in the order
+      const updateStockAndSold = updateOrder.products.map(async (item) => {
+        await Product.findByIdAndUpdate(item.product, {
+          $inc: { stock: item.count, sold: -item.count },
+        });
+      });
+      await Promise.all(updateStockAndSold);
+    }
+    res.status(200).json("Order Updated!");
+  } catch (error) {
+    next(error);
+  }
+};
