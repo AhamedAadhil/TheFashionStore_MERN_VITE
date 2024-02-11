@@ -59,6 +59,8 @@ export const getSingleProduct = async (req, res, next) => {
       await getProduct.populate("orderhistory");
     }
     await getProduct.populate("seller");
+    await getProduct.populate("brand");
+    await getProduct.populate("category");
     res.status(200).json(getProduct);
   } catch (error) {
     next(error);

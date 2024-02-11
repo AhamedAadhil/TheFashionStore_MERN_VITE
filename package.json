@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.1",
     "node-mailer": "^0.1.1",
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "uniqid": "^5.4.0"
   }
 }

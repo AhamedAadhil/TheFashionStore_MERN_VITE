@@ -4,6 +4,7 @@ import Seller from "../models/seller.model.js";
 import Product from "../models/product.model.js";
 import Cart from "../models/cart.model.js";
 import Coupon from "../models/coupon.model.js";
+import Order from "../models/order.model.js";
 import { errorUtil } from "../utils/error.utils.js";
 import { generateToken } from "../config/jwtToken.js";
 import { generateRefreshToken } from "../config/refreshToken.js";
@@ -11,6 +12,7 @@ import { validateMongoDbId } from "../utils/validateMongoDbId.utils.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import crypto from "crypto";
+import uniqid from "uniqid";
 import { sendEmail } from "../utils/sendEmail.utils.js";
 
 /* REGISTER A NEW BUYER */
@@ -63,8 +65,21 @@ export const loginBuyer = async (req, res, next) => {
         },
         { new: true }
       );
+
       await updateBuyer.save();
       const token = generateToken(isBuyerExist?._id, isBuyerExist?.role);
+      if (updateBuyer.orderhistory.length > 0) {
+        await updateBuyer.populate("orderhistory");
+      }
+      if (updateBuyer.reviewhistory.length > 0) {
+        await updateBuyer.populate("reviewhistory");
+      }
+      if (updateBuyer.wishlist.length > 0) {
+        await updateBuyer.populate("wishlist");
+      }
+      if (updateBuyer.cart.length > 0) {
+        await updateBuyer.populate("cart");
+      }
       const { password: pass, ...rest } = updateBuyer._doc;
       res
         .cookie("access_token", token, {
@@ -468,6 +483,8 @@ export const addToCart = async (req, res, next) => {
       orderby: buyer._id,
     });
     await newCart.save();
+    buyer.cart = newCart._id;
+    await buyer.save();
     res.status(201).json(newCart);
   } catch (error) {
     next(error);
@@ -562,12 +579,12 @@ export const applyCoupon = async (req, res, next) => {
     eligibleProduct.product.price = discountedPrice;
 
     // Calculate the total cart price after applying the discount
-    let cartTotal = 0;
+    let afterDiscount = 0;
     for (let product of cart.products) {
-      cartTotal += product.count * product.product.price;
+      afterDiscount += product.count * product.product.price;
     }
     // Update the cart total with the new discounted prices
-    cart.carttotal = cartTotal;
+    cart.totalafterdiscount = afterDiscount;
 
     // Save the updated cart
     await cart.save();
@@ -578,6 +595,57 @@ export const applyCoupon = async (req, res, next) => {
 
     // Respond with the total cart price after the discount
     res.status(200).json(cart);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* CREATE ORDER */
+export const createOrder = async (req, res, next) => {
+  const { id } = req.user;
+  validateMongoDbId(id);
+  try {
+    const buyer = await Buyer.findById(id);
+    if (!buyer) {
+      return next(errorUtil(404, "Unable To Find The User !"));
+    }
+    let buyerCart = await Cart.findOne({ orderby: buyer._id });
+    if (!buyerCart) {
+      return next(errorUtil(404, "You Dont Have Any Products In Your Cart!"));
+    }
+    let finalAmount = 0;
+    if (buyerCart.totalafterdiscount > 0) {
+      finalAmount = buyerCart.totalafterdiscount;
+    } else {
+      finalAmount = buyerCart.carttotal;
+    }
+    let newOrder = new Order({
+      products: buyerCart.products,
+      paymentintent: {
+        id: uniqid(),
+        method: "COD",
+        amount: finalAmount,
+        status: "pending",
+        created: Date.now(),
+        currency: "lkr",
+      },
+      orderstatus: "pending",
+      orderby: buyer._id,
+    });
+
+    await newOrder.save();
+    let update = buyerCart.products.map((item) => {
+      return {
+        updateOne: {
+          filter: { _id: item.product._id },
+          update: { $inc: { stock: -item.count, sold: +item.count } },
+        },
+      };
+    });
+    const updated = await Product.bulkWrite(update, {});
+    buyer.orderhistory.push(newOrder);
+    await buyer.save();
+    res.status(201).json("Success!");
   } catch (error) {
     next(error);
   }

@@ -21,6 +21,7 @@ import {
   getUserCart,
   emptyCart,
   applyCoupon,
+  createOrder,
 } from "../controller/buyer.controller.js";
 
 const router = express.Router();
@@ -48,5 +49,6 @@ router.post("/actions/addToCart", verifyToken, addToCart);
 router.get("/actions/getUserCart", verifyToken, getUserCart);
 router.delete("/actions/emptyCart", verifyToken, emptyCart);
 router.put("/actions/applyCoupon", verifyToken, applyCoupon);
+router.post("/actions/order/cod", verifyToken, createOrder);
 
 export default router;
