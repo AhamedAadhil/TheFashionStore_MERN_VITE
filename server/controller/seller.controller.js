@@ -1,6 +1,8 @@
 import Admin from "../models/admin.model.js";
 import Seller from "../models/seller.model.js";
 import Buyer from "../models/buyer.model.js";
+import Order from "../models/order.model.js";
+import Product from "../models/product.model.js";
 import PendingApproval from "../models/pending.approval.model.js";
 import bcryptjs from "bcryptjs";
 import { errorUtil } from "../utils/error.utils.js";
@@ -263,3 +265,36 @@ export const resetPassword = async (req, res, next) => {
     next(error);
   }
 };
+
+/* GET ALL ORDERS OF THE SELLER */
+export const getAllOrders = async (req, res, next) => {
+  const sellerId = req.user.id;
+  try {
+    // Find products associated with the seller
+    const sellerProducts = await Product.find({ seller: sellerId }).select(
+      "_id"
+    );
+
+    // Extract product IDs
+    const productIds = sellerProducts.map((product) => product._id);
+
+    // Find orders containing those products
+    const allOrders = await Order.find({
+      "products.product": { $in: productIds },
+    }).populate("products.product");
+
+    res.status(200).json(allOrders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// /* UPDATE ORDER STATUS */
+// export const updateOrderStatus = async(req,res,next)=>{
+//   const sellerId=req.user.id
+//   try {
+//     const order = await
+//   } catch (error) {
+//     next(error)
+//   }
+// }

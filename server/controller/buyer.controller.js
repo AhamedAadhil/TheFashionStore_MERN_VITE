@@ -77,7 +77,7 @@ export const loginBuyer = async (req, res, next) => {
       if (updateBuyer.wishlist.length > 0) {
         await updateBuyer.populate("wishlist");
       }
-      if (updateBuyer.cart.length > 0) {
+      if (updateBuyer.cart) {
         await updateBuyer.populate("cart");
       }
       const { password: pass, ...rest } = updateBuyer._doc;
@@ -450,42 +450,66 @@ export const updateAddress = async (req, res, next) => {
 
 /* ADD TO CART */
 export const addToCart = async (req, res, next) => {
-  const { cart } = req.body;
+  const { item } = req.body;
   const { id } = req.user;
   validateMongoDbId(id);
   try {
-    let products = [];
     const buyer = await Buyer.findById(id);
     if (!buyer) {
-      return next(errorUtil(404, "Buyer Not Found!"));
+      return next(errorUtil(404, "User not found"));
     }
-    const alreadyExistCart = await Cart.findOne({ orderby: buyer._id }).exec();
-    if (alreadyExistCart) {
-      await Cart.deleteOne({ _id: alreadyExistCart._id });
+    const product = await Product.findById(item.product);
+    if (!product) {
+      return next(errorUtil(404, "This Product Is Not Found!"));
     }
-    for (let i = 0; i < cart.length; i++) {
-      let object = {};
-      object.product = cart[i]._id;
-      object.count = cart[i].count;
-      object.color = cart[i].color || "N/A";
-      object.size = cart[i].size || "N/A";
-      let getPrice = await Product.findById(cart[i]._id).select("price").exec();
-      object.price = getPrice.price;
-      products.push(object);
+    const cart = await Cart.findOne({ orderby: id });
+    if (!cart) {
+      const price = product.price;
+      const newCart = new Cart({ products: item });
+      newCart.orderby = id;
+      newCart.carttotal = newCart.products[0].count * price;
+      newCart.totalafterdiscount = newCart.carttotal - 0;
+      await newCart.save();
+      return res.status(201).json(newCart);
     }
-    let cartTotal = 0;
-    for (let i = 0; i < products.length; i++) {
-      cartTotal += products[i].count * products[i].price;
+    await cart.populate("products.product");
+    let sellerOfCartItems = cart.products[0].product.seller.toString();
+    let sellerOfNewItem = product.seller.toString();
+    if (sellerOfCartItems === sellerOfNewItem) {
+      cart.products.push(item);
+
+      // Calculate the price of the newly added product
+      let newProductPrice = 0;
+      let newProduct = cart.products.find((p) => p.product == item.product);
+      if (newProduct) {
+        const productPrice = await Product.findById(newProduct.product).select(
+          "price"
+        );
+        newProductPrice = newProduct.count * productPrice.price;
+      }
+
+      await cart.populate("products.product");
+      let cartTotal = 0;
+      for (let product of cart.products) {
+        let productPrice = await Product.findById(product.product._id).select(
+          "price"
+        );
+        cartTotal += product.count * productPrice.price;
+      }
+      cart.carttotal = cartTotal;
+      cart.totalafterdiscount += newProductPrice;
+      await cart.save();
+      buyer.cart = cart._id;
+      await buyer.save();
+      return res.status(200).json(cart);
+    } else {
+      return next(
+        errorUtil(
+          403,
+          "You Can Only Add Products From Same Seller In Your Cart!"
+        )
+      );
     }
-    let newCart = new Cart({
-      products,
-      carttotal: cartTotal,
-      orderby: buyer._id,
-    });
-    await newCart.save();
-    buyer.cart = newCart._id;
-    await buyer.save();
-    res.status(201).json(newCart);
   } catch (error) {
     next(error);
   }
@@ -581,8 +605,17 @@ export const applyCoupon = async (req, res, next) => {
     // Calculate the total cart price after applying the discount
     let afterDiscount = 0;
     for (let product of cart.products) {
-      afterDiscount += product.count * product.product.price;
+      if (
+        product.product._id.toString() !==
+        eligibleProduct.product._id.toString()
+      ) {
+        afterDiscount += product.count * product.product.price;
+      }
     }
+
+    // Add the discounted price of the eligible product to the total after discount
+    afterDiscount += eligibleProduct.count * discountedPrice;
+
     // Update the cart total with the new discounted prices
     cart.totalafterdiscount = afterDiscount;
 
@@ -646,6 +679,23 @@ export const createOrder = async (req, res, next) => {
     buyer.orderhistory.push(newOrder);
     await buyer.save();
     res.status(201).json("Success!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET ORDERS OF THE USER */
+export const getOrders = async (req, res, next) => {
+  const { id } = req.user;
+  validateMongoDbId(id);
+  try {
+    const order = await Order.findOne({ orderby: id }).populate(
+      "products.product"
+    );
+    if (!order) {
+      return next(errorUtil(404, "There Is No Orders Link To This Account!"));
+    }
+    res.status(200).json(order);
   } catch (error) {
     next(error);
   }

@@ -9,6 +9,7 @@ import {
   handleRefreshToken,
   forgotPasswordToken,
   resetPassword,
+  getAllOrders,
 } from "../controller/seller.controller.js";
 
 const router = express.Router();
@@ -21,5 +22,6 @@ router.put("/auth/resetPassword/:token", resetPassword);
 router.delete("/actions/deleteSeller/:id", isSeller, deleteSingleSeller);
 router.put("/actions/updateSeller/:id", isSeller, updateSeller);
 router.put("/actions/refresh", isSeller, handleRefreshToken);
+router.get("/actions/getAllOrders", isSeller, getAllOrders);
 
 export default router;
