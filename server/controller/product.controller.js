@@ -1,16 +1,31 @@
 import Product from "../models/product.model.js";
 import Buyer from "../models/buyer.model.js";
+import Category from "../models/category.model.js";
+import Brand from "../models/brand.model.js";
 import { errorUtil } from "../utils/error.utils.js";
 import PendingApproval from "../models/pending.approval.model.js";
 
 /* CREATE A PRODUCT */
 export const createProduct = async (req, res, next) => {
   const sellerId = req.user.id;
+  const productCategory = req.body.category;
+  const productBrand = req.body.brand;
   try {
+    const category = await Category.findOne({ title: productCategory });
+    if (!category) {
+      return next(errorUtil(404, "This Category Is Not Found!"));
+    }
+    const brand = await Brand.findOne({ title: productBrand });
+    if (!brand) {
+      return next(errorUtil(404, "This Brand Is Not Found!"));
+    }
+
     const createProduct = await Product.create({
       ...req.body,
       seller: sellerId,
       status: "hold",
+      brand: brand,
+      category: category,
     });
     if (!createProduct) {
       return next(errorUtil(405, "Cannot Create Product"));
@@ -37,6 +52,13 @@ export const getSingleProduct = async (req, res, next) => {
     if (!getProduct.status === "live") {
       return next(errorUtil(403, "This Product is Still Under  Review"));
     }
+    if (getProduct.reviewhistory.length > 0) {
+      await getProduct.populate("reviewhistory");
+    }
+    if (getProduct.orderhistory.length > 0) {
+      await getProduct.populate("orderhistory");
+    }
+    await getProduct.populate("seller");
     res.status(200).json(getProduct);
   } catch (error) {
     next(error);
@@ -132,6 +154,8 @@ export const getAllProducts = async (req, res, next) => {
 export const updateProduct = async (req, res, next) => {
   const productId = req.params.id;
   const selletId = req.user.id;
+  const productCategory = req.body.category;
+  const productBrand = req.body.brand;
   try {
     const product = await Product.findById(productId);
     if (!product.status === "live") {
@@ -140,6 +164,15 @@ export const updateProduct = async (req, res, next) => {
     if (selletId !== product.seller.toString()) {
       return next(errorUtil(403, "You Can Only Update Your Products!"));
     }
+    const category = await Category.findOne({ title: productCategory });
+    if (!category) {
+      return next(errorUtil(404, "This Category Is Not Found!"));
+    }
+    const brand = await Brand.findOne({ title: productBrand });
+    if (!brand) {
+      return next(errorUtil(404, "This Brand Is Not Found!"));
+    }
+
     const updateProduct = await Product.findByIdAndUpdate(
       productId,
       {
@@ -148,8 +181,8 @@ export const updateProduct = async (req, res, next) => {
           description: req.body.description,
           imageUrls: req.body.imageUrls,
           price: req.body.price,
-          category: req.body.category,
-          brand: req.body.brand,
+          category: productCategory,
+          brand: productBrand,
           size: req.body.size,
           color: req.body.color,
           stock: req.body.stock,

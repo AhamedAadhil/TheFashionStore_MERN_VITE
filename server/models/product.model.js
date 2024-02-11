@@ -30,7 +30,8 @@ const productSchema = new mongoose.Schema(
       default: "hold",
     },
     brand: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
       required: true,
     },
     quality: {
@@ -56,14 +57,8 @@ const productSchema = new mongoose.Schema(
       default: [],
     },
     category: {
-      // type: [
-      //   {
-      //     type: mongoose.Schema.Types.ObjectId,
-      //     ref: "Category",
-      //   },
-      // ],
-      // default: [],
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
     },
     stock: {

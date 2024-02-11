@@ -20,6 +20,7 @@ var couponSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Seller",
   },
+  expiryusers: [{ type: mongoose.Schema.Types.ObjectId, ref: "Buyer" }],
 });
 
 const Coupon = mongoose.model("Coupon", couponSchema);

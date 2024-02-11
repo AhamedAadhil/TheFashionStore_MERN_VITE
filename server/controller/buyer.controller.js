@@ -520,6 +520,18 @@ export const applyCoupon = async (req, res, next) => {
     if (!validCoupon) {
       return next(errorUtil(400, "Invalid Coupon!"));
     }
+
+    // Check if the expiry date is present and it's a future date
+    const currentDate = new Date();
+    if (!validCoupon.expiry || validCoupon.expiry <= currentDate) {
+      return next(errorUtil(400, "Coupon has expired!"));
+    }
+
+    // Check if the user has already used the coupon
+    if (validCoupon.expiryusers && validCoupon.expiryusers.includes(id)) {
+      return next(errorUtil(400, "Coupon has already been used by this user!"));
+    }
+
     const buyer = await Buyer.findById(id);
     if (!buyer) {
       return next(errorUtil(404, "Buyer Not Found!"));
@@ -559,6 +571,10 @@ export const applyCoupon = async (req, res, next) => {
 
     // Save the updated cart
     await cart.save();
+
+    // Add the user id to the expiryUsers array to mark the coupon as used by this user
+    validCoupon.expiryusers.push(id);
+    await validCoupon.save();
 
     // Respond with the total cart price after the discount
     res.status(200).json(cart);

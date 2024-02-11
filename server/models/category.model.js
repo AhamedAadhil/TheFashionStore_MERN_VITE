@@ -7,6 +7,7 @@ var categorySchema = new mongoose.Schema(
       required: true,
       unique: true,
       index: true,
+      default: "other",
     },
     logo: {
       type: String,

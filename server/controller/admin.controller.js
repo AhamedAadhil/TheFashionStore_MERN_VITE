@@ -433,7 +433,7 @@ export const getAllPendingProductApprovals = async (req, res, next) => {
   }
 };
 
-/* GET A PENDING SELLER APPROVAL BY ID */
+/* GET A PENDING PRODUCT APPROVAL BY ID */
 export const getSinglePendingProductApproval = async (req, res, next) => {
   const user = req.user;
   if (!user.role === "admin") {
@@ -441,27 +441,33 @@ export const getSinglePendingProductApproval = async (req, res, next) => {
   }
   try {
     const requestId = req.params.id;
-    let request = await PendingApproval.findById(requestId);
+    let request = await PendingApproval.findById(requestId).populate("product");
+
     if (!request) {
       return next(errorUtil(404, "No Request Found With The Given ID"));
     }
-    // Find the pending approval entry and populate the 'product' field
-    const pendingApproval = await request.populate("product");
+
+    // Access the populated 'product' field
+    const product = request.product;
 
     // Check if a product is associated with this pending approval
-    if (!pendingApproval.product) {
+    if (!product) {
       return next(
         errorUtil(404, "No Product Associated With The Pending Approval")
       );
     }
 
+    // Populate the related fields ('category' and 'brand') of the 'product'
+    await product.populate("category");
+    await product.populate("brand");
+
     // Check if the product status is "hold"
-    if (pendingApproval.product.status !== "hold") {
+    if (product.status !== "hold") {
       return next(errorUtil(404, "Product Status Is Not 'hold'"));
     }
 
     // Respond with the product associated with the pending approval
-    res.status(200).json(pendingApproval.product);
+    res.status(200).json(product);
   } catch (error) {
     next(error);
   }
