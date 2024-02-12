@@ -351,6 +351,54 @@ export const updateOrderStatus = async (req, res, next) => {
       });
       await Promise.all(updateStockAndSold);
     }
+    const sellerInfo = await Seller.findById(sellerId).select("email shopname");
+    const orderInfo = await Order.findById(orderId);
+    const buyerInfo = await Buyer.findOne({ _id: orderInfo.orderby }).select(
+      "email username"
+    );
+    const dataForSeller = {
+      to: [sellerInfo.email, "ahamedaathil.5@gmail.com"],
+      subject: `Order Status Update: ${orderId} ${status}`,
+      html: `<p>Hi ${sellerInfo.shopname},We hope this email finds you well.</p>
+<p>We wanted to inform you that the status of an order on our platform has been updated. Here are the details:</p>
+<ul>
+  <li><strong>Order ID:</strong> ${orderId}</li>
+  <li><strong>Buyer ID:</strong> ${orderInfo.orderby}</li>
+  <li><strong>Status Updated Date:</strong> ${orderInfo.lastupdate}</li>
+  <li><strong>Order Total:</strong> ${orderInfo.paymentintent.amount} ${orderInfo.paymentintent.currency}</li>
+  <li><strong>New Order Status:</strong> ${status}</li>
+</ul>
+<p>Please review the order details and ensure that you are prepared to fulfill it promptly.</p>
+<p>If you have any questions or concerns regarding this order, please don't hesitate to contact us. We're here to assist you in any way we can.</p>
+<p>Thank you for your continued partnership.</p>
+<p>Best regards,<br>TFS Fashion</p>`,
+    };
+
+    const dataForBuyer = {
+      to: buyerInfo.email,
+      subject: `Order Status Update: ${orderId} ${status}`,
+      html: `<p>Dear ${buyerInfo.username},</p>
+
+<p>We hope this email finds you well.</p>
+
+<p>We wanted to inform you that the status of your order on our platform has been updated. Here are the details:</p>
+
+<ul>
+  <li><strong>Order ID:</strong> ${orderId}</li>
+  <li><strong>Status Updated Date:</strong> ${orderInfo.lastupdate}</li>
+  <li><strong>Order Total:</strong> ${orderInfo.paymentintent.amount} ${orderInfo.paymentintent.currency}</li>
+  <li><strong>New Order Status:</strong> ${status}</li>
+</ul>
+
+<p>Please review the updated status of your order. If you have any questions or concerns, feel free to reach out to us. We're here to assist you in any way we can.</p>
+
+<p>Thank you for choosing our platform for your purchase.</p>
+
+<p>Best regards,<br>TFS Fashion</p>
+`,
+    };
+    await sendEmail(dataForSeller);
+    await sendEmail(dataForBuyer);
     res.status(200).json("Order Updated!");
   } catch (error) {
     next(error);

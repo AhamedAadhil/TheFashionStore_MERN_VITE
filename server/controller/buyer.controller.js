@@ -470,9 +470,10 @@ export const addToCart = async (req, res, next) => {
     const cart = await Cart.findOne({ orderby: id });
     if (!cart) {
       const price = product.price;
-      const newCart = new Cart({ products: item });
+      const newItem = { ...item, price: price };
+      const newCart = new Cart({ products: newItem });
       newCart.orderby = id;
-      newCart.carttotal = newCart.products[0].count * price;
+      newCart.carttotal = newItem.count * price;
       newCart.totalafterdiscount = newCart.carttotal - 0;
       await newCart.save();
       return res.status(201).json(newCart);
@@ -481,6 +482,8 @@ export const addToCart = async (req, res, next) => {
     let sellerOfCartItems = cart.products[0].product.seller.toString();
     let sellerOfNewItem = product.seller.toString();
     if (sellerOfCartItems === sellerOfNewItem) {
+      const productPrice = product.price;
+      item.price = productPrice;
       cart.products.push(item);
 
       // Calculate the price of the newly added product
@@ -651,6 +654,23 @@ export const createOrder = async (req, res, next) => {
     if (!buyerCart) {
       return next(errorUtil(404, "You Dont Have Any Products In Your Cart!"));
     }
+
+    // store product details for send it to seller and admin when order placed
+    let productDetailsHTML = "";
+    if (buyerCart && buyerCart.products.length > 0) {
+      for (let product of buyerCart.products) {
+        let productHTML = `
+    <li><strong>Product ID:</strong> ${product.product}</li>
+    <li><strong>Color:</strong> ${product.color}</li>
+    <li><strong>Size:</strong> ${product.size}</li>
+    <li><strong>Price:</strong> ${product.price}</li>
+    <li><strong>Count:</strong> ${product.count}</li>
+    <hr/><br/><br/>
+  `;
+        productDetailsHTML += productHTML;
+      }
+    }
+
     let finalAmount = 0;
     if (buyerCart.totalafterdiscount > 0) {
       finalAmount = buyerCart.totalafterdiscount;
@@ -683,6 +703,42 @@ export const createOrder = async (req, res, next) => {
     const updated = await Product.bulkWrite(update, {});
     buyer.orderhistory.push(newOrder);
     await buyer.save();
+
+    //send mail to seller about the order
+    const products = await buyerCart.populate("products.product");
+    const firstProduct = products.products[0];
+    const sellerId = firstProduct.product.seller;
+    const sellerInfo = await Seller.findById(sellerId).select(
+      "email sellername shopname"
+    );
+    const data = {
+      to: [sellerInfo.email, "ahamedaathil.5@gmail.com"],
+      subject: "New Order Notification (Through Admin)",
+      html: `<p>Dear ${sellerInfo.shopname},</p>
+<p style="font-size: 16px;">We hope this email finds you well.</p>
+<p style="font-size: 16px;">We wanted to inform you that a new order has been placed on our platform. Here are the details:</p>
+<ul style="font-size: 16px; list-style-type: none; padding-left: 0;">
+  <li><strong>Order ID:</strong> ${newOrder.paymentintent.id}</li>
+  <li><strong>Buyer ID:</strong> ${newOrder.orderby}</li>
+  <li><strong>Order Date:</strong> ${new Date(
+    newOrder.paymentintent.created
+  ).toString()}</li>
+  <li><strong>Order Total:</strong> ${newOrder.paymentintent.amount} ${
+        newOrder.paymentintent.currency
+      }</li>
+  <li><strong>Order Status:</strong> ${newOrder.orderstatus}</li>
+</ul>
+<p style="font-size: 16px;">Product details:</p>
+<ul style="font-size: 16px; list-style-type: none; padding-left: 0;">
+${productDetailsHTML}
+</ul>
+<p style="font-size: 16px;">Please review the order details and ensure that you are prepared to fulfill it promptly.</p>
+<p style="font-size: 16px;">If you have any questions or concerns regarding this order, please don't hesitate to contact us. We're here to assist you in any way we can.</p>
+<p style="font-size: 16px;">Thank you for your continued partnership.</p>
+<p style="font-size: 16px;">Best regards,<br>TFS Fashion</p>`,
+    };
+    await sendEmail(data);
+    await emptyCart(req, res, next);
     res.status(201).json("Success!");
   } catch (error) {
     next(error);
