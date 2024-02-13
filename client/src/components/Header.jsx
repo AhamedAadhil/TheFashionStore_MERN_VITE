@@ -14,7 +14,7 @@ export default function Header() {
               <p className="text-end text-white mb-0">
                 Hotline:
                 <a className="text-white" href="tel:+94766611917">
-                  +94 76 66 119 17
+                  &nbsp; &nbsp;+94 76 66 119 17
                 </a>
               </p>
             </div>
@@ -59,7 +59,7 @@ export default function Header() {
                   <Link className="d-flex align-items-center gap-10 text-white">
                     <img src="images/heart.svg" alt="wishlist" />
                     <p className="mb-0">
-                      Add to
+                      My
                       <br />
                       Wishlist
                     </p>
