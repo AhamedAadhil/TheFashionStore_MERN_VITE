@@ -4,6 +4,8 @@ import Category from "../models/category.model.js";
 import Brand from "../models/brand.model.js";
 import { errorUtil } from "../utils/error.utils.js";
 import PendingApproval from "../models/pending.approval.model.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 /* CREATE A PRODUCT */
 export const createProduct = async (req, res, next) => {
@@ -19,6 +21,11 @@ export const createProduct = async (req, res, next) => {
     if (!brand) {
       return next(errorUtil(404, "This Brand Is Not Found!"));
     }
+    const actualPrice =
+      Number(req.body.price / process.env.ACTUAL_PRICE_DIVIDER) *
+        Number(process.env.ACTUAL_PRICE_MULTIPLYER) +
+      Number(process.env.DELIVERY_FEE) +
+      Number(req.body.price);
 
     const createProduct = await Product.create({
       ...req.body,
@@ -26,6 +33,7 @@ export const createProduct = async (req, res, next) => {
       status: "hold",
       brand: brand,
       category: category,
+      price: actualPrice,
     });
     if (!createProduct) {
       return next(errorUtil(405, "Cannot Create Product"));

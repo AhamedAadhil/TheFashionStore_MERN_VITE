@@ -711,7 +711,7 @@ export const createOrder = async (req, res, next) => {
     const sellerInfo = await Seller.findById(sellerId).select(
       "email sellername shopname"
     );
-    const data = {
+    const dataForSeller = {
       to: [sellerInfo.email, "ahamedaathil.5@gmail.com"],
       subject: "New Order Notification (Through Admin)",
       html: `<p>Dear ${sellerInfo.shopname},</p>
@@ -737,7 +737,33 @@ ${productDetailsHTML}
 <p style="font-size: 16px;">Thank you for your continued partnership.</p>
 <p style="font-size: 16px;">Best regards,<br>TFS Fashion</p>`,
     };
-    await sendEmail(data);
+    const dataForBuyer = {
+      to: buyer.email,
+      subject: "New Order Notification",
+      html: `<p>Dear ${buyer.username},</p>
+<p style="font-size: 16px;">We hope this email finds you well.</p>
+<p style="font-size: 16px;">We wanted to inform you that your order has been placed on our platform. Here are the details:</p>
+<ul style="font-size: 16px; list-style-type: none; padding-left: 0;">
+  <li><strong>Order ID:</strong> ${newOrder.paymentintent.id}</li>
+  <li><strong>Order Date:</strong> ${new Date(
+    newOrder.paymentintent.created
+  ).toString()}</li>
+  <li><strong>Order Total:</strong> ${newOrder.paymentintent.amount} ${
+        newOrder.paymentintent.currency
+      }</li>
+  <li><strong>Order Status:</strong> ${newOrder.orderstatus}</li>
+</ul>
+<p style="font-size: 16px;">Product details:</p>
+<ul style="font-size: 16px; list-style-type: none; padding-left: 0;">
+${productDetailsHTML}
+</ul>
+<p style="font-size: 16px;">Please review the order details and ensure that you are prepared to fulfill it promptly.</p>
+<p style="font-size: 16px;">If you have any questions or concerns regarding this order, please don't hesitate to contact us. We're here to assist you in any way we can.</p>
+<p style="font-size: 16px;">Thank you for your continued partnership.</p>
+<p style="font-size: 16px;">Best regards,<br>TFS Fashion</p>`,
+    };
+    await sendEmail(dataForSeller);
+    await sendEmail(dataForBuyer);
     await emptyCart(req, res, next);
     res.status(201).json("Success!");
   } catch (error) {
