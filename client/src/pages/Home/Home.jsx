@@ -38,7 +38,7 @@ export default function Home() {
       {data && <HomeCategory data={data} />}
       {data && <CategoryShowcase data={data} />}
       <SellerRegister />
-      <WhoWeAre />
+      {/* <WhoWeAre /> */}
       <BecomeASeller />
       <AppSection />
       <Brands />

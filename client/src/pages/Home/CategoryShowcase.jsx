@@ -73,7 +73,7 @@ export default function CategoryShowcase({ data }) {
         <div className="section-header">
           <h2 className="title">{title}</h2>
           <div className="course-filter-group">
-            <ul className="lab-ul">
+            <ul className="lab-ul ">
               <li onClick={() => filterItem("All")}>All</li>
 
               {data &&
@@ -87,7 +87,7 @@ export default function CategoryShowcase({ data }) {
         </div>
         {/* section body */}
         <div className="section-wrapper">
-          <div className="row g-4 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 course-filter">
+          <div className="row g-4 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-md-3 row-cols-2 course-filter">
             {items &&
               items.map((product) => (
                 <div key={product._id} className="col">

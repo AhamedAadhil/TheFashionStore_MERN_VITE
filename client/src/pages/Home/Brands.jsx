@@ -34,7 +34,7 @@ export default function Brands() {
         <div className="section-wrapper">
           <div className="sponsor-slider">
             <Swiper
-              slidesPerView={2}
+              slidesPerView={4}
               spaceBetween={20}
               autoplay={{
                 delay: 2000,

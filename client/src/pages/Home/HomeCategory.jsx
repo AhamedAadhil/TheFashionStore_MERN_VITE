@@ -1,4 +1,5 @@
-// import { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 import { Link } from "react-router-dom";
 import { TbCategory } from "react-icons/tb";
 import PropTypes from "prop-types";
@@ -33,31 +34,42 @@ export default function HomeCategory({ data }) {
         </div>
         {/* Section card */}
         <div className="section-wrapper">
-          <div className="row g-4 justify-content-center row-cols-md-3 row-cols-sm-2 row-cols-2">
-            {data &&
-              // eslint-disable-next-line react/prop-types
-              data.map((category, index) => (
-                <div key={index} className="col">
-                  <Link to="/shop" className="category-item">
-                    <div className="category-inner">
-                      {/* image thumbnail */}
-                      <div className="category-thumb">
-                        <img src={category.logo} alt={category.title} />
-                      </div>
-                      {/* content */}
-                      <div className="category-content">
-                        <div className="cate-icons">
-                          <TbCategory
-                            style={{ fontSize: "24px", color: "#ffc107" }}
-                          />
-                        </div>
-                        <h6>{category.title}</h6>
-                      </div>
+          <Swiper
+            slidesPerView={4}
+            spaceBetween={20}
+            loop={true}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+              },
+              768: {
+                slidesPerView: 3,
+              },
+              1024: {
+                slidesPerView: 4,
+              },
+            }}
+          >
+            {data.map((category, index) => (
+              <SwiperSlide key={index}>
+                <Link to="/shop" className="category-item">
+                  <div className="category-inner">
+                    <div className="category-thumb">
+                      <img src={category.logo} alt={category.title} />
                     </div>
-                  </Link>
-                </div>
-              ))}
-          </div>
+                    <div className="category-content">
+                      <div className="cate-icons">
+                        <TbCategory
+                          style={{ fontSize: "14px", color: "#ffc107" }}
+                        />
+                      </div>
+                      <h6>{category.title}</h6>
+                    </div>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
           {/* btn get started */}
           <div className="text-center mt-5">
             <Link to="/shop" className="lab-btn">
