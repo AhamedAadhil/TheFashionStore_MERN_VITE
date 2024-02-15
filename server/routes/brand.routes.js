@@ -14,6 +14,6 @@ router.post("/createBrand", isAdmin, createBrand);
 router.put("/updateBrand/:id", isAdmin, updateBrand);
 router.delete("/deleteBrand/:id", isAdmin, deleteBrand);
 router.get("/getSingleBrand/:id", isAdmin, getSingleBrand);
-router.get("/getAllBrand", isAdmin, getAllBrand);
+router.get("/getAllBrand", getAllBrand);
 
 export default router;

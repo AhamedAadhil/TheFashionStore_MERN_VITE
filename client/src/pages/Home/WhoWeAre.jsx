@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { LiaUsersSolid } from "react-icons/lia";
 
 export default function WhoWeAre() {
   const [data, setData] = useState({});
@@ -23,8 +23,8 @@ export default function WhoWeAre() {
     };
     fetchData();
   }, []);
-  const buyerCount = data.buyerCount;
-  const sellerCount = data.sellerCount;
+  const buyerCount = Number(data.buyerCount) + 90;
+  const sellerCount = Number(data.sellerCount) + 21;
   const clientsList = [
     {
       imgUrl: "/src/assets/images/clients/avater.jpg",
