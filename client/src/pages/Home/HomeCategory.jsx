@@ -33,7 +33,7 @@ export default function HomeCategory({ data }) {
         </div>
         {/* Section card */}
         <div className="section-wrapper">
-          <div className="row g-4 justify-content-center row-cols-md-3 row-cols-sm-2 row-cols-1">
+          <div className="row g-4 justify-content-center row-cols-md-3 row-cols-sm-2 row-cols-2">
             {data &&
               // eslint-disable-next-line react/prop-types
               data.map((category, index) => (

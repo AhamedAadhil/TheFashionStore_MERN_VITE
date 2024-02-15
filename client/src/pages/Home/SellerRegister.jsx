@@ -28,21 +28,21 @@ export default function SellerRegister() {
                   name="name"
                   placeholder="Username"
                   className="reg-input"
-                  required="true"
+                  required={true}
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="email"
                   className="reg-input"
-                  required="true"
+                  required={true}
                 />
                 <input
                   type="number"
                   name="phone"
                   placeholder="+94"
                   className="reg-input"
-                  required="true"
+                  required={true}
                 />
                 <button type="submit" className="lab-btn">
                   Register Now

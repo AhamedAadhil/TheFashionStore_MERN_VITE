@@ -7965,7 +7965,7 @@ button {
 }
 .clients-section.style-2 .section-wrapper {
   height: 400px;
-  background: url(../../assets/images/clients/bg.png) no-repeat;
+  background: url(../../assets/images/clients/sl.jpg) no-repeat;
   background-position: center;
   background-size: 75% 100%;
 }
@@ -8028,8 +8028,8 @@ button {
   animation: circle-2 1.05s infinite;
 }
 .clients-section.style-2 .section-wrapper .clients .client-list:nth-child(1) {
-  top: 70px;
-  left: 20%;
+  top: 140px;
+  left: 40%;
 }
 .clients-section.style-2 .section-wrapper .clients .client-list:nth-child(2) {
   top: 40px;
@@ -8065,7 +8065,7 @@ button {
 }
 .clients-section.style-2 .section-wrapper .clients .client-list:nth-child(4) {
   top: 265px;
-  left: 35%;
+  left: 45%;
 }
 .clients-section.style-2
   .section-wrapper
@@ -8097,7 +8097,7 @@ button {
 }
 .clients-section.style-2 .section-wrapper .clients .client-list:nth-child(6) {
   top: 288px;
-  left: 70%;
+  left: 60%;
 }
 .clients-section.style-2
   .section-wrapper
@@ -8114,7 +8114,7 @@ button {
 .clients-section.style-2 .section-wrapper .clients .client-list:nth-child(7) {
   top: 75px;
   left: 75%;
-  left: 70%;
+  left: 50%;
 }
 .clients-section.style-2
   .section-wrapper

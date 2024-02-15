@@ -23,6 +23,7 @@ import {
   applyCoupon,
   createOrder,
   getOrders,
+  getCount,
 } from "../controller/buyer.controller.js";
 
 const router = express.Router();
@@ -52,5 +53,7 @@ router.delete("/actions/emptyCart", verifyToken, emptyCart);
 router.put("/actions/applyCoupon", verifyToken, applyCoupon);
 router.post("/actions/order/cod", verifyToken, createOrder);
 router.get("/actions/getOrders", verifyToken, getOrders);
+/* SPECIAL */
+router.get("/actions/getCount", getCount);
 
 export default router;

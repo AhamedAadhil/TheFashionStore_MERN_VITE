@@ -4,6 +4,7 @@ import Banner from "./Banner";
 import CategoryShowcase from "./CategoryShowcase";
 import HomeCategory from "./HomeCategory";
 import SellerRegister from "./SellerRegister";
+import WhoWeAre from "./WhoWeAre";
 
 export default function Home() {
   const [data, setData] = useState(undefined);
@@ -34,6 +35,7 @@ export default function Home() {
       {data && <HomeCategory data={data} />}
       {data && <CategoryShowcase data={data} />}
       <SellerRegister />
+      <WhoWeAre />
     </div>
   );
 }

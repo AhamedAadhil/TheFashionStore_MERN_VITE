@@ -787,3 +787,14 @@ export const getOrders = async (req, res, next) => {
     next(error);
   }
 };
+
+/* GET BUYER AND SELLER COUNT */
+export const getCount = async (req, res, next) => {
+  try {
+    const buyerCount = await Buyer.find().countDocuments();
+    const sellerCount = await Seller.find().countDocuments();
+    res.status(200).json({ buyerCount, sellerCount });
+  } catch (error) {
+    next(error);
+  }
+};
