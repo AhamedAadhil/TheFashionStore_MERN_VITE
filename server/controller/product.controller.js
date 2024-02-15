@@ -128,8 +128,8 @@ export const getAllProducts = async (req, res, next) => {
       });
     }
 
-    // Define the limit based on the 'limit' query parameter (default to 10 if not provided)
-    const limit = parseInt(req.query.limit) || 10;
+    // Define the limit based on the 'limit' query parameter (default to 100000 if not provided)
+    const limit = parseInt(req.query.limit) || 24;
     const page = req.query.page || 1;
     const startIndex = (page - 1) * limit || 0;
 
@@ -144,6 +144,9 @@ export const getAllProducts = async (req, res, next) => {
 
     const allProducts = await Product.find(query)
       .select(selectFields)
+      .populate("brand")
+      .populate("seller")
+      .populate("category")
       .sort(sortOptions)
       .limit(limit)
       .skip(startIndex);
