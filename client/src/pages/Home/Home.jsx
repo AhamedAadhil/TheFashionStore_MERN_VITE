@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import Banner from "./Banner";
 import CategoryShowcase from "./CategoryShowcase";
 import HomeCategory from "./HomeCategory";
@@ -8,6 +7,7 @@ import WhoWeAre from "./WhoWeAre";
 import BecomeASeller from "./BecomeASeller";
 import AppSection from "./AppSection";
 import Brands from "./Brands";
+import CarouselHome from "../../components/CarouselHome";
 
 export default function Home() {
   const [data, setData] = useState(undefined);
@@ -34,7 +34,9 @@ export default function Home() {
   }, []);
   return (
     <div>
-      <Banner />
+      {/* <Banner /> */}
+      <CarouselHome />
+      {/* <Banner /> */}
       {data && <HomeCategory data={data} />}
       {data && <CategoryShowcase data={data} />}
       <SellerRegister />

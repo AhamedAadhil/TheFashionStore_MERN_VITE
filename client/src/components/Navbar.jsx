@@ -25,7 +25,7 @@ export default function Navbar() {
     >
       {/* header top start */}
 
-      <div className={`header-top  ${socialToggle ? "open" : ""}`}>
+      <div className={`header-top d-md-none  ${socialToggle ? "open" : ""}`}>
         <div className="container">
           <div className="header-top-area">
             <Link className="lab-btn me-3" to="/signup">

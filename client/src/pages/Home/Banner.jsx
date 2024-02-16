@@ -1,3 +1,8 @@
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { IoSearch } from "react-icons/io5";
@@ -10,11 +15,11 @@ const title = (
 );
 
 const desc = "We Have The Largest Collection Of Products";
-const bannerList = [
-  { iconName: "icofont-users-alt-4", text: "1.5 Million Customers" },
-  { iconName: "icofont-notification", text: "More then 2000 Marchent" },
-  { iconName: "icofont-globe", text: "Buy Anything Online" },
-];
+// const bannerList = [
+//   { iconName: "icofont-users-alt-4", text: "1.5 Million Customers" },
+//   { iconName: "icofont-notification", text: "More then 2000 Marchent" },
+//   { iconName: "icofont-globe", text: "Buy Anything Online" },
+// ];
 
 export default function Banner() {
   const [data, setData] = useState(undefined);
@@ -70,9 +75,29 @@ export default function Banner() {
   return (
     <div className="banner-section style-4">
       <div className="container">
-        <div className="banner-content">
-          {title}
-          <form>
+        <div className=" banner-content ">
+          {/* {title} */}
+          <InputGroup
+            className="mb-3 shadow rounded"
+            style={{ height: "50px" }}
+          >
+            <DropdownButton
+              variant="outline-secondary"
+              title="All Category"
+              id="input-group-dropdown-1"
+            >
+              <Dropdown.Item href="#">Action</Dropdown.Item>
+              <Dropdown.Item href="#">Another action</Dropdown.Item>
+              <Dropdown.Item href="#">Something else here</Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item href="#">Separated link</Dropdown.Item>
+            </DropdownButton>
+            <Form.Control
+              aria-label="Search Your Product..."
+              placeholder="Search Your Product..."
+            />
+          </InputGroup>
+          {/* <form>
             <SelectedCategory
               defaultCategory="all"
               onSelect={handleCategorySelect}
@@ -88,8 +113,8 @@ export default function Banner() {
             <button type="submit">
               <IoSearch style={{ fontSize: "24px" }} />
             </button>
-          </form>
-          <p>{desc}</p>
+          </form> */}
+          {/* <p>{desc}</p> */}
           <ul className="lab-ul">
             {searchInput &&
               filteredProducts.map((product, index) => (
