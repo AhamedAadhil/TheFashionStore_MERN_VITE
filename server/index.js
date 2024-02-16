@@ -11,7 +11,10 @@ import brandRoutes from "./routes/brand.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
 import couponRoutes from "./routes/coupon.routes.js";
 import { errorHandleMiddleware } from "./middlewares/errorHandle.middleware.js";
+import path from "path";
 dotenv.config();
+
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -34,6 +37,11 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/brand", brandRoutes);
 app.use("/api/review", reviewRoutes);
 app.use("/api/coupon", couponRoutes);
+
+app.use(express.static(path.join(__dirname, "/client/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
 
 /* ERROR HANDLE MIDDLEWARE */
 app.use(errorHandleMiddleware);
