@@ -3534,6 +3534,9 @@ button {
 .section-header {
   margin-bottom: 50px;
 }
+.section-header-home-card {
+  margin-bottom: 0px;
+}
 .section-header .subtitle {
   font-size: 1.125rem;
   letter-spacing: 5px;
@@ -6306,6 +6309,9 @@ button {
 }
 .sponsor-section {
   padding: 50px 0;
+}
+.brand-section {
+  padding: 0px;
 }
 .category-section
   .section-wrapper
@@ -11546,3 +11552,9 @@ footer.style-2 .footer-top.dark-view * {
     margin-top: 0;
   }
 } /*# sourceMappingURL=style.min.css.map */
+
+.custom-dropdown-button {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #000 !important;
+}

@@ -5,6 +5,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import { FaSearch } from "react-icons/fa";
 
 export default function CarouselHome() {
   const [product, setProduct] = useState(undefined);
@@ -126,9 +127,8 @@ export default function CarouselHome() {
       <div className="container mt-4">
         <div className=" banner-content ">
           {/* <h5>Without a Search How Can You Find Your Product In The Pool?</h5> */}
-          <InputGroup className="shadow rounded" style={{ height: "50px" }}>
+          <InputGroup className="shadow rounded" style={{ height: "45px" }}>
             <DropdownButton
-              variant="outline-primary"
               title={
                 selectedCategory === "all"
                   ? "All Categories"
@@ -149,12 +149,14 @@ export default function CarouselHome() {
               )}
             </DropdownButton>
             <Form.Control
-              aria-label="Search Your Product..."
-              placeholder="Search Your Product..."
               value={searchInput}
               onChange={handleChange}
+              placeholder="Product Name..."
               className="px-3 py-2"
             />
+            <InputGroup.Text className="bg-transparent ">
+              <FaSearch />
+            </InputGroup.Text>
           </InputGroup>
           <ul className="lab-ul">
             {searchInput &&

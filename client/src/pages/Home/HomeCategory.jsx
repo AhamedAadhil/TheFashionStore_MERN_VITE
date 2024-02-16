@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 const btnText = "Shop More >";
 
 // eslint-disable-next-line react/prop-types
-export default function HomeCategory({ data }) {
+export default function HomeCategory({ data: category }) {
   HomeCategory.propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
@@ -20,7 +20,7 @@ export default function HomeCategory({ data }) {
     ).isRequired,
   };
 
-  if (data === undefined || !Array.isArray(data)) {
+  if (category === undefined || !Array.isArray(category)) {
     return null;
   }
 
@@ -50,7 +50,7 @@ export default function HomeCategory({ data }) {
               },
             }}
           >
-            {data.map((category, index) => (
+            {category.map((category, index) => (
               <SwiperSlide key={index}>
                 <Link to="/shop" className="category-item">
                   <div className="category-inner">
@@ -74,7 +74,7 @@ export default function HomeCategory({ data }) {
                     {/* <p>Hello</p> */}
                   </div>
                   <p
-                    className="px-2"
+                    className="text-center"
                     style={{
                       fontWeight: "600",
                       fontSize: "15px",

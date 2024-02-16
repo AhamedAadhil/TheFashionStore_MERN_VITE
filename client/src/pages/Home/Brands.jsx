@@ -29,9 +29,10 @@ export default function Brands() {
   }, []);
 
   return (
-    <div className="sponsor-section section-bg">
+    <div className="brand-section ">
       <div className="container">
         <div className="section-wrapper">
+          <h5 style={{ fontSize: "1.2rem", fontWeight: "600" }}>Brands</h5>
           <div className="sponsor-slider">
             <Swiper
               slidesPerView={4}
@@ -62,7 +63,12 @@ export default function Brands() {
                   <SwiperSlide key={index}>
                     <div className="sponser-item">
                       <div className="sponser-thumb">
-                        <img src={item.logo} alt={item.title} />
+                        <img
+                          src={item.logo}
+                          alt={item.title}
+                          height="auto"
+                          width="auto"
+                        />
                       </div>
                     </div>
                   </SwiperSlide>

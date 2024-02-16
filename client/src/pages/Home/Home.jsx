@@ -8,9 +8,10 @@ import BecomeASeller from "./BecomeASeller";
 import AppSection from "./AppSection";
 import Brands from "./Brands";
 import CarouselHome from "../../components/CarouselHome";
+import NewProducts from "./NewProducts";
 
 export default function Home() {
-  const [data, setData] = useState(undefined);
+  const [category, setData] = useState(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,13 +38,14 @@ export default function Home() {
       {/* <Banner /> */}
       <CarouselHome />
       {/* <Banner /> */}
-      {data && <HomeCategory data={data} />}
-      {data && <CategoryShowcase data={data} />}
+      {category && <HomeCategory data={category} />}
+      <NewProducts />
+      <Brands />
+      {/* {data && <CategoryShowcase data={data} />} */}
       <SellerRegister />
       {/* <WhoWeAre /> */}
       <BecomeASeller />
       <AppSection />
-      <Brands />
     </div>
   );
 }

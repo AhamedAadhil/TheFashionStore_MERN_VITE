@@ -91,6 +91,7 @@ export const getAllProducts = async (req, res, next) => {
       "color",
       "category",
       "seller",
+      "createdAt",
     ];
 
     // Iterate over allowed parameters and include them in the query if they exist in req.query
@@ -106,6 +107,12 @@ export const getAllProducts = async (req, res, next) => {
             query.price = { ...query.price, $lt: parseFloat(priceParam.lt) };
           if (priceParam.lte)
             query.price = { ...query.price, $lte: parseFloat(priceParam.lte) };
+        }
+        if (param === "createdAt") {
+          // If 'createdAt' parameter exists, calculate the date 4 days ago
+          const fourDaysAgo = new Date();
+          fourDaysAgo.setDate(fourDaysAgo.getDate() - 4);
+          query[param] = { $gte: fourDaysAgo }; // Add condition for 'createdAt' field
         } else {
           // For other parameters, directly include them in the query
           query[param] = req.query[param];
