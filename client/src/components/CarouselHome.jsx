@@ -9,6 +9,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 export default function CarouselHome() {
   const [product, setProduct] = useState(undefined);
   const [category, setCategory] = useState(undefined);
+  const [carousels, setCarousels] = useState(undefined);
   const [searchInput, setSearchInput] = useState("");
   const [filteredProducts, setfilteredProducts] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -73,8 +74,27 @@ export default function CarouselHome() {
         console.log(error.message);
       }
     };
+    const fetchCarousels = async () => {
+      try {
+        const response = await fetch("/api/admin/actions/getAllCarousels", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const dataFromResponse = await response.json();
+        if (!response.ok) {
+          console.log(response.message);
+        }
+        console.log(dataFromResponse);
+        setCarousels(dataFromResponse);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
     fetchProduct();
     fetchCategory();
+    fetchCarousels();
   }, [selectedCategory]);
 
   const [index, setIndex] = useState(0);
@@ -92,27 +112,16 @@ export default function CarouselHome() {
         className="px-4"
         controls={false}
       >
-        <Carousel.Item>
-          <img
-            src="/src/assets/images/pageheader/cat-1.jpg"
-            alt=""
-            className="d-block w-100"
-          />
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            src="/src/assets/images/pageheader/cat-1.jpg"
-            alt=""
-            className="d-block w-100"
-          />
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            src="/src/assets/images/pageheader/cat-1.jpg"
-            alt=""
-            className="d-block w-100"
-          />
-        </Carousel.Item>
+        {carousels &&
+          carousels.map((carousel, index) => (
+            <Carousel.Item key={index}>
+              <img
+                src={carousel.imageUrl}
+                alt={carousel.name}
+                className="d-block w-100"
+              />
+            </Carousel.Item>
+          ))}
       </Carousel>
       <div className="container mt-4">
         <div className=" banner-content ">

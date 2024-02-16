@@ -1,6 +1,7 @@
 import Admin from "../models/admin.model.js";
 import Seller from "../models/seller.model.js";
 import Buyer from "../models/buyer.model.js";
+import Carousel from "../models/carousel.model.js";
 import bcryptjs from "bcryptjs";
 import { generateRefreshToken } from "../config/refreshToken.js";
 import { generateToken } from "../config/jwtToken.js";
@@ -597,6 +598,33 @@ export const verifySeller = async (req, res, next) => {
           isVerified ? "Verified" : "Unverified"
         } Successfully!`
       );
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* CREATE CAROUSEL */
+export const createCarousel = async (req, res, next) => {
+  try {
+    const carousel = new Carousel({
+      imageUrl: req.body.imageUrl,
+      name: req.body.name,
+    });
+    await carousel.save();
+    res.status(201).json(carousel);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET ALL CAROUSELS */
+export const getAllCarousels = async (req, res, next) => {
+  try {
+    const allCarousels = await Carousel.find();
+    if (!allCarousels) {
+      return next(errorUtil(404, "No Carousels Found!"));
+    }
+    res.status(200).json(allCarousels);
   } catch (error) {
     next(error);
   }

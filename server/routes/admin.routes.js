@@ -21,6 +21,8 @@ import {
   acceptProductRequest,
   declineProductRequest,
   verifySeller,
+  createCarousel,
+  getAllCarousels,
 } from "../controller/admin.controller.js";
 import { isAdmin } from "../middlewares/authentication.middleware.js";
 
@@ -75,5 +77,9 @@ router.put(
   isAdmin,
   declineProductRequest
 );
+
+/* CAROUSEL CREATE */
+router.post("/actions/createCarousel", isAdmin, createCarousel);
+router.get("/actions/getAllCarousels", getAllCarousels);
 
 export default router;
