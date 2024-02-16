@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { TbCategory } from "react-icons/tb";
 import PropTypes from "prop-types";
 
-const subTitle = "Choose Any Product";
-const title = "Buy Everything With Us";
-const btnText = "Get Started Now";
+// const subTitle = "Choose Any Product";
+// const title = "Buy Everything With Us";
+const btnText = "Shop More >";
 
 // eslint-disable-next-line react/prop-types
 export default function HomeCategory({ data }) {
@@ -25,13 +25,13 @@ export default function HomeCategory({ data }) {
   }
 
   return (
-    <div className="category-section style-4 padding-tb">
+    <div className="category-section style-4 py-4 ">
       <div className="container">
         {/* Section header */}
-        {/* <div className="section-header text-center">
-          <span className="subtitle">{subTitle}</span>
-          <h2 className="title">{title}</h2>
-        </div> */}
+        {/* <div className="section-header text-center"> */}
+        {/* <span className="subtitle pb-0">Categories</span>
+          <h2 className="title">Categories</h2> */}
+        {/* </div> */}
         {/* Section card */}
         <div className="section-wrapper">
           <Swiper
@@ -57,22 +57,35 @@ export default function HomeCategory({ data }) {
                     <div className="category-thumb">
                       <img src={category.logo} alt={category.title} />
                     </div>
-                    <div className="category-content">
-                      <div className="cate-icons">
+                    {/* <div className="category-content">
+                      <div
+                        className="cate-icons"
+                        style={{
+                          display: window.innerWidth > 768 ? "block" : "none",
+                        }}
+                      >
                         <TbCategory
                           style={{ fontSize: "14px", color: "#ffc107" }}
                         />
                       </div>
+
                       <h6>{category.title}</h6>
-                    </div>
+                    </div> */}
+                    {/* <p>Hello</p> */}
                   </div>
+                  <p
+                    className="px-2"
+                    style={{ fontWeight: "600", fontSize: "15px" }}
+                  >
+                    {category.title}
+                  </p>
                 </Link>
               </SwiperSlide>
             ))}
           </Swiper>
           {/* btn get started */}
-          <div className="text-center mt-5">
-            <Link to="/shop" className="lab-btn">
+          <div className="text-center mt-1">
+            <Link to="/shop" className="lab-btn-category">
               <span>{btnText}</span>
             </Link>
           </div>

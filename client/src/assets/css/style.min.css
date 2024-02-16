@@ -3553,6 +3553,16 @@ button {
   font-size: 1rem;
   font-weight: 700;
 }
+
+.lab-btn-category {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  float: right;
+}
+
 .lab-btn span {
   color: #fff;
 }

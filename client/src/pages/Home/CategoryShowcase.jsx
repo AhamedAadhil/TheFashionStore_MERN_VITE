@@ -59,7 +59,7 @@ export default function CategoryShowcase({ data }) {
   };
 
   return (
-    <div className="course-section style-3 padding-tb">
+    <div className="course-section style-3 pt-4">
       {/* shapes */}
       <div className="course-shape one">
         <img src="/src/assets/images/shape-img/icon/01.png" alt="" />
