@@ -14,7 +14,7 @@ export default function CategoryShowcase({ data }) {
     ).isRequired,
   };
 
-  const title = "Our Products";
+  const title = "New Collections";
 
   const [items, setItems] = useState([]);
   const [originalItems, setOriginalItems] = useState([]);
@@ -71,7 +71,7 @@ export default function CategoryShowcase({ data }) {
       <div className="container">
         {/* section header */}
         <div className="section-header">
-          <h2 className="title">{title}</h2>
+          <h5 className="title">{title}</h5>
           <div className="course-filter-group">
             <ul className="lab-ul ">
               <li onClick={() => filterItem("All")}>All</li>

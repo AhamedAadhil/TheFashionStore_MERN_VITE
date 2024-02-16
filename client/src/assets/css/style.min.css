@@ -3561,6 +3561,7 @@ button {
   font-size: 0.8rem;
   font-weight: 700;
   float: right;
+  padding-bottom: 3px;
 }
 
 .lab-btn span {

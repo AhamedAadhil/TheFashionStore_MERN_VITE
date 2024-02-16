@@ -75,7 +75,10 @@ export default function HomeCategory({ data }) {
                   </div>
                   <p
                     className="px-2"
-                    style={{ fontWeight: "600", fontSize: "15px" }}
+                    style={{
+                      fontWeight: "600",
+                      fontSize: "15px",
+                    }}
                   >
                     {category.title}
                   </p>
@@ -84,11 +87,11 @@ export default function HomeCategory({ data }) {
             ))}
           </Swiper>
           {/* btn get started */}
-          <div className="text-center mt-1">
-            <Link to="/shop" className="lab-btn-category">
-              <span>{btnText}</span>
-            </Link>
-          </div>
+          {/* <div className="text-center"> */}
+          <Link to="/shop" className="lab-btn-category ">
+            <span>{btnText}</span>
+          </Link>
+          {/* </div> */}
         </div>
       </div>
     </div>
