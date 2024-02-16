@@ -125,7 +125,7 @@ export default function CarouselHome() {
       </Carousel>
       <div className="container mt-4">
         <div className=" banner-content ">
-          <h5>Without a Search How Can You Find Your Product In The Pool?</h5>
+          {/* <h5>Without a Search How Can You Find Your Product In The Pool?</h5> */}
           <InputGroup className="shadow rounded" style={{ height: "50px" }}>
             <DropdownButton
               variant="outline-primary"

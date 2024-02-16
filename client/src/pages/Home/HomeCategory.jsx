@@ -28,10 +28,10 @@ export default function HomeCategory({ data }) {
     <div className="category-section style-4 padding-tb">
       <div className="container">
         {/* Section header */}
-        <div className="section-header text-center">
+        {/* <div className="section-header text-center">
           <span className="subtitle">{subTitle}</span>
           <h2 className="title">{title}</h2>
-        </div>
+        </div> */}
         {/* Section card */}
         <div className="section-wrapper">
           <Swiper
