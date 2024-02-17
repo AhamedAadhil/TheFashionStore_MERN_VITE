@@ -29,7 +29,7 @@ export default function Brands() {
   }, []);
 
   return (
-    <div className="brand-section ">
+    <div className="brand-section py-4">
       <div className="container">
         <div className="section-wrapper">
           <h5

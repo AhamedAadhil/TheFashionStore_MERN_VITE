@@ -29,7 +29,7 @@ export default function BecomeASeller() {
     fetchData();
   }, []);
 
-  const subtitle = "Why Choose Us";
+  const subtitle = "Join as Merchant?";
   const title = "Become a Seller";
   const desc =
     "Take a Step to Register in Our Platform as a Seller and Grow Your Business With Us, Just Click the Register Button To Continue Your Registration Process";
@@ -53,43 +53,47 @@ export default function BecomeASeller() {
     },
   ];
   return (
-    <div className="instructor-section style-2 padding-tb section-bg-ash">
+    <div className="instructor-section style-2 pt-2 section-bg-ash">
       <div className="container">
         <div className="section-wrapper">
-          <div className="row g-4 justify-content-center align-items-center row-cols-1 row-cols-md-3 row-col-xl-3">
+          <div className="row justify-content-center align-items-center row-cols-1 row-cols-md-2 row-col-xl-1">
+            {/* Count Items */}
             <div className="col">
-              {countList.map((val, i) => (
-                <div key={i} className="count-item">
-                  <div className="count-inner">
-                    <div className="count-icon">
-                      <i>{val.icon}</i>
-                    </div>
-                    <div className="count-content">
-                      <h2>
-                        <span className="count">
-                          <Countup end={val.count} />
-                        </span>
-                        <span>+</span>
-                      </h2>
-                      <p>{val.text}</p>
+              <div className="d-flex flex-wrap justify-content-center">
+                {countList.map((val, i) => (
+                  <div key={i} className="col-md-4 mb-3">
+                    <div className="count-item text-center">
+                      <div className="count-inner">
+                        <div className="count-content text-center px-3">
+                          <div
+                            className="text-white"
+                            style={{ fontSize: "22px" }}
+                          >
+                            {" "}
+                            {val.icon}
+                          </div>
+                          <h2 className="count mb-1">
+                            <Countup end={val.count} />
+                          </h2>
+                          <p className="mb-0" style={{ fontSize: "14px" }}>
+                            {val.text}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-            <div className="col">
-              <div className="instructor-content">
+            {/* Content for Becoming a Seller */}
+            <div className="col mb-3">
+              <div className="instructor-content text-center">
                 <span className="subtitle">{subtitle}</span>
                 <h2 className="title">{title}</h2>
                 <p>{desc}</p>
                 <Link to="/seller/register" className="lab-btn">
                   {btnText}
                 </Link>
-              </div>
-            </div>
-            <div className="col">
-              <div className="instructor-thumb">
-                <img src="/src/assets/images/instructor/01.png" alt="seller" />
               </div>
             </div>
           </div>

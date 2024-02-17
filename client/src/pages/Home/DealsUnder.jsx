@@ -54,7 +54,7 @@ export default function DealsUnder() {
                 <div>
                   <div className="category-thumb">
                     <Image
-                      src="https://img.freepik.com/free-vector/dollar-one-deal-sale-banner_1017-31780.jpg?w=740&t=st=1708148849~exp=1708149449~hmac=8b0c1d338515c6347d9eb19236c58d319f77db50b5ec1e02d4743d9ed95813a4"
+                      src="https://i.ibb.co/7K77DLh/deal-2000.jpg"
                       alt="alt"
                     />
                   </div>
