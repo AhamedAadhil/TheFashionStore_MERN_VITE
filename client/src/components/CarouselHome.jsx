@@ -110,7 +110,6 @@ export default function CarouselHome() {
         style={{ paddingTop: "80px" }}
         activeIndex={index}
         onSelect={handleSelect}
-        className="px-4"
         controls={false}
       >
         {carousels &&

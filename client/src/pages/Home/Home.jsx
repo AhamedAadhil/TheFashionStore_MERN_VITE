@@ -11,6 +11,7 @@ import CarouselHome from "../../components/CarouselHome";
 import NewProducts from "./NewProducts";
 import DealsUnder from "./DealsUnder";
 import BeautyCollections from "./BeautyCollections";
+import HotCollections from "./HotCollections";
 
 export default function Home() {
   const [category, setCategory] = useState(undefined);
@@ -69,6 +70,7 @@ export default function Home() {
       <BeautyCollections />
       <Brands />
       <DealsUnder />
+      <HotCollections />
       {/* {data && <CategoryShowcase data={data} />} */}
       {/* <SellerRegister /> */}
       {/* <WhoWeAre /> */}

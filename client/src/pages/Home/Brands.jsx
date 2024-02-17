@@ -32,12 +32,7 @@ export default function Brands() {
     <div className="brand-section py-4">
       <div className="container">
         <div className="section-wrapper">
-          <h5
-            style={{ fontSize: "1.2rem", fontWeight: "600" }}
-            className="px-2"
-          >
-            Brands
-          </h5>
+          <h6 className="px-2 mb-2">Brands</h6>
           <div className="sponsor-slider">
             <Swiper
               slidesPerView={4}

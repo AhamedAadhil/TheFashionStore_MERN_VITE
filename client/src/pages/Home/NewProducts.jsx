@@ -26,12 +26,7 @@ export default function NewProducts({ data: newProducts }) {
     <div className="container mt-4 shadow">
       <div className="section-wrapper">
         <div className="section-header-home-card d-flex justify-content-between align-items-center mb-2">
-          <h5
-            className="title mb-0 mx-2  mt-2"
-            style={{ fontSize: "1.2rem", fontWeight: "600" }}
-          >
-            New Collections
-          </h5>
+          <h6 className="title mb-2 mt-2 px-2">New Collections</h6>
           <div>
             <span
               className="mx-3"
@@ -62,20 +57,22 @@ export default function NewProducts({ data: newProducts }) {
                   </Card.Title>
                   {/* <Card.Text>{product.description}</Card.Text> */}
                   <Card.Text style={{ fontSize: "1rem" }} className="px-2">
-                    <span style={{ color: "blue" }}>Rs. {product.price}</span>
-                    <span
-                      className="px-2 rounded"
-                      style={{
-                        float: "right",
+                    <div className="pb-1">
+                      <span style={{ color: "blue" }}>Rs. {product.price}</span>
+                      <span
+                        className="px-2 rounded"
+                        style={{
+                          float: "right",
 
-                        border: "0.1rem solid green",
-                        color: "green",
-                        fontSize: "0.7rem",
-                      }}
-                    >
-                      New
-                    </span>
-                    <br />
+                          border: "0.1rem solid green",
+                          color: "green",
+                          fontSize: "0.7rem",
+                        }}
+                      >
+                        New
+                      </span>
+                    </div>
+
                     <span style={{ fontSize: "0.8rem" }}>
                       By: {product.seller.shopname}
                     </span>
