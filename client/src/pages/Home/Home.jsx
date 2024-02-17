@@ -9,12 +9,14 @@ import AppSection from "./AppSection";
 import Brands from "./Brands";
 import CarouselHome from "../../components/CarouselHome";
 import NewProducts from "./NewProducts";
+import DealsUnder from "./DealsUnder";
 
 export default function Home() {
-  const [category, setData] = useState(undefined);
+  const [category, setCategory] = useState(undefined);
+  const [newProducts, setNewProducts] = useState(undefined);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCategory = async () => {
       try {
         const response = await fetch("/api/category/getAllCategory", {
           method: "GET",
@@ -26,12 +28,35 @@ export default function Home() {
         if (!response.ok) {
           console.log(response.message);
         }
-        setData(dataFromResponse);
+        setCategory(dataFromResponse);
       } catch (error) {
         console.log(error.message);
       }
     };
-    fetchData();
+    const fetchNewProducts = async () => {
+      const fourDaysAgo = new Date();
+      fourDaysAgo.setDate(fourDaysAgo.getDate() - 4);
+      try {
+        const response = await fetch(
+          `/api/product/allProducts?createdAt=${fourDaysAgo.toISOString()}&limt=6`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const dataFromResponse = await response.json();
+        if (!response.ok) {
+          console.log(dataFromResponse.message);
+        }
+        setNewProducts(dataFromResponse);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchCategory();
+    fetchNewProducts();
   }, []);
   return (
     <div>
@@ -39,10 +64,11 @@ export default function Home() {
       <CarouselHome />
       {/* <Banner /> */}
       {category && <HomeCategory data={category} />}
-      <NewProducts />
+      {newProducts && <NewProducts data={newProducts} />}
       <Brands />
+      <DealsUnder />
       {/* {data && <CategoryShowcase data={data} />} */}
-      <SellerRegister />
+      {/* <SellerRegister /> */}
       {/* <WhoWeAre /> */}
       <BecomeASeller />
       <AppSection />

@@ -1,7 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Link } from "react-router-dom";
-import { TbCategory } from "react-icons/tb";
 import PropTypes from "prop-types";
 
 // const subTitle = "Choose Any Product";

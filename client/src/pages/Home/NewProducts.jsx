@@ -1,35 +1,26 @@
-import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 
-export default function NewProducts() {
-  const [data, setData] = useState([]);
+export default function NewProducts({ data: newProducts }) {
+  NewProducts.propTypes = {
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        imageUrls: PropTypes.array.isRequired,
+        description: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        seller: PropTypes.shape({
+          shopname: PropTypes.string.isRequired,
+        }).isRequired,
+      })
+    ).isRequired,
+  };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const fourDaysAgo = new Date();
-      fourDaysAgo.setDate(fourDaysAgo.getDate() - 4);
-      try {
-        const response = await fetch(
-          `/api/product/allProducts?createdAt=${fourDaysAgo.toISOString()}&limt=6`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const dataFromResponse = await response.json();
-        if (!response.ok) {
-          console.log(dataFromResponse.message);
-        }
-        setData(dataFromResponse);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    fetchProducts();
-  }, []);
+  if (newProducts === undefined || !Array.isArray(newProducts)) {
+    return null;
+  }
 
   return (
     <div className="container mt-4">
@@ -51,7 +42,7 @@ export default function NewProducts() {
           </div>
         </div>
         <div className="row g-1 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-md-3 row-cols-2 course-filter">
-          {data.map((product, index) => (
+          {newProducts.map((product, index) => (
             <div key={index} className="col mb-3">
               {/* Add margin-bottom to create space between cards */}
               <Card style={{ width: "auto" }} className="mx-2 shadow">
