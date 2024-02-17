@@ -129,6 +129,7 @@ export default function CarouselHome() {
           {/* <h5>Without a Search How Can You Find Your Product In The Pool?</h5> */}
           <InputGroup className="shadow rounded" style={{ height: "45px" }}>
             <DropdownButton
+              variant="secondary"
               title={
                 selectedCategory === "all"
                   ? "All Categories"

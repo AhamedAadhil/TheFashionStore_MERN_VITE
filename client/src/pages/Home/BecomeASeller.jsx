@@ -53,7 +53,7 @@ export default function BecomeASeller() {
     },
   ];
   return (
-    <div className="instructor-section style-2 section-bg-ash">
+    <div className="instructor-section style-2 section-bg-ash my-3">
       <div className="container">
         <div className="section-wrapper">
           <div className="row justify-content-center align-items-center row-cols-1 row-cols-md-2 row-col-xl-1">

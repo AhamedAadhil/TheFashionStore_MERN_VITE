@@ -162,7 +162,7 @@ export default function Footer() {
       {/* Footer bottom */}
       <div className="footer-bottom">
         <div className="container">
-          <div className="section-wrapper">
+          <div className="section-wrapper justify-content-center">
             <p>
               &copy; {new Date().getFullYear()} <Link to="/">TFS</Link>Designed
               by{" "}
@@ -170,13 +170,13 @@ export default function Footer() {
                 Ahamed Aathil
               </Link>
             </p>
-            <div className="footer-bottom-list">
+            {/* <div className="footer-bottom-list">
               {footerbottomList.map((val, i) => (
                 <Link to="#" target="_blank" key={i}>
                   {val.text}
                 </Link>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -6466,14 +6466,6 @@ button {
   .category-inner::after {
   top: 0;
   left: 0;
-  background-image: linear-gradient(
-    to top,
-    #051937bd,
-    #0519379e,
-    #05193759,
-    #05193703,
-    #05193700
-  );
 }
 .category-section.style-4
   .section-wrapper

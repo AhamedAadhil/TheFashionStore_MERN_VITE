@@ -54,17 +54,44 @@ export default function NewProducts({ data: newProducts }) {
                 />
                 <Card.Body className="p-2">
                   {/* Add padding to the card body */}
-                  <Card.Title>{product.name}</Card.Title>
-                  <Card.Text>{product.description}</Card.Text>
+                  <Card.Title
+                    style={{ fontSize: "1rem", fontWeight: "600" }}
+                    className="text-center"
+                  >
+                    {product.name}
+                  </Card.Title>
+                  {/* <Card.Text>{product.description}</Card.Text> */}
+                  <Card.Text style={{ fontSize: "1rem" }} className="px-2">
+                    <span style={{ color: "blue" }}>Rs. {product.price}</span>
+                    <span
+                      className="px-2 rounded"
+                      style={{
+                        float: "right",
+
+                        border: "0.1rem solid green",
+                        color: "green",
+                        fontSize: "0.7rem",
+                      }}
+                    >
+                      New
+                    </span>
+                    <br />
+                    <span style={{ fontSize: "0.8rem" }}>
+                      By: {product.seller.shopname}
+                    </span>
+                  </Card.Text>
+                  {/* <Card.Text style={{ fontSize: "1rem" }} className="px-2">
+                    By: {product.seller.shopname}
+                  </Card.Text> */}
                 </Card.Body>
-                <ListGroup className="list-group-flush border-0">
+                {/* <ListGroup className="list-group-flush border-0">
                   <ListGroup.Item className="border-0">
-                    {product.price}
+                    Rs. {product.price}
                   </ListGroup.Item>
                   <ListGroup.Item className="border-0">
                     {product.seller.shopname}
                   </ListGroup.Item>
-                </ListGroup>
+                </ListGroup> */}
               </Card>
             </div>
           ))}

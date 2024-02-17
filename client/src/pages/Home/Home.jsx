@@ -10,6 +10,7 @@ import Brands from "./Brands";
 import CarouselHome from "../../components/CarouselHome";
 import NewProducts from "./NewProducts";
 import DealsUnder from "./DealsUnder";
+import BeautyCollections from "./BeautyCollections";
 
 export default function Home() {
   const [category, setCategory] = useState(undefined);
@@ -65,13 +66,14 @@ export default function Home() {
       {/* <Banner /> */}
       {category && <HomeCategory data={category} />}
       {newProducts && <NewProducts data={newProducts} />}
+      <BeautyCollections />
       <Brands />
       <DealsUnder />
       {/* {data && <CategoryShowcase data={data} />} */}
       {/* <SellerRegister /> */}
       {/* <WhoWeAre /> */}
       <BecomeASeller />
-      <AppSection />
+      {/* <AppSection /> */}
     </div>
   );
 }
