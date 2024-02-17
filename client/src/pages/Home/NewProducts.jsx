@@ -23,11 +23,11 @@ export default function NewProducts({ data: newProducts }) {
   }
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 shadow">
       <div className="section-wrapper">
         <div className="section-header-home-card d-flex justify-content-between align-items-center mb-2">
           <h5
-            className="title mb-0 mx-2"
+            className="title mb-0 mx-2  mt-2"
             style={{ fontSize: "1.2rem", fontWeight: "600" }}
           >
             New Collections

@@ -13,7 +13,7 @@ export default function DealsUnder() {
       }}
     >
       <div className="container">
-        <h6 className="px-2">Explore More Deals!</h6>
+        <h6 className="px-2">Explore More Deals</h6>
         {/* Section header */}
         {/* <div className="section-header text-center"> */}
         {/* <span className="subtitle pb-0">Categories</span>

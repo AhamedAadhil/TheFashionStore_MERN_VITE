@@ -32,7 +32,7 @@ export default function BecomeASeller() {
   const subtitle = "Join as Merchant?";
   const title = "Become a Seller";
   const desc =
-    "Take a Step to Register in Our Platform as a Seller and Grow Your Business With Us, Just Click the Register Button To Continue Your Registration Process";
+    "Register as a seller on our platform to grow your business with ease. Click the register button to get started with your registration process.";
   const btnText = "Register Now!";
 
   const countList = [
@@ -53,7 +53,7 @@ export default function BecomeASeller() {
     },
   ];
   return (
-    <div className="instructor-section style-2 pt-2 section-bg-ash">
+    <div className="instructor-section style-2 section-bg-ash">
       <div className="container">
         <div className="section-wrapper">
           <div className="row justify-content-center align-items-center row-cols-1 row-cols-md-2 row-col-xl-1">
@@ -61,21 +61,25 @@ export default function BecomeASeller() {
             <div className="col">
               <div className="d-flex flex-wrap justify-content-center">
                 {countList.map((val, i) => (
-                  <div key={i} className="col-md-4 mb-3">
+                  <div key={i} className="col-md-4">
                     <div className="count-item text-center">
                       <div className="count-inner">
                         <div className="count-content text-center px-3">
                           <div
                             className="text-white"
-                            style={{ fontSize: "22px" }}
+                            style={{ fontSize: "1.2rem" }}
                           >
                             {" "}
                             {val.icon}
                           </div>
-                          <h2 className="count mb-1">
+                          <h2
+                            className="count mb-1"
+                            style={{ fontSize: "1.4rem" }}
+                          >
                             <Countup end={val.count} />
+                            <span>+</span>
                           </h2>
-                          <p className="mb-0" style={{ fontSize: "14px" }}>
+                          <p className="mb-0" style={{ fontSize: "0.8rem" }}>
                             {val.text}
                           </p>
                         </div>
@@ -86,12 +90,18 @@ export default function BecomeASeller() {
               </div>
             </div>
             {/* Content for Becoming a Seller */}
-            <div className="col mb-3">
+            <div className="col mb-4">
               <div className="instructor-content text-center">
-                <span className="subtitle">{subtitle}</span>
-                <h2 className="title">{title}</h2>
-                <p>{desc}</p>
-                <Link to="/seller/register" className="lab-btn">
+                <span className="subtitle" style={{ fontSize: "0.8rem" }}>
+                  {subtitle}
+                </span>
+                <h3 className="title">{title}</h3>
+                <p style={{ fontSize: "0.8rem", fontWeight: "600" }}>{desc}</p>
+                <Link
+                  to="/seller/register"
+                  className="lab-btn"
+                  style={{ fontSize: "0.8rem" }}
+                >
                   {btnText}
                 </Link>
               </div>
