@@ -39,9 +39,11 @@ export default function SingleProduct() {
   const [productColor, setProductColor] = useState("Select Color");
   const [productSize, setProductSize] = useState("Select Size");
 
-  const handleSizeChange = (event) => {
-    setProductSize(event.target.value); // Set the selected product size to the state variable
+  const handleSizeChange = (size) => {
+    setProductSize(size); // Set the selected product size to the state variable
   };
+
+  console.log(productSize);
 
   const handleColorChange = (event) => {
     setProductColor(event.target.value); // Set the selected product size to the state variable
@@ -65,7 +67,7 @@ export default function SingleProduct() {
     <div className="shop-single padding-tb aside-bg">
       <div className="container">
         <div className="row justify-content-center">
-          <div className="col-lg-12 col-12">
+          <div className="col-lg-10 col-12">
             <article>
               <div className="product-details">
                 <div className="row align-items-center">
@@ -113,29 +115,48 @@ export default function SingleProduct() {
                         </p>
 
                         <h4>Rs. {product?.price}</h4>
-                        <h6> {product?.brand.title}</h6>
-                        <p>{product?.description}</p>
+
+                        <h6>
+                          {" "}
+                          <b>Brand:</b> {product?.brand.title.toUpperCase()}
+                        </h6>
+                        <h6>
+                          <b> Quality:</b>
+                          {product?.quality === "a_grade"
+                            ? "A-GRADE"
+                            : "ORIGINAL"}
+                        </h6>
+                        <h6>
+                          <b>Seller:</b> {product?.seller.shopname}
+                        </h6>
+
+                        <p>
+                          <b>Description:</b> {product?.description}
+                        </p>
                       </div>
                       {/* cart component */}
                       <div>
                         <form action="">
                           {/* select size */}
-                          <div className="select-product size">
-                            <select
-                              onChange={handleSizeChange}
-                              value={productSize}
-                            >
-                              <option value="Select Size" disabled>
-                                Select Size
-                              </option>
+                          <div className="select-product size d-flex align-items-center">
+                            <p className="m-0 me-2">Size:</p>
+                            <div className="btn-group gap-2">
                               {product &&
                                 product.size.map((size, i) => (
-                                  <option value={size} key={i}>
+                                  <button
+                                    type="button"
+                                    key={i}
+                                    className={`btn btn-outline-secondary ${
+                                      size === productSize
+                                        ? "btn-selected-size"
+                                        : ""
+                                    }`}
+                                    onClick={() => handleSizeChange(size)}
+                                  >
                                     {size}
-                                  </option>
+                                  </button>
                                 ))}
-                            </select>
-                            <i className="icofont-rounded-down"></i>
+                            </div>
                           </div>
 
                           {/* select color */}

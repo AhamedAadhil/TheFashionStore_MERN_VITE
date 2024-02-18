@@ -8941,7 +8941,7 @@ button {
   left: 0;
 }
 .shop-single .product-details .post-content {
-  padding-top: 30px;
+  padding-top: 0px;
 }
 @media (min-width: 768px) {
   .shop-single .product-details .post-content {
@@ -11549,4 +11549,9 @@ footer.style-2 .footer-top.dark-view * {
   background-color: transparent !important;
   border-color: transparent !important;
   color: #000 !important;
+}
+
+.btn-selected-size {
+  background-color: orange; /* Apply a different background color for selected size */
+  color: white; /* Apply white text color for better visibility */
 }
