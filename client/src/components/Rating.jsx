@@ -37,7 +37,7 @@ export default function Rating({ product }) {
     );
 
     return (
-      <div className="d-flex align-items-center justify-content-center">
+      <div className="">
         {filledStars.map((star, index) => (
           <FaStar key={`filled-${index}`} color="#ffc107" />
         ))}

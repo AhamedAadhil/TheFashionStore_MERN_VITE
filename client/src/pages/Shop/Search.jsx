@@ -9,7 +9,6 @@ export default function Search({ gridList }) {
   useEffect(() => {
     const fetchProducts = async () => {
       const api = `/api/product/allProducts?description=${searchTerm.toLowerCase()}`;
-      console.log(api);
       try {
         const response = await fetch(api, {
           method: "GET",
@@ -29,13 +28,9 @@ export default function Search({ gridList }) {
     fetchProducts();
   }, [searchTerm]);
 
-  console.log(products);
-  console.log(searchTerm);
-
-  const filteredProducts = products.filter((product) => {
-    product.description.toLowerCase().includes(searchTerm.toLowerCase());
-  });
-  console.log(filteredProducts);
+  // const filteredProducts = products.filter((product) => {
+  //   product.description.toLowerCase().includes(searchTerm.toLowerCase());
+  // });
 
   return (
     <div className="widget widget-search">

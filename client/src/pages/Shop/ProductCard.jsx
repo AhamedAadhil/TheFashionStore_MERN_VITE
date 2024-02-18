@@ -39,7 +39,7 @@ export default function ProductCard({ gridList, products }) {
                   <h5>
                     <Link to={`/shop/${product._id}`}>{product.name}</Link>
                   </h5>
-                  <p className="productRating">
+                  <p className="productRating d-flex align-items-center justify-content-center">
                     <Rating product={product} />
                   </p>
                   <h6>Rs. {product.price}</h6>
