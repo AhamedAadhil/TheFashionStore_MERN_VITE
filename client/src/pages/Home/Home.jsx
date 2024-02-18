@@ -14,8 +14,8 @@ import BeautyCollections from "./BeautyCollections";
 import HotCollections from "./HotCollections";
 
 export default function Home() {
-  const [category, setCategory] = useState(undefined);
-  const [newProducts, setNewProducts] = useState(undefined);
+  const [category, setCategory] = useState([]);
+  const [newProducts, setNewProducts] = useState([]);
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -40,7 +40,7 @@ export default function Home() {
       fourDaysAgo.setDate(fourDaysAgo.getDate() - 4);
       try {
         const response = await fetch(
-          `/api/product/allProducts?createdAt=${fourDaysAgo.toISOString()}&limt=6`,
+          `/api/product/allProducts?createdAt=${fourDaysAgo.toISOString()}&limit=6`,
           {
             method: "GET",
             headers: {
@@ -60,13 +60,16 @@ export default function Home() {
     fetchCategory();
     fetchNewProducts();
   }, []);
+
+  console.log(newProducts);
+
   return (
-    <div>
+    <div className="min-vh-100">
       {/* <Banner /> */}
       <CarouselHome />
       {/* <Banner /> */}
       {category && <HomeCategory data={category} />}
-      {newProducts && <NewProducts data={newProducts} />}
+      {newProducts && <NewProducts data={newProducts.products} />}
       <BeautyCollections />
       <Brands />
       <DealsUnder />

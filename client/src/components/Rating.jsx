@@ -7,6 +7,7 @@ export default function Rating({ product }) {
     product: PropTypes.shape({
       _id: PropTypes.string.isRequired,
       stars: PropTypes.number.isRequired,
+      reviewhistory: PropTypes.array.isRequired, // Assuming reviewhistory is an array
     }).isRequired,
   };
 
@@ -36,16 +37,17 @@ export default function Rating({ product }) {
     );
 
     return (
-      <>
+      <div className="d-flex align-items-center justify-content-center">
         {filledStars.map((star, index) => (
           <FaStar key={`filled-${index}`} color="#ffc107" />
         ))}
         {outlinedStars.map((star, index) => (
           <FaStar key={`outlined-${index}`} color="#e4e5e9" />
         ))}
-      </>
+        <span>&nbsp;({product.reviewhistory.length})</span>
+      </div>
     );
   };
 
-  return <span className="ratings">{renderStars()}</span>;
+  return <div>{renderStars()}</div>;
 }

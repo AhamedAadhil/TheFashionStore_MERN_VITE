@@ -81,6 +81,14 @@ export const getAllProducts = async (req, res, next) => {
     // Create a base query with the 'status' field set to 'live'
     let query = { status: "live" };
 
+    // Check if the 'name' parameter exists in the request query
+    if (req.query.name) {
+      // Create a regular expression to perform a case-insensitive search
+      const regex = new RegExp(req.query.name, "i");
+      // Update the query to filter products by name
+      query.name = regex;
+    }
+
     // Define an array of allowed query parameters
     const allowedParams = [
       "brand",
@@ -158,13 +166,18 @@ export const getAllProducts = async (req, res, next) => {
       .limit(limit)
       .skip(startIndex);
 
+    const totalCount = await Product.countDocuments(query);
+
     if (req.query.page) {
       const productCount = await Product.countDocuments();
       if (startIndex >= productCount) {
         return next(errorUtil("This Page Does Not Exist!"));
       }
     }
-    res.status(200).json(allProducts);
+    res.status(200).json({
+      products: allProducts,
+      totalCount: totalCount,
+    });
   } catch (error) {
     next(error);
   }

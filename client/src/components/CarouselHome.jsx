@@ -87,7 +87,6 @@ export default function CarouselHome() {
         if (!response.ok) {
           console.log(response.message);
         }
-        console.log(dataFromResponse);
         setCarousels(dataFromResponse);
       } catch (error) {
         console.log(error.message);

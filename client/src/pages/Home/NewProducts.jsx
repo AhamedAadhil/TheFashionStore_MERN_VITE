@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
+import { Link } from "react-router-dom";
 
 export default function NewProducts({ data: newProducts }) {
   NewProducts.propTypes = {
@@ -28,17 +29,22 @@ export default function NewProducts({ data: newProducts }) {
         <div className="section-header-home-card d-flex justify-content-between align-items-center mb-2">
           <h6 className="title mb-2 mt-2 px-2">New Collections</h6>
           <div>
-            <span
+            <Link
+              to={"/shop"}
               className="mx-3"
               style={{ fontSize: "0.8rem", fontWeight: "800" }}
             >
               All&gt;
-            </span>
+            </Link>
           </div>
         </div>
         <div className="row g-1 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-md-3 row-cols-2 course-filter">
           {newProducts.map((product, index) => (
-            <div key={index} className="col mb-3">
+            <div
+              to={`shop/${product._id}`}
+              key={index}
+              className="col mb-3 text-decoration-none"
+            >
               {/* Add margin-bottom to create space between cards */}
               <Card style={{ width: "auto" }} className="mx-2 shadow">
                 <Card.Img
@@ -57,7 +63,7 @@ export default function NewProducts({ data: newProducts }) {
                   </Card.Title>
                   {/* <Card.Text>{product.description}</Card.Text> */}
                   <Card.Text style={{ fontSize: "1rem" }} className="px-2">
-                    <div className="pb-1">
+                    <span className="d-block pb-1">
                       <span style={{ color: "blue" }}>Rs. {product.price}</span>
                       <span
                         className="px-2 rounded"
@@ -71,9 +77,9 @@ export default function NewProducts({ data: newProducts }) {
                       >
                         New
                       </span>
-                    </div>
+                    </span>
 
-                    <span style={{ fontSize: "0.8rem" }}>
+                    <span style={{ fontSize: "0.8rem" }} className="d-block">
                       By: {product.seller.shopname}
                     </span>
                   </Card.Text>
