@@ -11555,3 +11555,17 @@ footer.style-2 .footer-top.dark-view * {
   background-color: orange; /* Apply a different background color for selected size */
   color: white; /* Apply white text color for better visibility */
 }
+
+.buyer-rating {
+  display: inline-block;
+}
+
+.buyer-rating .star {
+  color: gray;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.buyer-rating .star.filled {
+  color: yellow;
+}

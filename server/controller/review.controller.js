@@ -285,7 +285,7 @@ export const getSingleReview = async (req, res, next) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const review = await Review.findById(id);
+    const review = await Review.findById(id).populate("buyer");
     if (!review) {
       return next(errorUtil(404, "Unable to Find This Review!"));
     }
@@ -328,7 +328,7 @@ export const getSingleProductReview = async (req, res, next) => {
     if (!productId) {
       return next(errorUtil(404, "Product Id Is Required!"));
     }
-    const reviews = await Review.find({ product: productId });
+    const reviews = await Review.find({ product: productId }).populate("buyer");
     if (!reviews) {
       return next(errorUtil(404, "No Reviews Found For this Product"));
     }
