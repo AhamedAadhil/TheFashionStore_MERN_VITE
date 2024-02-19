@@ -14,7 +14,7 @@ export default function ProductCard({ gridList, products }) {
         products &&
           // eslint-disable-next-line react/prop-types
           products.map((product, index) => (
-            <div key={index} className="col-lg-4 col-md-6 col-12">
+            <div key={index} className="col-lg-4 col-md-6 col-6">
               <div className="product-item">
                 {/* product images */}
                 <div className="product-thumb">
@@ -50,7 +50,7 @@ export default function ProductCard({ gridList, products }) {
                 {/* product images */}
                 <div className="product-thumb">
                   <div className="pro-thumb">
-                    <img src={product.img} alt="" />
+                    <img src={product.img} alt="" height="auto" width="auto" />
                   </div>
                   {/* product actions */}
                   <div className="product-action-link">

@@ -6,13 +6,19 @@ export default function Pagination({ totalPages, currentPage, paginate }) {
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
+
+  const handlePageClick = (pageNumber) => {
+    paginate(pageNumber);
+    window.scrollTo(0, 0); // Scroll to the top of the page
+  };
+
   return (
     <ul className="default-pagination lab-ul">
       <li>
         <Link
           onClick={() => {
             if (currentPage > 1) {
-              paginate(currentPage - 1);
+              handlePageClick(currentPage - 1);
             }
           }}
         >
@@ -24,7 +30,10 @@ export default function Pagination({ totalPages, currentPage, paginate }) {
           key={number}
           className={`page-item ${number === currentPage ? "bg-warning" : ""}`}
         >
-          <button onClick={() => paginate(number)} className="bg-transparent">
+          <button
+            onClick={() => handlePageClick(number)}
+            className="bg-transparent"
+          >
             {number}
           </button>
         </li>
@@ -33,7 +42,7 @@ export default function Pagination({ totalPages, currentPage, paginate }) {
         <Link
           onClick={() => {
             if (currentPage < totalPages) {
-              paginate(currentPage + 1);
+              handlePageClick(currentPage + 1);
             }
           }}
         >

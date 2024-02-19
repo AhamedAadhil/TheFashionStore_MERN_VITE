@@ -8,6 +8,13 @@ export default function Navbar() {
   const [socialToggle, setsocialToggle] = useState(false);
   const [headerFixed, setHeaderFixed] = useState(false);
 
+  // Close navbar when a page link is clicked
+  const handlePageLinkClick = () => {
+    if (window.innerWidth < 992) {
+      setMenuToggle(false);
+    }
+  };
+
   window.addEventListener("scroll", () => {
     if (window.scrollY > 200) {
       setHeaderFixed(true);
@@ -51,19 +58,19 @@ export default function Navbar() {
             <div className="menu-area">
               <div className="menu">
                 <ul className={`lab-ul ${menuToggle ? "active" : ""}`}>
-                  <li>
+                  <li onClick={handlePageLinkClick}>
                     <Link to="/">Home</Link>
                   </li>
-                  <li>
+                  <li onClick={handlePageLinkClick}>
                     <Link to="/shop">Shop</Link>
                   </li>
-                  <li>
+                  <li onClick={handlePageLinkClick}>
                     <Link to="/blog">Blog</Link>
                   </li>
-                  <li>
+                  <li onClick={handlePageLinkClick}>
                     <Link to="/about">About</Link>
                   </li>
-                  <li>
+                  <li onClick={handlePageLinkClick}>
                     <Link to="/help">Help</Link>
                   </li>
                 </ul>

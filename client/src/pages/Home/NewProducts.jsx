@@ -38,7 +38,7 @@ export default function NewProducts({ data: newProducts }) {
             </Link>
           </div>
         </div>
-        <div className="row g-1 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-md-3 row-cols-2 course-filter">
+        <div className="row g-1 row-cols-xl-4 row-cols-lg-3 row-cols-md-3 row-cols-2 course-filter">
           {newProducts.map((product, index) => (
             <div
               to={`shop/${product._id}`}
