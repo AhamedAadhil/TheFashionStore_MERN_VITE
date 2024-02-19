@@ -231,7 +231,7 @@ export default function SingleProduct() {
               </div>
               {/* review */}
               <div className="review">
-                <Review id={id} desc={product.description} />
+                <Review id={id} desc={product?.description} />
               </div>
             </article>
           </div>
