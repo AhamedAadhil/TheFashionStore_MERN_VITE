@@ -9,22 +9,18 @@ const addressSchema = new mongoose.Schema({
   housenumber: {
     default: "",
     type: String,
-    required: true,
   },
   street: {
     default: "",
     type: String,
-    required: true,
   },
   city: {
     default: "",
     type: String,
-    required: true,
   },
   state: {
     default: "",
     type: String,
-    required: true,
   },
 });
 

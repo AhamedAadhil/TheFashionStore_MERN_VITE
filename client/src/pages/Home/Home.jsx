@@ -52,7 +52,7 @@ export default function Home() {
         if (!response.ok) {
           console.log(dataFromResponse.message);
         }
-        setNewProducts(dataFromResponse);
+        setNewProducts(dataFromResponse.products);
       } catch (error) {
         console.log(error.message);
       }
@@ -61,15 +61,13 @@ export default function Home() {
     fetchNewProducts();
   }, []);
 
-  console.log(newProducts);
-
   return (
     <div className="min-vh-100">
       {/* <Banner /> */}
       <CarouselHome />
       {/* <Banner /> */}
-      {category && <HomeCategory data={category} />}
-      {newProducts && <NewProducts data={newProducts.products} />}
+      {category.length > 0 && <HomeCategory data={category} />}
+      {newProducts.length > 0 && <NewProducts data={newProducts} />}
       <BeautyCollections />
       <Brands />
       <DealsUnder />

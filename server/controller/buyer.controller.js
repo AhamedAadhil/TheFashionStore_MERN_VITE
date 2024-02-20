@@ -532,9 +532,50 @@ export const getUserCart = async (req, res, next) => {
       "products.product"
     );
     if (!cart) {
-      return next(errorUtil(404, "Cannot Get The Cart!"));
+      return next(errorUtil(404, "The Cart Is Empty!"));
     }
     res.status(200).json(cart);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* DELETE SPECIFIC PRODUCT FROM CART */
+export const deleteProductFromCart = async (req, res, next) => {
+  const productIdInCart = req.params.id;
+  const id = req.user.id;
+  try {
+    const cart = await Cart.findOne({ orderby: id });
+    if (!cart) {
+      return next(errorUtil(404, "Cart Not Found!"));
+    }
+
+    const cartLengthBeforeDelete = cart.products.length;
+
+    const itemToDelete = cart.products.find((item) => {
+      return item._id.toString() === productIdInCart.toString();
+    });
+
+    const deleteProductPrice = itemToDelete.price;
+    const deleteProductCount = itemToDelete.count;
+    const totalToDeductAfterDelete =
+      Number(deleteProductPrice) * Number(deleteProductCount);
+
+    cart.products = cart.products.filter(
+      (item) => item._id.toString() !== productIdInCart.toString()
+    );
+
+    if (cart.products.length < cartLengthBeforeDelete) {
+      cart.carttotal -= totalToDeductAfterDelete;
+      cart.totalafterdiscount -= totalToDeductAfterDelete;
+      await cart.save();
+      const buyer = await Buyer.findById(id);
+      buyer.cart = cart._id;
+      await buyer.save();
+      res.status(200).json("Product removed from cart successfully!");
+    } else {
+      return next(errorUtil(400, "Unable to Delete The Product From Cart!"));
+    }
   } catch (error) {
     next(error);
   }

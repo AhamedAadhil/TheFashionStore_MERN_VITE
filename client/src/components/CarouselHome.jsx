@@ -6,6 +6,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { FaSearch } from "react-icons/fa";
+import Search from "../pages/Shop/Search";
 
 export default function CarouselHome() {
   const [product, setProduct] = useState(undefined);
@@ -53,7 +54,7 @@ export default function CarouselHome() {
         if (!response.ok) {
           console.log("if not ok", data.message);
         }
-        setProduct(data);
+        setProduct(data.products);
       } catch (error) {
         console.log("error: ", error.message);
       }
@@ -147,17 +148,18 @@ export default function CarouselHome() {
                 <Dropdown.Item disabled>No categories available</Dropdown.Item>
               )}
             </DropdownButton>
+            {/* <Search /> */}
             <Form.Control
               value={searchInput}
               onChange={handleChange}
               placeholder="Product Name..."
-              className="px-3 py-2"
+              className="px-3 py-2 shadow-none"
             />
-            <InputGroup.Text className="bg-transparent ">
+            {/* <InputGroup.Text className="bg-transparent ">
               <FaSearch />
-            </InputGroup.Text>
+            </InputGroup.Text> */}
           </InputGroup>
-          <ul className="lab-ul">
+          <ul className="lab-ul mt-3 px-4">
             {searchInput &&
               filteredProducts.map((product, index) => (
                 <li key={index}>

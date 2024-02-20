@@ -65,7 +65,7 @@ export default function Navbar() {
                     <Link to="/shop">Shop</Link>
                   </li>
                   <li onClick={handlePageLinkClick}>
-                    <Link to="/blog">Blog</Link>
+                    <Link to="/my-orders">My Orders</Link>
                   </li>
                   <li onClick={handlePageLinkClick}>
                     <Link to="/about">About</Link>

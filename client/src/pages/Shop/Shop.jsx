@@ -60,7 +60,7 @@ export default function Shop() {
     currentPage * productsPerPage > totalProducts
       ? totalProducts
       : currentPage * productsPerPage
-  } Products of ${totalProducts} Results`;
+  } Products`;
 
   return (
     <div className="min-vh-100">

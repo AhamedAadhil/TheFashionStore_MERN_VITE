@@ -24,6 +24,7 @@ import {
   createOrder,
   getOrders,
   getCount,
+  deleteProductFromCart,
 } from "../controller/buyer.controller.js";
 
 const router = express.Router();
@@ -50,6 +51,11 @@ router.get("/actions/getWishList", verifyToken, getWishList);
 router.post("/actions/addToCart", verifyToken, addToCart);
 router.get("/actions/getUserCart", verifyToken, getUserCart);
 router.delete("/actions/emptyCart", verifyToken, emptyCart);
+router.delete(
+  "/actions/deleteProductFromCart/:id",
+  verifyToken,
+  deleteProductFromCart
+);
 router.put("/actions/applyCoupon", verifyToken, applyCoupon);
 router.post("/actions/order/cod", verifyToken, createOrder);
 router.get("/actions/getOrders", verifyToken, getOrders);
