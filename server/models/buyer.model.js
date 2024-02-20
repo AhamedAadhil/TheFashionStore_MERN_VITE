@@ -40,7 +40,6 @@ const buyerSchema = new mongoose.Schema(
     },
     mobile: {
       type: String,
-      required: true,
     },
     password: {
       type: String,

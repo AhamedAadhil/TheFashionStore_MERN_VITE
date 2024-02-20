@@ -80,7 +80,7 @@ export const loginBuyer = async (req, res, next) => {
       if (updateBuyer.cart) {
         await updateBuyer.populate("cart");
       }
-      const { password: pass, ...rest } = updateBuyer._doc;
+      const { password: pass, role: ro, ...rest } = updateBuyer._doc;
       res
         .cookie("access_token", token, {
           httpOnly: true,
@@ -94,6 +94,121 @@ export const loginBuyer = async (req, res, next) => {
         .json(rest);
     } else {
       return next(errorUtil(401, "You  Are Not Authorized To Login!"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GOOGLE AUTH */
+export const google = async (req, res, next) => {
+  let username = req.body.username;
+
+  if (username && username.includes(" ")) {
+    // If the username has spaces, remove them and convert to lowercase
+    username = username.replace(/\s+/g, "").toLowerCase();
+  } else {
+    // If no spaces or username is not provided, use the original username
+    username = username; // Use the original username or an empty string
+  }
+  try {
+    const isBuyerExist = await Buyer.findOne({ email: req.body.email });
+    if (isBuyerExist) {
+      const accountStatus = isBuyerExist.status;
+      if (accountStatus === "active") {
+        const refreshToken = generateRefreshToken(
+          isBuyerExist?._id,
+          isBuyerExist?.role
+        );
+        const updateBuyer = await Buyer.findByIdAndUpdate(
+          isBuyerExist._id,
+          {
+            refreshtoken: refreshToken,
+          },
+          { new: true }
+        );
+
+        await updateBuyer.save();
+        const token = generateToken(isBuyerExist?._id, isBuyerExist?.role);
+        if (updateBuyer.orderhistory.length > 0) {
+          await updateBuyer.populate("orderhistory");
+        }
+        if (updateBuyer.reviewhistory.length > 0) {
+          await updateBuyer.populate("reviewhistory");
+        }
+        if (updateBuyer.wishlist.length > 0) {
+          await updateBuyer.populate("wishlist");
+        }
+        if (updateBuyer.cart) {
+          await updateBuyer.populate("cart");
+        }
+        const { password: pass, role: ro, ...rest } = updateBuyer._doc;
+        res
+          .cookie("access_token", token, {
+            httpOnly: true,
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          })
+          .cookie("refresh_token", refreshToken, {
+            httpOnly: true,
+            expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+          })
+          .status(200)
+          .json(rest);
+      }
+    } else {
+      const isSellerExist = await Seller.findOne({ email: req.body.email });
+      const isAdminExist = await Admin.findOne({ email: req.body.email });
+      if (isSellerExist || isAdminExist) {
+        return next(errorUtil(405, "User Already Exists!"));
+      }
+      const genPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = bcryptjs.hashSync(genPassword, 10);
+      const newUser = new Buyer({
+        username: username + Math.random().toString(36).slice(-4),
+        email: req.body.email,
+        mobile: req.body.mobile,
+        password: hashedPassword,
+        avatar: req.body.avatar,
+      });
+      await newUser.save();
+      const accountStatus = newUser.status;
+      if (accountStatus === "active") {
+        const refreshToken = generateRefreshToken(newUser?._id, newUser?.role);
+        const updateBuyer = await Buyer.findByIdAndUpdate(
+          newUser._id,
+          {
+            refreshtoken: refreshToken,
+          },
+          { new: true }
+        );
+
+        await updateBuyer.save();
+        const token = generateToken(updateBuyer?._id, updateBuyer?.role);
+        if (updateBuyer.orderhistory.length > 0) {
+          await updateBuyer.populate("orderhistory");
+        }
+        if (updateBuyer.reviewhistory.length > 0) {
+          await updateBuyer.populate("reviewhistory");
+        }
+        if (updateBuyer.wishlist.length > 0) {
+          await updateBuyer.populate("wishlist");
+        }
+        if (updateBuyer.cart) {
+          await updateBuyer.populate("cart");
+        }
+        const { password: pass, role: ro, ...rest } = updateBuyer._doc;
+        res
+          .cookie("access_token", token, {
+            httpOnly: true,
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          })
+          .cookie("refresh_token", refreshToken, {
+            httpOnly: true,
+            expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+          })
+          .status(200)
+          .json(rest);
+      }
     }
   } catch (error) {
     next(error);
@@ -467,7 +582,7 @@ export const addToCart = async (req, res, next) => {
         errorUtil(400, "Not Enough Stock Available For This Product!")
       );
     }
-    const cart = await Cart.findOne({ orderby: id });
+    let cart = await Cart.findOne({ orderby: id });
     if (!cart) {
       const price = product.price;
       const newItem = { ...item, price: price };
@@ -569,10 +684,23 @@ export const deleteProductFromCart = async (req, res, next) => {
       cart.carttotal -= totalToDeductAfterDelete;
       cart.totalafterdiscount -= totalToDeductAfterDelete;
       await cart.save();
+
+      // Check if cart total becomes 0
+      if (cart.carttotal === 0) {
+        // If cart total is 0, delete the cart
+        await Cart.findByIdAndDelete(cart._id);
+        // Also update the buyer's cart reference to null
+        const buyer = await Buyer.findById(id);
+        buyer.cart = null;
+        await buyer.save();
+        // Respond with success message or appropriate response
+        return res.status(200).json({ message: "Cart deleted successfully" });
+      }
+
       const buyer = await Buyer.findById(id);
       buyer.cart = cart._id;
       await buyer.save();
-      res.status(200).json("Product removed from cart successfully!");
+      res.status(200).json(cart);
     } else {
       return next(errorUtil(400, "Unable to Delete The Product From Cart!"));
     }

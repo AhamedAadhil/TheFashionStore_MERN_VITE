@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-// Import Swiper React components
+import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 // Import Swiper styles
 import "swiper/css";
@@ -10,9 +12,10 @@ import Rating from "../../components/Rating";
 import Review from "./Review";
 
 export default function SingleProduct() {
-  const [product, setProduct] = useState(undefined);
-
+  const [product, setProduct] = useState({});
+  const navigate = useNavigate();
   const { id } = useParams();
+  const { currentUser } = useSelector((state) => state.user);
 
   // Fetch the product data when the component mounts.
   useEffect(() => {
@@ -29,6 +32,7 @@ export default function SingleProduct() {
         }
         const data = await response.json();
         setProduct(data);
+        console.log("Product data:", data);
       } catch (error) {
         console.log(error.message);
       }
@@ -40,6 +44,18 @@ export default function SingleProduct() {
   const [productCoupon, setProductCoupon] = useState(1);
   const [productColor, setProductColor] = useState("Select Color");
   const [productSize, setProductSize] = useState("Select Size");
+  const [loading, setLoading] = useState(false);
+
+  const FormData = {
+    item: {
+      count: productQuantity,
+      color: productColor,
+      size: productSize,
+      product: id,
+    },
+  };
+
+  console.log(FormData);
 
   const handleSizeChange = (size) => {
     setProductSize(size); // Set the selected product size to the state variable
@@ -60,8 +76,50 @@ export default function SingleProduct() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
+      if (!currentUser) {
+        setLoading(false);
+        navigate("/login");
+        return;
+      }
+      if (FormData.item.color === "Select Color") {
+        setLoading(false);
+        toast.error("Please Select a Color!");
+        return;
+      }
+      if (FormData.item.size === "Select Size") {
+        setLoading(false);
+        toast.error("Please Select a Size!");
+        return;
+      }
+      if (FormData.item.count <= 0) {
+        setLoading(false);
+        toast.error("Please select a valid quantity");
+        return;
+      }
+      const response = await fetch("/api/buyer/actions/addToCart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(FormData),
+      });
+      console.log("res body", JSON.stringify(FormData));
+
+      const data = await response.json();
+      if (data.success == false) {
+        setLoading(false);
+        toast.error(data.message);
+        return;
+      }
+      toast.success("Product Added To Cart!");
+      setLoading(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -75,29 +133,31 @@ export default function SingleProduct() {
                   <div className="col-md-6 col-12">
                     <div className="product-thumb">
                       <div className="swiper-container pro-single-top">
-                        <Swiper
-                          spaceBetween={30}
-                          slidesPerView="1"
-                          loop={true}
-                          autoplay={{
-                            delay: 2000,
-                            disableOnInteraction: false,
-                          }}
-                          modules={[Autoplay]}
-                          navigation={{
-                            prevEl: ".pro-single-prev",
-                            nextEl: ".pro-single-next",
-                          }}
-                          className="mySwiper"
-                        >
-                          {product &&
-                            product.imageUrls.map((imageUrl, index) => (
-                              <SwiperSlide key={index}>
-                                <div className="single-thumb"></div>
-                                <img src={imageUrl} alt="product" />
-                              </SwiperSlide>
-                            ))}
-                        </Swiper>
+                        {product && product.imageUrls && (
+                          <Swiper
+                            spaceBetween={30}
+                            slidesPerView="1"
+                            loop={true}
+                            autoplay={{
+                              delay: 2000,
+                              disableOnInteraction: false,
+                            }}
+                            modules={[Autoplay]}
+                            navigation={{
+                              prevEl: ".pro-single-prev",
+                              nextEl: ".pro-single-next",
+                            }}
+                            className="mySwiper"
+                          >
+                            {product &&
+                              product.imageUrls.map((imageUrl, index) => (
+                                <SwiperSlide key={index}>
+                                  <div className="single-thumb"></div>
+                                  <img src={imageUrl} alt="product" />
+                                </SwiperSlide>
+                              ))}
+                          </Swiper>
+                        )}
                         <div className="pro-single-prev">
                           <i className="icofont-rounded-right"></i>
                         </div>
@@ -109,32 +169,37 @@ export default function SingleProduct() {
                   </div>
                   <div className="col-md-6 col-12">
                     <div className="post-content">
-                      <div>
-                        <h4>{product?.name}</h4>
-                        <p className="rating">
-                          {product && <Rating product={product} />}
-                        </p>
+                      {product && (
+                        <div>
+                          <h4>{product?.name}</h4>
+                          <p className="rating">
+                            {product && <Rating product={product} />}
+                          </p>
 
-                        <h4>Rs. {product?.price}</h4>
+                          <h4>Rs. {product?.price}</h4>
+                          {product && product.brand && (
+                            <h6>
+                              {" "}
+                              <b>Brand:</b> {product?.brand.title.toUpperCase()}
+                            </h6>
+                          )}
+                          <h6>
+                            <b> Quality:</b>
+                            {product?.quality === "a_grade"
+                              ? "A-GRADE"
+                              : "ORIGINAL"}
+                          </h6>
+                          {product && product.seller && (
+                            <h6>
+                              <b>Seller:</b> {product?.seller.shopname}
+                            </h6>
+                          )}
 
-                        <h6>
-                          {" "}
-                          <b>Brand:</b> {product?.brand.title.toUpperCase()}
-                        </h6>
-                        <h6>
-                          <b> Quality:</b>
-                          {product?.quality === "a_grade"
-                            ? "A-GRADE"
-                            : "ORIGINAL"}
-                        </h6>
-                        <h6>
-                          <b>Seller:</b> {product?.seller.shopname}
-                        </h6>
-
-                        {/* <p>
+                          {/* <p>
                           <b>Description:</b> {product?.description}
                         </p> */}
-                      </div>
+                        </div>
+                      )}
                       {/* cart component */}
                       <div>
                         <form onSubmit={handleSubmit}>
@@ -143,6 +208,7 @@ export default function SingleProduct() {
                             <p className="m-0 me-2">Size:</p>
                             <div className="btn-group gap-2">
                               {product &&
+                                product.size &&
                                 product.size.map((size, i) => (
                                   <button
                                     type="button"
@@ -170,6 +236,7 @@ export default function SingleProduct() {
                                 Select Color
                               </option>
                               {product &&
+                                product.color &&
                                 product.color.map((color, i) => (
                                   <option value={color} key={i}>
                                     {color}
@@ -217,8 +284,12 @@ export default function SingleProduct() {
                           </div>
 
                           {/* button section */}
-                          <button type="submit" className="lab-btn">
-                            <span>Add to Cart</span>
+                          <button
+                            type="submit"
+                            className="lab-btn mt-4"
+                            disabled={loading}
+                          >
+                            <span>{loading ? "Loading" : "Add To Cart"}</span>
                           </button>
                           <Link to="/cart" className="lab-btn bg-primary">
                             <span>Check Out</span>

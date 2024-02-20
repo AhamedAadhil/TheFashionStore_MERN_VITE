@@ -32,8 +32,6 @@ export default function Review({ id, desc }) {
     fetchReviews();
   }, [id]);
 
-  console.log("ra", buyerStarRating);
-
   return (
     <>
       <ul

@@ -1,11 +1,52 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import {
+  signInStart,
+  signInFailure,
+  signInSuccess,
+} from "../../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import OAuth from "./OAuth";
 
 export default function Login() {
   const title = "Login";
-  const socialTitle = "Login With Google";
   const btnText = "Login";
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({});
+  const { loading } = useSelector((state) => state.user);
 
-  const handleLogin = (e) => {};
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleLogin = async (e) => {
+    try {
+      e.preventDefault();
+      dispatch(signInStart());
+      const response = await fetch("/api/buyer/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+        toast.error(data.message);
+        return;
+      }
+      toast.success(`Welcome ${data.username}!`);
+      dispatch(signInSuccess(data));
+      navigate("/");
+    } catch (error) {
+      dispatch(signInFailure(error.message));
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div>
@@ -20,6 +61,7 @@ export default function Login() {
                   name="email"
                   id="email"
                   placeholder="Email Address *"
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -29,6 +71,7 @@ export default function Login() {
                   name="password"
                   id="password"
                   placeholder="Password *"
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -42,8 +85,12 @@ export default function Login() {
                 </div>
               </div>
               <div className="form-group">
-                <button type="submit" className="d-block lab-btn">
-                  <span>{btnText}</span>
+                <button
+                  type="submit"
+                  className="d-block lab-btn"
+                  disabled={loading}
+                >
+                  <span>{loading ? "Processing..." : btnText}</span>
                 </button>
               </div>
             </form>
@@ -56,7 +103,9 @@ export default function Login() {
                 <span>Or</span>
               </span>
               {/* login with google */}
-              <span>Login With Google</span>
+              <span>
+                <OAuth />
+              </span>
             </div>
           </div>
         </div>

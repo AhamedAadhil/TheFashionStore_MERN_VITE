@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import OAuth from "./OAuth";
 import toast from "react-hot-toast";
 
 export default function Register() {
@@ -140,7 +141,10 @@ export default function Register() {
               <span>Or</span>
             </span>
             {/* login with google */}
-            <span>Login With Google</span>
+            <span>
+              {" "}
+              <OAuth />
+            </span>
           </div>
         </div>
       </div>

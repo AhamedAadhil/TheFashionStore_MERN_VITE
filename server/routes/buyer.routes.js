@@ -25,12 +25,14 @@ import {
   getOrders,
   getCount,
   deleteProductFromCart,
+  google,
 } from "../controller/buyer.controller.js";
 
 const router = express.Router();
 /* AUTH */
 router.post("/auth/register", registerBuyer);
 router.post("/auth/login", loginBuyer);
+router.post("/auth/google", google);
 router.post("/auth/logout", verifyToken, logoutBuyer);
 router.put("/auth/updatePassword", verifyToken, updatePassword);
 router.post("/auth/forgotPasswordToken", forgotPasswordToken);

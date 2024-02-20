@@ -10,6 +10,7 @@ import About from "./pages/About/About";
 import Help from "./pages/Help/Help";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
 
 function App() {
   return (
@@ -19,11 +20,13 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/shop/:id" element={<SingleProduct />} />
-        <Route path="/cart" element={<CartPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/help" element={<Help />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/cart" element={<CartPage />} />
+        </Route>
       </Routes>
       <Footer />
     </BrowserRouter>

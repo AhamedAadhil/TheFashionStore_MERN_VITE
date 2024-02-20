@@ -44,7 +44,7 @@ export default function Rating({ product }) {
         {outlinedStars.map((star, index) => (
           <FaStar key={`outlined-${index}`} color="#e4e5e9" />
         ))}
-        <span>&nbsp;({product.reviewhistory.length})</span>
+        <span>&nbsp;({product?.reviewhistory?.length})</span>
       </div>
     );
   };
