@@ -26,7 +26,12 @@ export const registerBuyer = async (req, res, next) => {
     const isSellerExist = await Seller.findOne({ email: req.body.email });
     const isAdminExist = await Admin.findOne({ email: req.body.email });
     if (isBuyerExist || isSellerExist || isAdminExist) {
-      return next(errorUtil(405, "User Already Exists!"));
+      return next(
+        errorUtil(
+          405,
+          "This email is already registered. Please log in or use a different email."
+        )
+      );
     }
     const genSalt = bcryptjs.genSaltSync(10);
     const hashedPassword = bcryptjs.hashSync(req.body.password, genSalt);
@@ -934,7 +939,7 @@ ${productDetailsHTML}
     await sendEmail(dataForSeller);
     await sendEmail(dataForBuyer);
     await emptyCart(req, res, next);
-    res.status(201).json("Success!");
+    res.status(201).json("Order Placed Successfully!");
   } catch (error) {
     next(error);
   }

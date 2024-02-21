@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdDeleteOutline } from "react-icons/md";
 import Button from "react-bootstrap/esm/Button";
 import toast from "react-hot-toast";
+import { FaCartPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import MobileNumberModel from "../../components/MobileNumberModel";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
@@ -14,8 +17,10 @@ export default function CartPage() {
   const [afterDiscount, setAfterDiscount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({});
+  const [showMobileNumberModel, setShowMobileNumberModel] = useState(false);
   const buttonText = !selectedAddressId ? "Add New Address" : "Update Address";
-
+  const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const handleCouponChange = (e) => {
     setCoupon(e.target.value);
   };
@@ -85,7 +90,10 @@ export default function CartPage() {
   useEffect(() => {
     fetchCartData();
     fetchAddress();
-  }, []);
+    if (!currentUser.mobile) {
+      setShowMobileNumberModel(true);
+    }
+  }, [currentUser.mobile]);
 
   const handleDelete = async (id) => {
     try {
@@ -251,7 +259,11 @@ export default function CartPage() {
     }
   };
 
-  const applyCoupon = async () => {
+  const applyCoupon = async (e) => {
+    e.preventDefault();
+    if (coupon === "" || !coupon) {
+      return toast.error("Please Enter Coupon Code!");
+    }
     try {
       const response = await fetch("/api/buyer/actions/applyCoupon", {
         method: "PUT",
@@ -264,6 +276,7 @@ export default function CartPage() {
       if (!response.ok) {
         setLoading(false);
         toast.error(data.message);
+        return;
       }
       setLoading(false);
       setCartItems(data.products);
@@ -275,11 +288,50 @@ export default function CartPage() {
     }
   };
 
+  const placeOrder = async (e) => {
+    try {
+      if (
+        selectedAddressId === "" ||
+        !selectedAddressId ||
+        selectedAddress === "" ||
+        !selectedAddress
+      ) {
+        return toast.error("Please Select a Delivery Address!");
+      }
+      if (currentUser.mobile === "" || !currentUser.mobile) {
+        toast.error("Please Enter a Mobile Number!");
+        setShowMobileNumberModel(true);
+        return;
+      }
+      e.preventDefault();
+      setLoading(true);
+      const response = await fetch("/api/buyer/actions/order/cod", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setLoading(false);
+        toast.error(data.message);
+        return;
+      }
+      setLoading(false);
+      navigate("/");
+      toast.success("Your Order Has Been Placed!");
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="shop-cart padding-tb">
+      {showMobileNumberModel && <MobileNumberModel currentUser={currentUser} />}
       <div className="container">
         <div className="section-wrapper">
-          {cartItems.length > 0 ? (
+          {cartItems?.length > 0 ? (
             <>
               {/* cart top */}
               <div className="cart-top">
@@ -338,6 +390,7 @@ export default function CartPage() {
                 <div className="cart-checkout-box">
                   <form className="coupon">
                     <input
+                      required
                       type="text"
                       name="coupon"
                       id="coupon"
@@ -359,9 +412,10 @@ export default function CartPage() {
                       <Button
                         variant="primary"
                         className="py-2"
-                        // onClick={handleCheckout}
+                        onClick={placeOrder}
+                        style={{ width: "9rem" }}
                       >
-                        Proceed to Checkout
+                        Place Order
                       </Button>
                     </div>
                   </form>
@@ -461,7 +515,7 @@ export default function CartPage() {
                             name="state"
                             id="state"
                             className="cart-page-input-text"
-                            placeholder="State *"
+                            placeholder="District *"
                             value={selectedAddress.state || ""}
                             onChange={handleAddressChange}
                           />
@@ -544,16 +598,25 @@ export default function CartPage() {
               </div>
             </>
           ) : (
-            <p
-              className="text-center my-4"
-              style={{
-                fontSize: "2rem",
-                color: "orange",
-                fontWeight: "600",
-              }}
-            >
-              Your cart is empty
-            </p>
+            <div className="d-flex.flex-column justify-content-center align-items-center text-center">
+              <p
+                className="text-center my-4"
+                style={{
+                  fontSize: "1.5rem",
+                  color: "orange",
+                  fontWeight: "600",
+                }}
+              >
+                <FaCartPlus className="mx-3" />
+                Your cart is empty
+              </p>
+              <button
+                className="lab-btn text-white"
+                onClick={() => navigate("/shop")}
+              >
+                Shop Now
+              </button>
+            </div>
           )}
         </div>
       </div>
