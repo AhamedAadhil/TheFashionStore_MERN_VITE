@@ -45,6 +45,7 @@ export default function Login() {
     } catch (error) {
       dispatch(signInFailure(error.message));
       toast.error(error.message);
+      return;
     }
   };
 

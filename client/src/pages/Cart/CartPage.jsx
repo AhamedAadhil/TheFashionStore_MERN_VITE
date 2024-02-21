@@ -364,7 +364,10 @@ export default function CartPage() {
                             </Link>
                           </div>
                           <div className="p-content">
-                            <Link to="/shop">{item.product.name}</Link>
+                            <Link to="/shop">
+                              {item.product.name} <br /> Color: {item.color}{" "}
+                              <br /> Size: {item.size}
+                            </Link>
                           </div>
                         </td>
                         <td className="cat-price">Rs. {item.product.price}</td>
