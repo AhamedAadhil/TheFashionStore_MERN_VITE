@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
+  const [coupon, setCoupon] = useState("");
   const [addressList, setAddressList] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [selectedAddress, setSelectedAddress] = useState({});
@@ -14,6 +15,10 @@ export default function CartPage() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({});
   const buttonText = !selectedAddressId ? "Add New Address" : "Update Address";
+
+  const handleCouponChange = (e) => {
+    setCoupon(e.target.value);
+  };
 
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
@@ -246,6 +251,30 @@ export default function CartPage() {
     }
   };
 
+  const applyCoupon = async () => {
+    try {
+      const response = await fetch("/api/buyer/actions/applyCoupon", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ coupon: coupon }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setLoading(false);
+        toast.error(data.message);
+      }
+      setLoading(false);
+      setCartItems(data.products);
+      setCartTotal(data.carttotal);
+      setAfterDiscount(data.totalafterdiscount);
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="shop-cart padding-tb">
       <div className="container">
@@ -312,11 +341,17 @@ export default function CartPage() {
                       type="text"
                       name="coupon"
                       id="coupon"
+                      onChange={handleCouponChange}
+                      value={coupon}
                       className="cart-page-input-text"
                       placeholder="Coupon Code"
                       style={{ textTransform: "uppercase" }}
                     />
-                    <input type="submit" value="Apply Coupon" />
+                    <input
+                      type="submit"
+                      value="Apply Coupon"
+                      onClick={applyCoupon}
+                    />
                   </form>
                   <form className="cart-checkout">
                     {/* <input type="text" value="Update Cart" /> */}
