@@ -2,7 +2,20 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo/logo.png";
 import { BsFillInfoSquareFill } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { BiLogOut } from "react-icons/bi";
+import {
+  MdOutlineManageAccounts,
+  MdFavoriteBorder,
+  MdOutlineShoppingBag,
+} from "react-icons/md";
+import {
+  signOutUserStart,
+  signOutUserFailure,
+  signOutUserSuccess,
+} from "../redux/user/userSlice";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [menuToggle, setMenuToggle] = useState(false);
@@ -10,6 +23,9 @@ export default function Navbar() {
   const [headerFixed, setHeaderFixed] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleUserMenu = () => {
     setUserMenuOpen(!userMenuOpen);
@@ -30,6 +46,34 @@ export default function Navbar() {
     }
   });
 
+  const handleLogout = async () => {
+    try {
+      dispatch(signOutUserStart());
+      setLoading(true);
+      const response = await fetch("/api/buyer/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setLoading(false);
+        dispatch(signOutUserFailure(data.message));
+        toast.error(data.message);
+        return;
+      }
+      setLoading(false);
+      dispatch(signOutUserSuccess(data));
+      navigate("/");
+      toast.success(data);
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
+      setLoading(false);
+      toast.error(error.message);
+    }
+  };
+
   //d-md-none
   return (
     <header
@@ -44,7 +88,7 @@ export default function Navbar() {
           <div className="header-top-area">
             {!currentUser && (
               <>
-                <Link className="lab-btn me-3" to="/signup">
+                <Link className="lab-btn me-3" to="/register">
                   <span>Create Account</span>
                 </Link>
                 <Link to="/login">Login</Link>
@@ -75,9 +119,9 @@ export default function Navbar() {
                   <li onClick={handlePageLinkClick}>
                     <Link to="/shop">Shop</Link>
                   </li>
-                  <li onClick={handlePageLinkClick}>
+                  {/* <li onClick={handlePageLinkClick}>
                     <Link to="/my-orders">My Orders</Link>
-                  </li>
+                  </li> */}
                   <li onClick={handlePageLinkClick}>
                     <Link to="/about">About</Link>
                   </li>
@@ -90,7 +134,7 @@ export default function Navbar() {
               {!currentUser && (
                 <>
                   <Link
-                    to="/sign-up"
+                    to="/register"
                     className="lab-btn me-3 d-none d-md-block"
                   >
                     Create Account
@@ -112,9 +156,38 @@ export default function Navbar() {
                     <div className="dropdown-menu-container">
                       <div className="dropdown-menu show ">
                         <ul className="list-group ">
-                          <li className="list-group-item border-0">One</li>
-                          <li className="list-group-item ">Two</li>
-                          <li className="list-group-item border-0">Three</li>
+                          <li className="list-group-item border-top-0 ">
+                            {currentUser.email} <br /> @{currentUser.username}
+                          </li>
+                          <Link className="d-flex justify-content-between">
+                            <li className="list-group-item border-0">
+                              <MdOutlineManageAccounts />
+                              My Account
+                            </li>
+                          </Link>
+                          <Link className="d-flex justify-content-between">
+                            <li className="list-group-item border-0">
+                              <MdOutlineShoppingBag />
+                              My Orders
+                            </li>
+                          </Link>
+                          <Link className="d-flex justify-content-between">
+                            <li className="list-group-item border-0">
+                              <MdFavoriteBorder />
+                              My Wishlist
+                            </li>
+                          </Link>
+                          <Link onClick={handleLogout}>
+                            <li
+                              className="list-group-item border-bottom-0"
+                              style={{
+                                color: "red",
+                              }}
+                            >
+                              <BiLogOut className="mx-1" />
+                              Logout
+                            </li>
+                          </Link>
                         </ul>
                       </div>
                     </div>

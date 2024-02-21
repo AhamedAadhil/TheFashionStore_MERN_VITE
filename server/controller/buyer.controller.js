@@ -253,8 +253,8 @@ export const logoutBuyer = async (req, res, next) => {
       { refreshtoken: "" },
       { new: true }
     );
-    res.clearCookie("access-token", { expires: new Date(0) });
-    res.clearCookie("refresh-token", { expires: new Date(0) });
+    res.clearCookie("access_token", { expires: new Date(0) });
+    res.clearCookie("refresh_token", { expires: new Date(0) });
     res.status(200).json("User Signout Successfully!");
   } catch (error) {
     next(error);
