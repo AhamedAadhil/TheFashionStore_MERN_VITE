@@ -9,6 +9,11 @@ export default function Navbar() {
   const [socialToggle, setsocialToggle] = useState(false);
   const [headerFixed, setHeaderFixed] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  const toggleUserMenu = () => {
+    setUserMenuOpen(!userMenuOpen);
+  };
 
   // Close navbar when a page link is clicked
   const handlePageLinkClick = () => {
@@ -96,11 +101,25 @@ export default function Navbar() {
                 </>
               )}
               {currentUser && (
-                <img
-                  src={currentUser.avatar}
-                  alt="User Image"
-                  className="user-avatar"
-                />
+                <div>
+                  <img
+                    src={currentUser.avatar}
+                    alt="User Image"
+                    className="user-avatar"
+                    onClick={toggleUserMenu}
+                  />
+                  {userMenuOpen && (
+                    <div className="dropdown-menu-container">
+                      <div className="dropdown-menu show ">
+                        <ul className="list-group ">
+                          <li className="list-group-item border-0">One</li>
+                          <li className="list-group-item ">Two</li>
+                          <li className="list-group-item border-0">Three</li>
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
               {/* menu toggler */}
               <div

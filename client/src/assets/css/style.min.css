@@ -11573,5 +11573,10 @@ footer.style-2 .footer-top.dark-view * {
 .user-avatar {
   width: 30px; /* Adjust this value as needed */
   height: 30px; /* Adjust this value as needed */
-  border-radius: 50%; /* Ensure the image is round */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dropdown-menu-container {
+  margin-left: -190%;
 }
