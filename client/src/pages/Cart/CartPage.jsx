@@ -6,12 +6,32 @@ import toast from "react-hot-toast";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
+  const [addressList, setAddressList] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState({});
   const [cartTotal, setCartTotal] = useState(0);
   const [afterDiscount, setAfterDiscount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({});
+  const buttonText = !selectedAddressId ? "Add New Address" : "Update Address";
+
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedAddress((prevAddress) => ({
+      ...prevAddress,
+      [name]: value,
+    }));
+
+    // Update formData with the changed attribute
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
 
   const fetchCartData = async () => {
     try {
+      setLoading(true);
       let response = await fetch("/api/buyer/actions/getUserCart", {
         method: "GET",
         headers: {
@@ -19,20 +39,47 @@ export default function CartPage() {
         },
       });
       if (!response.ok) {
+        setLoading(false);
         console.log(response.message);
         return;
       }
       const data = await response.json();
+      setLoading(false);
       setCartItems(data.products);
       setCartTotal(data.carttotal);
       setAfterDiscount(data.totalafterdiscount);
     } catch (error) {
+      setLoading(false);
+      console.log(error.message);
+    }
+  };
+
+  const fetchAddress = async () => {
+    try {
+      setLoading(true);
+      let response = await fetch("/api/buyer/actions/getAllAddress", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        setLoading(false);
+        console.log(response.message);
+        return;
+      }
+      const data = await response.json();
+      setLoading(false);
+      setAddressList(data);
+    } catch (error) {
+      setLoading(false);
       console.log(error.message);
     }
   };
 
   useEffect(() => {
     fetchCartData();
+    fetchAddress();
   }, []);
 
   const handleDelete = async (id) => {
@@ -57,6 +104,142 @@ export default function CartPage() {
       toast.success("Product Deleted From Cart!");
       // Refetch cart data after successful deletion
       fetchCartData();
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    }
+  };
+
+  const updateAddress = async (addressId) => {
+    if (!addressId) {
+      toast.error("Please Select an Address To Update!");
+      return;
+    }
+    if (Object.keys(formData).length === 0) {
+      toast.error("Please Change Something To Update Your Address!");
+      return;
+    }
+
+    if (formData === "") {
+      toast.error("Please Change Something To Update Your Address!");
+      return;
+    }
+    if (formData.label === "") {
+      toast.error("Please Enter Address Label!");
+      return;
+    }
+    if (formData.housenumber === "") {
+      toast.error("Please Enter HouseNumber!");
+      return;
+    }
+    if (formData.street === "") {
+      toast.error("Please Enter the Street!");
+      return;
+    }
+    if (formData.city === "") {
+      toast.error("Please Enter the City!");
+      return;
+    }
+    if (formData.state === "") {
+      toast.error("Please Enter the State!");
+      return;
+    }
+    try {
+      setLoading(true);
+      let response = await fetch(
+        `/api/buyer/actions/updateAddress/${addressId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        setLoading(false);
+        toast.error("Failed to Update Address!");
+        return;
+      }
+      setLoading(false);
+      setAddressList(data);
+      toast.success("Address Updated!");
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    }
+  };
+
+  const CreateAddress = async () => {
+    if (formData === "") {
+      toast.error("Please Add Details To Create Address!");
+      return;
+    }
+    if (formData.label === "") {
+      toast.error("Please Enter Address Label!");
+      return;
+    }
+    if (formData.housenumber === "") {
+      toast.error("Please Enter HouseNumber!");
+      return;
+    }
+    if (formData.street === "") {
+      toast.error("Please Enter the Street!");
+      return;
+    }
+    if (formData.city === "") {
+      toast.error("Please Enter the City!");
+      return;
+    }
+    if (formData.state === "") {
+      toast.error("Please Enter the State!");
+      return;
+    }
+    try {
+      setLoading(true);
+      let response = await fetch("/api/buyer/actions/askAddress", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setLoading(false);
+        toast.error(response.message);
+        return;
+      }
+      setLoading(false);
+      setAddressList(data);
+      toast.success("New Address Added!");
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    }
+  };
+
+  const deleteAddress = async (addressId) => {
+    try {
+      setLoading(true);
+      let response = await fetch(
+        `/api/buyer/actions/deleteAddress/${addressId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        setLoading(false);
+        toast.error(response.message);
+        return;
+      }
+      setLoading(false);
+      toast.success(data.message);
     } catch (error) {
       setLoading(false);
       toast.error(error.message);
@@ -135,7 +318,7 @@ export default function CartPage() {
                     />
                     <input type="submit" value="Apply Coupon" />
                   </form>
-                  <form action="" className="cart-checkout">
+                  <form className="cart-checkout">
                     {/* <input type="text" value="Update Cart" /> */}
                     <div>
                       <Button
@@ -154,37 +337,132 @@ export default function CartPage() {
                   <div className="row ">
                     <div className="col-md-6 col-12">
                       <div className="calculate-shiping">
-                        <h3>Calculate Shiping</h3>
+                        <h3>Shiping Details</h3>
                         <div className="outline-select">
-                          <select>
-                            <option value="uk">United Kingdom (UK)</option>
-                            <option value="uk">VBangalaDesh</option>
-                            <option value="uk">United Pakistan (UK)</option>
-                            <option value="uk">India</option>
+                          <select
+                            value={selectedAddressId}
+                            onChange={(e) => {
+                              const selectedValue = e.target.value;
+                              if (selectedValue === "select") {
+                                setSelectedAddress({});
+                                setSelectedAddressId("");
+                                setFormData({});
+                                // return toast.error("Please Select an Address!");
+                              } else {
+                                const selectedId = selectedValue;
+                                const selectedAddress = addressList.find(
+                                  (address) => address._id === selectedId
+                                );
+                                setFormData({});
+                                setSelectedAddress(selectedAddress);
+                                setSelectedAddressId(selectedId);
+                              }
+                            }}
+                          >
+                            <option
+                              value="select"
+                              defaultChecked
+                              style={{ fontWeight: "500" }}
+                            >
+                              Add New Address
+                            </option>
+                            <option
+                              style={{ backgroundColor: "lightgray" }}
+                              disabled
+                            >
+                              &nbsp;
+                            </option>
+                            {addressList.map((address, i) => (
+                              <option value={address._id} key={i}>
+                                {address.label}
+                              </option>
+                            ))}
                           </select>
                           <span className="select-icon">
                             <i className="icofont-rounded-down"></i>
                           </span>
                         </div>
-                        <div className="outline-select shipping-select">
-                          <select>
-                            <option value="uk">Akp</option>
-                            <option value="uk">Kalmunai</option>
-                            <option value="uk">Palamunai</option>
-                            <option value="uk">Pottuvil</option>
-                          </select>
-                          <span className="select-icon">
-                            <i className="icofont-rounded-down"></i>
-                          </span>
+                        <div className="d-flex  align-items-center justify-content-between">
+                          <input
+                            type="text"
+                            name="label"
+                            id="label"
+                            className="cart-page-input-text"
+                            placeholder="Label *"
+                            value={selectedAddress.label || ""}
+                            onChange={handleAddressChange}
+                          />
+                          <input
+                            type="text"
+                            name="housenumber"
+                            id="housenumber"
+                            className="cart-page-input-text"
+                            placeholder="House Number *"
+                            value={selectedAddress.housenumber || ""}
+                            onChange={handleAddressChange}
+                          />
                         </div>
                         <input
                           type="text"
-                          name="postalcode"
-                          id="postalcode"
-                          className="cart-page-input-text"
-                          placeholder="PostalCode/ZIP *"
+                          name="street"
+                          id="street"
+                          placeholder="Street *"
+                          className="mb-4"
+                          value={selectedAddress.street || ""}
+                          onChange={handleAddressChange}
                         />
-                        <button type="submit">Update Address</button>
+                        <div className="d-flex  align-items-center justify-content-between">
+                          <input
+                            type="text"
+                            name="city"
+                            id="city"
+                            className="cart-page-input-text"
+                            placeholder="City *"
+                            value={selectedAddress.city || ""}
+                            onChange={handleAddressChange}
+                          />
+                          <input
+                            type="text"
+                            name="state"
+                            id="state"
+                            className="cart-page-input-text"
+                            placeholder="State *"
+                            value={selectedAddress.state || ""}
+                            onChange={handleAddressChange}
+                          />
+                        </div>
+
+                        {/*  onClick={()=>updateAddress(addressId)} */}
+                        <div className="d-flex justify-content-around align-items-center">
+                          <button
+                            onClick={() => {
+                              buttonText === "Update Address"
+                                ? updateAddress(selectedAddressId)
+                                : CreateAddress();
+                            }}
+                            type="submit"
+                            style={{
+                              display: Object.keys(formData).length
+                                ? "block"
+                                : "none",
+                            }}
+                          >
+                            {buttonText}
+                          </button>
+
+                          <MdDeleteOutline
+                            onClick={() => deleteAddress(selectedAddressId)}
+                            className="link-danger"
+                            style={{
+                              color: "red",
+                              fontSize: "1.5rem",
+                              display:
+                                buttonText === "Update Address"
+                                  ? "block"
+                                  : "none",
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="col-md-6 col-12">

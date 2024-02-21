@@ -483,7 +483,7 @@ export const askAddress = async (req, res, next) => {
     };
     buyer.address.push(newAddress);
     await buyer.save();
-    return res.status(200).json("New Address Added!");
+    return res.status(200).json(buyer.address);
   } catch (error) {
     next(error);
   }
@@ -556,7 +556,7 @@ export const updateAddress = async (req, res, next) => {
         state: state || buyer.address[index].state,
       };
       await buyer.save();
-      return res.status(200).json("Address Updated Successfully");
+      return res.status(200).json(buyer.address);
     }
   } catch (error) {
     next(error);

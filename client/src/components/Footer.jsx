@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
 
-const title = "About ShopCart";
+const title = "About Gallery Glam (GG)";
 const desc =
-  "Eduaid theme number one world class university in the world There are student are studing always in this university for all time.";
-const ItemTitle = "Categories";
-const quickTitle = "Quick Links";
-const tweetTitle = "Recent Tweets";
+  "Explore GG Gallery Glam: Your go-to source for fashion and beauty inspiration. Elevate your style with us – for all fashionistas!";
+const ItemTitle = "Quick Links";
+const quickTitle = "Categories";
+const tweetTitle = "Policy";
 
 const addressList = [
-  { iconName: "icofont-google-map", text: "New York, USA." },
-  { iconName: "icofont-phone", text: "+880 123 456 789" },
-  { iconName: "icofont-envelope", text: "info@shopcart.com" },
+  { iconName: "icofont-google-map", text: "Akkaraipattu, SRILANKA" },
+  { iconName: "icofont-phone", text: "+94 7 666 119 17" },
+  { iconName: "icofont-envelope", text: "info@galleryglam.com" },
 ];
 
 const socialList = [
@@ -21,13 +21,21 @@ const socialList = [
   { iconName: "icofont-pinterest", siteLink: "#", className: "pinterest" },
 ];
 
+const policies = [
+  { policy: "Return Policy", siteLink: "#" },
+  { policy: "Payment Policy", siteLink: "#" },
+  { policy: "Terms of Use", siteLink: "#" },
+  { policy: "Shipping Policy", siteLink: "#" },
+];
+
 const ItemList = [
   { text: "All Products", link: "/shop" },
   { text: "Shop", link: "/shop" },
-  { text: "Blog", link: "/blog" },
+  { text: "My Orders", link: "/my-orders" },
+  { text: "WishList", link: "/wishlist" },
+  { text: "Account", link: "/profile" },
   { text: "About", link: "/about" },
-  { text: "Policy", link: "#" },
-  { text: "FAQs", link: "/about" },
+  { text: "Help", link: "/help" },
 ];
 
 const quickList = [
@@ -37,23 +45,6 @@ const quickList = [
   { text: "Forums", link: "#" },
   { text: "Privacy Policy", link: "#" },
   { text: "Terms of Use", link: "#" },
-];
-
-const tweetList = [
-  {
-    iconName: "icofont-twitter",
-    desc: "Aminur islam @ShopCart Greetings! #HTML_Template Grab your item, 50% Big Sale Offer !!",
-  },
-  {
-    iconName: "icofont-twitter",
-    desc: "Somrat islam @ShopCart Hey! #HTML_Template Grab your item, 50% Big Sale Offer !!",
-  },
-];
-const footerbottomList = [
-  { text: "Faculty", link: "#" },
-  { text: "Staff", link: "#" },
-  { text: "Students", link: "#" },
-  { text: "Alumni", link: "#" },
 ];
 
 export default function Footer() {
@@ -144,10 +135,10 @@ export default function Footer() {
                     <div className="content">
                       {/* <p>{desc}</p> */}
                       <ul className="lab-ul office-address">
-                        {tweetList.map((val, index) => (
+                        {policies.map((val, index) => (
                           <li key={index}>
-                            <i className={val.iconName}> </i>
-                            {val.desc}
+                            {/* <i className={val.iconName}> </i> */}
+                            <Link to={val.siteLink}>{val.policy}</Link>
                           </li>
                         ))}
                       </ul>
@@ -166,17 +157,13 @@ export default function Footer() {
             <p>
               &copy; {new Date().getFullYear()} <Link to="/">TFS</Link>Designed
               by{" "}
-              <Link to="" target="_blank">
+              <Link
+                to="https://www.linkedin.com/in/ahamed-aathil-0b52b2136/"
+                target="_blank"
+              >
                 Ahamed Aathil
               </Link>
             </p>
-            {/* <div className="footer-bottom-list">
-              {footerbottomList.map((val, i) => (
-                <Link to="#" target="_blank" key={i}>
-                  {val.text}
-                </Link>
-              ))}
-            </div> */}
           </div>
         </div>
       </div>
