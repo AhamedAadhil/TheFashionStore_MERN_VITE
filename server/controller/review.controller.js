@@ -39,7 +39,7 @@ export const createReviewForProduct = async (req, res, next) => {
         await buyer.save();
       }
       await product.calculateStars();
-      res.status(201).json("Review Posted!");
+      res.status(201).json(product);
     } else {
       return next(errorUtil(400, "Something Went Wrong!"));
     }

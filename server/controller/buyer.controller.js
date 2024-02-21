@@ -694,7 +694,7 @@ export const deleteProductFromCart = async (req, res, next) => {
         buyer.cart = null;
         await buyer.save();
         // Respond with success message or appropriate response
-        return res.status(200).json({ message: "Cart deleted successfully" });
+        return res.status(200).json(buyer.cart);
       }
 
       const buyer = await Buyer.findById(id);

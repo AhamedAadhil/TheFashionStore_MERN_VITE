@@ -512,7 +512,10 @@ export default function CartPage() {
                           </li>
                           <li>
                             <span className="pull-left">Coupon Discount</span>
-                            <p className="pull-right">
+                            <p
+                              className="pull-right"
+                              style={{ color: "green" }}
+                            >
                               Rs.{" "}
                               {Number(cartTotal.toFixed(2)) -
                                 Number(afterDiscount.toFixed(2))}

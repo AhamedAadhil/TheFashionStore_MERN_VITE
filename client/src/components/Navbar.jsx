@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo/logo.png";
 import { BsFillInfoSquareFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const [menuToggle, setMenuToggle] = useState(false);
   const [socialToggle, setsocialToggle] = useState(false);
   const [headerFixed, setHeaderFixed] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
 
   // Close navbar when a page link is clicked
   const handlePageLinkClick = () => {
@@ -35,10 +37,14 @@ export default function Navbar() {
       <div className={`header-top d-md-none  ${socialToggle ? "open" : ""}`}>
         <div className="container">
           <div className="header-top-area">
-            <Link className="lab-btn me-3" to="/signup">
-              <span>Create Account</span>
-            </Link>
-            <Link to="/login">Login</Link>
+            {!currentUser && (
+              <>
+                <Link className="lab-btn me-3" to="/signup">
+                  <span>Create Account</span>
+                </Link>
+                <Link to="/login">Login</Link>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -76,12 +82,26 @@ export default function Navbar() {
                 </ul>
               </div>
               {/* Sign in and Login */}
-              <Link to="/sign-up" className="lab-btn me-3 d-none d-md-block">
-                Create Account
-              </Link>
-              <Link to="/login" className="d-none d-md-block">
-                Login
-              </Link>
+              {!currentUser && (
+                <>
+                  <Link
+                    to="/sign-up"
+                    className="lab-btn me-3 d-none d-md-block"
+                  >
+                    Create Account
+                  </Link>
+                  <Link to="/login" className="d-none d-md-block">
+                    Login
+                  </Link>
+                </>
+              )}
+              {currentUser && (
+                <img
+                  src={currentUser.avatar}
+                  alt="User Image"
+                  className="user-avatar"
+                />
+              )}
               {/* menu toggler */}
               <div
                 onClick={() => setMenuToggle(!menuToggle)}
@@ -96,7 +116,7 @@ export default function Navbar() {
                 className="ellepsis-bar d-md-none"
                 onClick={() => setsocialToggle(!socialToggle)}
               >
-                <BsFillInfoSquareFill />
+                {!currentUser && <BsFillInfoSquareFill />}
               </div>
             </div>
           </div>
