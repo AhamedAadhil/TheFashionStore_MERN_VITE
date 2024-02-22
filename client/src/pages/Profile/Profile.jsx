@@ -137,10 +137,6 @@ export default function Profile() {
       setLoading(false);
       dispatch(updateUserSuccess(data));
       toast.success("User Updated!");
-      if (formData?.password) {
-        navigate("/login");
-        return;
-      }
     } catch (error) {
       setLoading(false);
       toast.error(error.message);
@@ -317,8 +313,7 @@ export default function Profile() {
                 </Col>
                 <p className="text-muted">
                   {formData?.password
-                    ? `Note: Changing your password will log you out. You&apos;ll
-                  need to log in again with your new password.`
+                    ? `Note: Updating your password will change your login credentials. Be sure to remember your new password for future logins!`
                     : ""}
                 </p>
               </Row>
