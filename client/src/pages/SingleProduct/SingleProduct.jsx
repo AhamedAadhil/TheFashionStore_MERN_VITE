@@ -47,6 +47,7 @@ export default function SingleProduct() {
         console.log(response.message);
       }
       const data = await response.json();
+
       const isProductInWishlist = data.some((item) => item._id === id);
       setIsOnWishList(isProductInWishlist);
     } catch (error) {
@@ -63,7 +64,9 @@ export default function SingleProduct() {
   const addToWishlist = async (id) => {
     try {
       if (!currentUser || currentUser === null) {
+        toast.error("Please Login To Add This Product in Wishlist!");
         navigate("/login");
+        return;
       }
       const response = await fetch("/api/product/addToWishlist", {
         method: "PUT",
@@ -73,6 +76,10 @@ export default function SingleProduct() {
         body: JSON.stringify({ productId: id }),
       });
       const data = await response.json();
+      if (data.message === "UnAuthorized!") {
+        navigate("/login");
+        return;
+      }
       if (!response.ok) {
         toast.error(data.message);
         return;

@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BuyerRating from "./BuyerRating";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 export default function Review({ id, desc, onUpdate }) {
   const [reviewShow, setReviewShow] = useState(false);
@@ -10,6 +11,8 @@ export default function Review({ id, desc, onUpdate }) {
   const [reviewsOfProduct, setReviewsOfProduct] = useState([]);
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   const handleSetReview = (e) => {
     setReview(e.target.value);
@@ -24,6 +27,11 @@ export default function Review({ id, desc, onUpdate }) {
       if (review === "" || !review) {
         return toast.error("Please Enter Your Comment To Submit!");
       }
+      if (!currentUser || currentUser === "") {
+        toast.error("Please Login to Rate This Product!");
+        navigate("/login");
+        return;
+      }
       setLoading(true);
       const response = await fetch(`/api/review/createReviewForProduct/${id}`, {
         method: "POST",
@@ -36,11 +44,15 @@ export default function Review({ id, desc, onUpdate }) {
         }),
       });
       const data = await response.json();
+      if (response.status === 401) {
+        return toast.error("Please Login To Add Comment!");
+      }
       if (!response.ok) {
         setLoading(false);
         toast.error(data.message);
         return;
       }
+
       setLoading(false);
       toast.success("Review Added!");
       setReview("");
