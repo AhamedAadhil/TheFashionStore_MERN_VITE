@@ -2,11 +2,56 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BuyerRating from "./BuyerRating";
+import toast from "react-hot-toast";
 
-export default function Review({ id, desc }) {
-  const [reviewShow, setReviewShow] = useState(true);
+export default function Review({ id, desc, onUpdate }) {
+  const [reviewShow, setReviewShow] = useState(false);
   const [buyerStarRating, setBuyerStarRating] = useState(0);
   const [reviewsOfProduct, setReviewsOfProduct] = useState([]);
+  const [review, setReview] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSetReview = (e) => {
+    setReview(e.target.value);
+  };
+
+  const postReview = async (e) => {
+    try {
+      e.preventDefault();
+      if (buyerStarRating === 0 || !buyerStarRating) {
+        return toast.error("Please  Rate This Product!");
+      }
+      if (review === "" || !review) {
+        return toast.error("Please Enter Your Comment To Submit!");
+      }
+      setLoading(true);
+      const response = await fetch(`/api/review/createReviewForProduct/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rating: buyerStarRating,
+          comment: review,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setLoading(false);
+        toast.error(data.message);
+        return;
+      }
+      setLoading(false);
+      toast.success("Review Added!");
+      setReview("");
+      setBuyerStarRating(0);
+      setReviewsOfProduct(data);
+      onUpdate();
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -80,7 +125,7 @@ export default function Review({ id, desc }) {
               <div className="review-title">
                 <h5>Add a Review</h5>
               </div>
-              <form action="" className="row">
+              <form action="" className="row" onSubmit={postReview}>
                 {/* <div className="col-md-4 col-12">
                   <input type="text" name="name" id="name" placeholder="name" />
                 </div>
@@ -103,16 +148,22 @@ export default function Review({ id, desc }) {
                   </div>
                 </div>
                 <div className="col-md-12 col-12">
-                  <textArea
+                  <textarea
                     name="comment"
                     id="comment"
                     rows="8"
                     placeholder="Type Your Message"
-                  ></textArea>
+                    value={review}
+                    onChange={handleSetReview}
+                  ></textarea>
                 </div>
                 <div className="col-12">
-                  <button type="submit" className="default-button">
-                    <span>Submit Review</span>
+                  <button
+                    type="submit"
+                    className="default-button"
+                    disabled={loading}
+                  >
+                    <span>{loading ? "Submitting..." : "Submit Review"}</span>
                   </button>
                 </div>
               </form>

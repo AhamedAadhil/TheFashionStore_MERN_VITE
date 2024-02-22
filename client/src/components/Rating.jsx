@@ -1,16 +1,8 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import PropTypes from "prop-types";
 
 export default function Rating({ product }) {
-  Rating.propTypes = {
-    product: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      stars: PropTypes.number.isRequired,
-      reviewhistory: PropTypes.array.isRequired, // Assuming reviewhistory is an array
-    }).isRequired,
-  };
-
   const [filledStars, setFilledStars] = useState([]);
 
   useEffect(() => {

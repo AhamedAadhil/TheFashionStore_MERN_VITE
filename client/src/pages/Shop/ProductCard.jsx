@@ -1,6 +1,6 @@
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
 import Rating from "../../components/Rating";
-
 // eslint-disable-next-line react/prop-types
 export default function ProductCard({ gridList, products }) {
   return (
@@ -22,17 +22,6 @@ export default function ProductCard({ gridList, products }) {
                     <img src={product.imageUrls[0]} alt="" />
                   </div>
                   {/* product actions */}
-                  <div className="product-action-link">
-                    <Link to={`/shop/${product._id}`}>
-                      <i className="icofont-eye"></i>
-                    </Link>
-                    <Link to={`/shop/${product._id}`}>
-                      <i className="icofont-heart"></i>
-                    </Link>
-                    <Link to={"/cart-page/"}>
-                      <i className="icofont-cart-alt"></i>
-                    </Link>
-                  </div>
                 </div>
                 {/* product content */}
                 <div className="product-content">
@@ -53,17 +42,6 @@ export default function ProductCard({ gridList, products }) {
                     <img src={product.img} alt="" height="auto" width="auto" />
                   </div>
                   {/* product actions */}
-                  <div className="product-action-link">
-                    <Link to={`/shop/${product._id}`}>
-                      <i className="icofont-eye"></i>
-                    </Link>
-                    <Link to={`/shop/${product._id}`}>
-                      <i className="icofont-heart"></i>
-                    </Link>
-                    <Link to={"/cart-page/"}>
-                      <i className="icofont-cart-alt"></i>
-                    </Link>
-                  </div>
                 </div>
                 {/* product content */}
                 <div className="product-content">

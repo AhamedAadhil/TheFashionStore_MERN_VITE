@@ -3,9 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import toast from "react-hot-toast";
-
-// Import Swiper styles
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import Rating from "../../components/Rating";
@@ -13,32 +12,77 @@ import Review from "./Review";
 
 export default function SingleProduct() {
   const [product, setProduct] = useState({});
+  const [isOnWishList, setIsOnWishList] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { currentUser } = useSelector((state) => state.user);
 
+  const fetchProduct = async () => {
+    try {
+      const response = await fetch(`/api/product/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        console.log(response.message);
+      }
+      const data = await response.json();
+      setProduct(data);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const getBuyerWishList = async () => {
+    try {
+      const response = await fetch("/api/buyer/actions/getWishList", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        console.log(response.message);
+      }
+      const data = await response.json();
+      const isProductInWishlist = data.some((item) => item._id === id);
+      setIsOnWishList(isProductInWishlist);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   // Fetch the product data when the component mounts.
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await fetch(`/api/product/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          console.log(response.message);
-        }
-        const data = await response.json();
-        setProduct(data);
-        console.log("Product data:", data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
     fetchProduct();
+    getBuyerWishList();
   }, [id]);
+
+  const addToWishlist = async (id) => {
+    try {
+      if (!currentUser || currentUser === null) {
+        navigate("/login");
+      }
+      const response = await fetch("/api/product/addToWishlist", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ productId: id }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error(data.message);
+        return;
+      }
+      toast.success(data);
+      setIsOnWishList(data === "Added To Wishlist!");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const [productQuantity, setProductQuantity] = useState(1);
   const [productCoupon, setProductCoupon] = useState(1);
@@ -55,14 +99,12 @@ export default function SingleProduct() {
     },
   };
 
-  console.log(FormData);
-
   const handleSizeChange = (size) => {
-    setProductSize(size); // Set the selected product size to the state variable
+    setProductSize(size);
   };
 
   const handleColorChange = (event) => {
-    setProductColor(event.target.value); // Set the selected product size to the state variable
+    setProductColor(event.target.value);
   };
 
   const handleDecreseCount = () => {
@@ -122,6 +164,11 @@ export default function SingleProduct() {
     }
   };
 
+  // Function to handle updating product data after adding a review
+  const handleProductUpdate = () => {
+    fetchProduct();
+  };
+
   return (
     <div className="shop-single padding-tb aside-bg">
       <div className="container">
@@ -153,6 +200,21 @@ export default function SingleProduct() {
                               product.imageUrls.map((imageUrl, index) => (
                                 <SwiperSlide key={index}>
                                   <div className="single-thumb"></div>
+                                  <div className="heart-icon">
+                                    <>
+                                      {isOnWishList ? (
+                                        <FaHeart
+                                          style={{ color: "red" }}
+                                          onClick={() => addToWishlist(id)}
+                                        />
+                                      ) : (
+                                        <FaRegHeart
+                                          style={{ color: "red" }}
+                                          onClick={() => addToWishlist(id)}
+                                        />
+                                      )}
+                                    </>
+                                  </div>
                                   <img src={imageUrl} alt="product" />
                                 </SwiperSlide>
                               ))}
@@ -172,9 +234,9 @@ export default function SingleProduct() {
                       {product && (
                         <div>
                           <h4>{product?.name}</h4>
-                          <p className="rating">
+                          <h4 className="rating">
                             {product && <Rating product={product} />}
-                          </p>
+                          </h4>
 
                           <h4>Rs. {product?.price}</h4>
                           {product && product.brand && (
@@ -302,7 +364,11 @@ export default function SingleProduct() {
               </div>
               {/* review */}
               <div className="review">
-                <Review id={id} desc={product?.description} />
+                <Review
+                  id={id}
+                  desc={product?.description}
+                  onUpdate={handleProductUpdate}
+                />
               </div>
             </article>
           </div>

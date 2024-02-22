@@ -8674,9 +8674,9 @@ button {
   .product-list-item:hover
   .product-thumb
   .pro-thumb::after {
-  -webkit-transform: scale(1);
+  /* -webkit-transform: scale(1);
   -ms-transform: scale(1);
-  transform: scale(1);
+  transform: scale(1); */
 }
 .shop-page
   .shop-product-wrap
@@ -11579,4 +11579,20 @@ footer.style-2 .footer-top.dark-view * {
 
 .dropdown-menu-container {
   margin-left: -490%;
+}
+
+.heart-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.heart-icon2 {
+  position: absolute;
+  top: -30px;
+  right: -200px;
+}
+
+.product-thumb2 {
+  position: relative;
 }

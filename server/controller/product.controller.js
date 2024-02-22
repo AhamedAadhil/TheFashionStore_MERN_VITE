@@ -272,14 +272,14 @@ export const addToWishList = async (req, res, next) => {
         { $pull: { wishlist: productId } },
         { new: true }
       );
-      res.status(200).json(removeFromList);
+      res.status(200).json("Removed From Wishlist!");
     } else {
       let addInList = await Buyer.findByIdAndUpdate(
         id,
         { $push: { wishlist: productId } },
         { new: true }
       );
-      res.status(200).json(addInList);
+      res.status(200).json("Added To Wishlist!");
     }
   } catch (error) {
     next(error);
