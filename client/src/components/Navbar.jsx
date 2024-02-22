@@ -147,8 +147,11 @@ export default function Navbar() {
               {currentUser && (
                 <div>
                   <img
-                    src={currentUser.avatar}
-                    alt="User Image"
+                    src={
+                      currentUser?.avatar ||
+                      "https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
+                    }
+                    alt="User"
                     className="user-avatar"
                     onClick={toggleUserMenu}
                   />
@@ -159,7 +162,10 @@ export default function Navbar() {
                           <li className="list-group-item border-top-0 ">
                             {currentUser.email} <br /> @{currentUser.username}
                           </li>
-                          <Link className="d-flex justify-content-between">
+                          <Link
+                            to="/me"
+                            className="d-flex justify-content-between"
+                          >
                             <li className="list-group-item border-0">
                               <MdOutlineManageAccounts />
                               My Account

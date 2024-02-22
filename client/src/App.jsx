@@ -11,6 +11,7 @@ import Help from "./pages/Help/Help";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route element={<PrivateRoute />}>
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/me" element={<Profile />} />
         </Route>
       </Routes>
       <Footer />
