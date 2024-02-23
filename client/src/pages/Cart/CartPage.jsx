@@ -329,7 +329,7 @@ export default function CartPage() {
   return (
     <div className="shop-cart padding-tb">
       {showMobileNumberModel && <MobileNumberModel currentUser={currentUser} />}
-      <div className="container">
+      <div className="container py-4">
         <div className="section-wrapper">
           {cartItems?.length > 0 ? (
             <>

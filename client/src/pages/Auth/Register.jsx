@@ -67,7 +67,7 @@ export default function Register() {
 
   return (
     <div className="login-section padding-tb section-bg">
-      <div className="container">
+      <div className="container py-4">
         <div className="account-wrapper">
           <h3 className="title">{title}</h3>
           <form className="account-form" onSubmit={handleRegister}>

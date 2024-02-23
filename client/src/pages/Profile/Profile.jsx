@@ -183,13 +183,14 @@ export default function Profile() {
                   alt="Profile"
                   width="150px"
                   height="150px"
-                  className="img-fluid rounded-circle"
+                  className="img-fluid"
+                  style={{ borderRadius: "5%" }}
                 />
                 <FaPencilAlt
                   style={{
                     position: "absolute",
-                    bottom: 15,
-                    right: 25,
+                    bottom: 5,
+                    right: 5,
                     cursor: "pointer",
                     backgroundColor: "#FFF",
                     padding: 5,

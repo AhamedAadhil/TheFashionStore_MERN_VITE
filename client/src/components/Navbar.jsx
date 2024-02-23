@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/images/logo/logo.png";
+import logo from "../assets/images/logo/Main-Logo.png";
 import { BsFillInfoSquareFill } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { BiLogOut } from "react-icons/bi";
@@ -114,7 +114,14 @@ export default function Navbar() {
             <div className="logo-search-acte">
               <div className="logo">
                 <Link to="/">
-                  <img src={logo} alt="logo" />
+                  <img
+                    src={logo}
+                    alt="logo"
+                    style={{
+                      height: "52px",
+                      width: "auto",
+                    }}
+                  />
                 </Link>
               </div>
             </div>
