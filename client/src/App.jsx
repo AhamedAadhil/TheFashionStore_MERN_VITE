@@ -12,6 +12,7 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import Profile from "./pages/Profile/Profile";
+import Wishlist from "./pages/WishList/Wishlist";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/cart" element={<CartPage />} />
           <Route path="/me" element={<Profile />} />
+          <Route path="/my-wishlist" element={<Wishlist />} />
         </Route>
       </Routes>
       <Footer />

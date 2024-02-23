@@ -45,6 +45,7 @@ export default function SingleProduct() {
       });
       if (!response.ok) {
         console.log(response.message);
+        return;
       }
       const data = await response.json();
 

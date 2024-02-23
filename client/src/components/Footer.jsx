@@ -155,7 +155,7 @@ export default function Footer() {
         <div className="container">
           <div className="section-wrapper justify-content-center">
             <p>
-              &copy; {new Date().getFullYear()} <Link to="/">TFS</Link>Designed
+              &copy; {new Date().getFullYear()} <Link to="/">GG</Link>Designed
               by{" "}
               <Link
                 to="https://www.linkedin.com/in/ahamed-aathil-0b52b2136/"

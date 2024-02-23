@@ -88,10 +88,19 @@ export default function Navbar() {
           <div className="header-top-area">
             {!currentUser && (
               <>
-                <Link className="lab-btn me-3" to="/register">
+                <Link
+                  className="lab-btn me-3"
+                  to="/register"
+                  onClick={() => setsocialToggle(!socialToggle)}
+                >
                   <span>Create Account</span>
                 </Link>
-                <Link to="/login">Login</Link>
+                <Link
+                  to="/login"
+                  onClick={() => setsocialToggle(!socialToggle)}
+                >
+                  Login
+                </Link>
               </>
             )}
           </div>
@@ -163,6 +172,7 @@ export default function Navbar() {
                             {currentUser.email} <br /> @{currentUser.username}
                           </li>
                           <Link
+                            onClick={toggleUserMenu}
                             to="/me"
                             className="d-flex justify-content-between"
                           >
@@ -171,13 +181,20 @@ export default function Navbar() {
                               My Account
                             </li>
                           </Link>
-                          <Link className="d-flex justify-content-between">
+                          <Link
+                            onClick={toggleUserMenu}
+                            className="d-flex justify-content-between"
+                          >
                             <li className="list-group-item border-0">
                               <MdOutlineShoppingBag />
                               My Orders
                             </li>
                           </Link>
-                          <Link className="d-flex justify-content-between">
+                          <Link
+                            onClick={toggleUserMenu}
+                            to="/my-wishlist"
+                            className="d-flex justify-content-between"
+                          >
                             <li className="list-group-item border-0">
                               <MdFavoriteBorder />
                               My Wishlist
