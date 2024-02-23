@@ -110,27 +110,6 @@ export default function Review({ id, desc, onUpdate }) {
         }`}
       >
         <div className="review-showing">
-          <ul className="content lab-ul">
-            {reviewsOfProduct.map((review, index) => (
-              <li key={index}>
-                <div className="post-thumb">
-                  <img src={review.buyer.avatar} alt="" />
-                </div>
-                <div className="post-content">
-                  <div className="entry-meta">
-                    <div className="posted-on">
-                      <Link to="#">{review.buyer.username}</Link>
-                      <p>{review.date.split("T")[0]}</p>
-                    </div>
-                  </div>
-                  <div className="entry-content">
-                    <p>{review.rating < 6 ? "★".repeat(review.rating) : ""}</p>
-                    <p>{review.comment}</p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
           {/* add review field */}
           <div className="client-review">
             <div className="review-form">
@@ -163,7 +142,7 @@ export default function Review({ id, desc, onUpdate }) {
                   <textarea
                     name="comment"
                     id="comment"
-                    rows="8"
+                    rows="2"
                     placeholder="Type Your Message"
                     value={review}
                     onChange={handleSetReview}
@@ -181,6 +160,27 @@ export default function Review({ id, desc, onUpdate }) {
               </form>
             </div>
           </div>
+          <ul className="content lab-ul px-2">
+            {reviewsOfProduct.map((review, index) => (
+              <li key={index}>
+                <div className="post-thumb">
+                  <img src={review.buyer.avatar} alt="" />
+                </div>
+                <div className="post-content">
+                  <div className="entry-meta">
+                    <div className="posted-on">
+                      <Link to="#">{review.buyer.username}</Link>
+                      <p>{review.date.split("T")[0]}</p>
+                    </div>
+                  </div>
+                  <div className="entry-content">
+                    <p>{review.rating < 6 ? "★".repeat(review.rating) : ""}</p>
+                    <p>{review.comment}</p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
         {/* description */}
         <div className="description">

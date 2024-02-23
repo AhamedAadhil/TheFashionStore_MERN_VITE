@@ -14,6 +14,8 @@ import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import Profile from "./pages/Profile/Profile";
 import Wishlist from "./pages/WishList/Wishlist";
 import Orders from "./pages/Orders/Orders";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
         <Route path="/help" element={<Help />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route element={<PrivateRoute />}>
           <Route path="/cart" element={<CartPage />} />
           <Route path="/me" element={<Profile />} />

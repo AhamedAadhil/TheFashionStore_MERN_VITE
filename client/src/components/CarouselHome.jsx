@@ -5,8 +5,6 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { FaSearch } from "react-icons/fa";
-import Search from "../pages/Shop/Search";
 
 export default function CarouselHome() {
   const [product, setProduct] = useState(undefined);

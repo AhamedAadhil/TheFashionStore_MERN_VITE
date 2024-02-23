@@ -12,7 +12,7 @@ export default function Shop() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(1);
-  const [productsPerPage] = useState(8);
+  const [productsPerPage] = useState(30);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -56,7 +56,7 @@ export default function Shop() {
   //     setProducts(newItem)
   //   }
 
-  const showResults = `Showing ${currentPage * productsPerPage - 8 + 1} - ${
+  const showResults = `Showing ${currentPage * productsPerPage - 30 + 1} - ${
     currentPage * productsPerPage > totalProducts
       ? totalProducts
       : currentPage * productsPerPage
@@ -83,7 +83,7 @@ export default function Shop() {
                 {/* layout and title */}
                 <div className="shop-title d-flex flex-wrap justify-content-between">
                   <p>{showResults}</p>
-                  <div
+                  {/* <div
                     className={`product-view-mode ${
                       gridList ? "gridActive" : "listActive"
                     }`}
@@ -100,7 +100,7 @@ export default function Shop() {
                     >
                       <i className="icofont-listine-dots"></i>
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
                 {/* product cards */}
                 <div>
