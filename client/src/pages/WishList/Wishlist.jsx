@@ -26,7 +26,7 @@ export default function Wishlist() {
       }
     };
     getBuyerWishList();
-  });
+  }, []);
 
   return (
     <div className="container padding-tb">
@@ -35,10 +35,19 @@ export default function Wishlist() {
         {products && products.length > 0 ? (
           <WishlistProductCard products={products} />
         ) : (
-          <div className="col-lg-6 text-center">
-            <p className="mb-4">There are no products in your wishlist.</p>
+          <div className="col-lg-6 text-center py-2">
+            <p>There are no Products in your Wishlist!</p>
             <Link to="/shop">
-              <Button variant="primary">Shop Now</Button>
+              <button
+                className="rounded"
+                style={{
+                  color: "white",
+                  backgroundColor: "#F16126",
+                  width: "10rem",
+                }}
+              >
+                Shop Now!
+              </button>
             </Link>
           </div>
         )}

@@ -182,6 +182,7 @@ export default function Navbar() {
                             </li>
                           </Link>
                           <Link
+                            to="/my-orders"
                             onClick={toggleUserMenu}
                             className="d-flex justify-content-between"
                           >

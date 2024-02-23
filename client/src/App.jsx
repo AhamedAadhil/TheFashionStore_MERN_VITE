@@ -13,6 +13,7 @@ import Register from "./pages/Auth/Register";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import Profile from "./pages/Profile/Profile";
 import Wishlist from "./pages/WishList/Wishlist";
+import Orders from "./pages/Orders/Orders";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/me" element={<Profile />} />
           <Route path="/my-wishlist" element={<Wishlist />} />
+          <Route path="/my-orders" element={<Orders />} />
         </Route>
       </Routes>
       <Footer />

@@ -820,7 +820,7 @@ export const createOrder = async (req, res, next) => {
   const { id } = req.user;
   validateMongoDbId(id);
   try {
-    const buyer = await Buyer.findById(id);
+    const buyer = await Buyer.findById(id).populate("orderhistory");
     if (!buyer) {
       return next(errorUtil(404, "Unable To Find The User !"));
     }
@@ -950,7 +950,7 @@ export const getOrders = async (req, res, next) => {
   const { id } = req.user;
   validateMongoDbId(id);
   try {
-    const order = await Order.findOne({ orderby: id }).populate(
+    const order = await Order.find({ orderby: id }).populate(
       "products.product"
     );
     if (!order) {
