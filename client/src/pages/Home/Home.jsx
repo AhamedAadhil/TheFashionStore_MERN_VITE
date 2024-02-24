@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import Banner from "./Banner";
-import CategoryShowcase from "./CategoryShowcase";
+
 import HomeCategory from "./HomeCategory";
-import SellerRegister from "./SellerRegister";
-import WhoWeAre from "./WhoWeAre";
+
 import BecomeASeller from "./BecomeASeller";
-import AppSection from "./AppSection";
+
 import Brands from "./Brands";
 import CarouselHome from "../../components/CarouselHome";
 import NewProducts from "./NewProducts";

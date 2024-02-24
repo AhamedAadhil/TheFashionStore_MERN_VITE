@@ -9,7 +9,7 @@ export default function DealsUnder() {
     <div
       className="category-section style-4 py-4"
       style={{
-        backgroundImage: `url("https://img.freepik.com/free-photo/design-space-paper-textured-background_53876-41740.jpg")`,
+        backgroundImage: `url("https://i.ibb.co/VM9MBDF/Blue-Neon-Glow-Texture-Background-Zoom-Virtual-Background.png")`,
       }}
     >
       <div className="container">
@@ -20,7 +20,7 @@ export default function DealsUnder() {
           <h2 className="title">Categories</h2> */}
         {/* </div> */}
         {/* Section card */}
-        <div className="section-wrapper">
+        <div className="section-wrapper shadow">
           <Swiper
             slidesPerView={3}
             spaceBetween={20}

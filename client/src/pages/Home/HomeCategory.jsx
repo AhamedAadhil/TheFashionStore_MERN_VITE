@@ -73,10 +73,11 @@ export default function HomeCategory({ data: category }) {
                     {/* <p>Hello</p> */}
                   </div>
                   <p
-                    className="text-center"
+                    className="text-center .text-truncate lh-1"
                     style={{
+                      paddingTop: "0.2rem",
                       fontWeight: "600",
-                      fontSize: "15px",
+                      fontSize: "0.8rem",
                     }}
                   >
                     {category.title}

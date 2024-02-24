@@ -18,13 +18,13 @@ export default function BeautyCollections() {
     <div
       className="container mt-4 py-2"
       style={{
-        backgroundImage: `url("https://img.freepik.com/free-photo/design-space-paper-textured-background_53876-41740.jpg")`,
+        backgroundImage: `url("https://i.ibb.co/TtFxYzL/Untitled-design.png")`,
       }}
     >
       <h6 className="mb-2 px-2">Beauty Collections</h6>
       <div className="row row-cols-4 row-cols-sm-4 row-cols-md-4 row-cols-lg-4 g-3">
         {imageUrls.map((url, index) => (
-          <div key={index} className="col mb-2">
+          <div key={index} className="col mb-2 shadow">
             <Link to="/shop">
               <Image src={url} alt={`Beauty Collection ${index + 1}`} fluid />
             </Link>
