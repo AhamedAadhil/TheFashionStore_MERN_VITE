@@ -1,5 +1,6 @@
 import Product from "../models/product.model.js";
 import Buyer from "../models/buyer.model.js";
+import Seller from "../models/seller.model.js";
 import Category from "../models/category.model.js";
 import Brand from "../models/brand.model.js";
 import { errorUtil } from "../utils/error.utils.js";
@@ -44,6 +45,11 @@ export const createProduct = async (req, res, next) => {
       purpose: "product",
     });
     await pendingApproval.save();
+
+    const seller = await Seller.findById(sellerId);
+    seller.products.push(createProduct._id);
+    await seller.save();
+
     res.status(201).json(" Product Under Review!");
   } catch (error) {
     next(error);
@@ -248,7 +254,12 @@ export const deleteProduct = async (req, res, next) => {
     if (!deleteProduct)
       return next(errorUtil(405, "Cannot Update The Product Now!"));
 
-    res.status(200).json("Product Deleted");
+    const seller = await Seller.findById(selletId);
+
+    seller.products.pull(deleteProduct._id);
+    await seller.save();
+
+    res.status(200).json(seller);
   } catch (error) {
     next(error);
   }

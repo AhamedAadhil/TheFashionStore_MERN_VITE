@@ -939,6 +939,10 @@ ${productDetailsHTML}
     await sendEmail(dataForSeller);
     await sendEmail(dataForBuyer);
     await emptyCart(req, res, next);
+
+    const seller = await Seller.findById(sellerId);
+    seller.orderhistory.push(newOrder._id);
+    await seller.save();
     res.status(201).json("Order Placed Successfully!");
   } catch (error) {
     next(error);

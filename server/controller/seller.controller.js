@@ -18,7 +18,7 @@ export const registerSeller = async (req, res, next) => {
     return next(errorUtil(400, "Invalid Email"));
   }
   try {
-    const isSellerExist = await Seller.findOne({ email: req.body.emai });
+    const isSellerExist = await Seller.findOne({ email: req.body.email });
     const isBuyerExist = await Buyer.findOne({ email: req.body.email });
     const isAdminExist = await Admin.findOne({ email: req.body.email });
     if (isSellerExist || isBuyerExist || isAdminExist) {
