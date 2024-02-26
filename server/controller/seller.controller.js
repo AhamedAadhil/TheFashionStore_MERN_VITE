@@ -404,3 +404,69 @@ export const updateOrderStatus = async (req, res, next) => {
     next(error);
   }
 };
+
+/* DATA FOR SELLER DASHBOARD */
+export const dashboardData = async (req, res, next) => {
+  try {
+    const sellerId = req.user.id;
+    /* data1 */
+    const liveProductsCount = await Product.countDocuments({
+      seller: sellerId,
+      status: "live",
+    });
+    /* data2 */
+    const holdProductsCount = await Product.countDocuments({
+      seller: sellerId,
+      status: "hold",
+    });
+    const allProducts = await Product.find({
+      seller: sellerId,
+      status: "live",
+    });
+    /* data3 */
+    let totalSold = 0;
+    allProducts.map((product) => {
+      totalSold += product.sold;
+      return product.stock;
+    });
+
+    const allOrders = await Order.find({
+      seller: sellerId,
+    });
+
+    /* data4 */
+    const orderCount = allOrders.length;
+
+    const deliveredOrders = allOrders.filter(
+      (order) => order.orderstatus === "pending"
+    );
+
+    /* data5 */
+    let salesTotal = 0;
+    if (deliveredOrders.length > 0) {
+      deliveredOrders.map((order) => {
+        salesTotal += order.paymentintent.amount;
+        return order.paymentintent.amount;
+      });
+    }
+
+    /* data for table 1,2 stock count and sold count */
+    const productStocks = await Product.find({ seller: sellerId }).select(
+      "_id name stock sold"
+    );
+    const sortedProductStocks = productStocks.sort((a, b) => b.stock - a.stock);
+    const sortedProductSales = productStocks.sort((a, b) => b.sold - a.sold);
+
+    res.status(200).json({
+      liveProductsCount,
+      holdProductsCount,
+      totalSold,
+      orderCount,
+      salesTotal,
+      sortedProductStocks,
+      sortedProductSales,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

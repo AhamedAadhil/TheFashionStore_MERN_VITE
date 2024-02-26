@@ -11,6 +11,7 @@ import {
   resetPassword,
   getAllOrders,
   updateOrderStatus,
+  dashboardData,
 } from "../controller/seller.controller.js";
 
 const router = express.Router();
@@ -25,5 +26,6 @@ router.put("/actions/updateSeller/:id", isSeller, updateSeller);
 router.put("/actions/refresh", isSeller, handleRefreshToken);
 router.get("/actions/getAllOrders", isSeller, getAllOrders);
 router.put("/actions/updateOrderStatus/:id", isSeller, updateOrderStatus);
+router.get("/actions/dashboardData", isSeller, dashboardData);
 
 export default router;

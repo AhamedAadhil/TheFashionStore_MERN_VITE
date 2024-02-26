@@ -829,6 +829,10 @@ export const createOrder = async (req, res, next) => {
       return next(errorUtil(404, "You Dont Have Any Products In Your Cart!"));
     }
 
+    const products = await buyerCart.populate("products.product");
+    const firstProduct = products.products[0];
+    const sellerId = firstProduct.product.seller;
+
     // store product details for send it to seller and admin when order placed
     let productDetailsHTML = "";
     if (buyerCart && buyerCart.products.length > 0) {
@@ -863,6 +867,7 @@ export const createOrder = async (req, res, next) => {
       },
       orderstatus: "pending",
       orderby: buyer._id,
+      seller: sellerId,
     });
 
     await newOrder.save();
@@ -879,9 +884,7 @@ export const createOrder = async (req, res, next) => {
     await buyer.save();
 
     //send mail to seller about the order
-    const products = await buyerCart.populate("products.product");
-    const firstProduct = products.products[0];
-    const sellerId = firstProduct.product.seller;
+
     const sellerInfo = await Seller.findById(sellerId).select(
       "email sellername shopname"
     );

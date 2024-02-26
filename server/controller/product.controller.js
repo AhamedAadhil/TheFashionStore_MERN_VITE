@@ -296,12 +296,3 @@ export const addToWishList = async (req, res, next) => {
     next(error);
   }
 };
-
-/* UPLOAD IMAGES */
-export const uploadImages = async (req, res, next) => {
-  try {
-    console.log(req.files);
-  } catch (error) {
-    next(error);
-  }
-};

@@ -30,9 +30,13 @@ var orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Buyer",
     },
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Seller",
+    },
     lastupdate: {
       type: String,
-      default: Date.now(),
+      default: () => new Date().toISOString(),
     },
   },
   { timestamps: true }
