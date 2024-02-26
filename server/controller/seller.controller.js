@@ -438,7 +438,7 @@ export const dashboardData = async (req, res, next) => {
     const orderCount = allOrders.length;
 
     const deliveredOrders = allOrders.filter(
-      (order) => order.orderstatus === "pending"
+      (order) => order.orderstatus === "delivered"
     );
 
     /* data5 */
