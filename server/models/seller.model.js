@@ -124,6 +124,10 @@ const sellerSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    totalsold: {
+      type: Number,
+      default: 0,
+    },
     passwordcChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,

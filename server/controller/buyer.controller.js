@@ -818,6 +818,7 @@ export const applyCoupon = async (req, res, next) => {
 /* CREATE ORDER */
 export const createOrder = async (req, res, next) => {
   const { id } = req.user;
+  const { deliveryInfo } = req.body;
   validateMongoDbId(id);
   try {
     const buyer = await Buyer.findById(id).populate("orderhistory");
@@ -827,6 +828,16 @@ export const createOrder = async (req, res, next) => {
     let buyerCart = await Cart.findOne({ orderby: buyer._id });
     if (!buyerCart) {
       return next(errorUtil(404, "You Dont Have Any Products In Your Cart!"));
+    }
+
+    // Check if all products in the cart have sufficient stock
+    for (const cartItem of buyerCart.products) {
+      const product = cartItem.product;
+      if (product.stock < cartItem.count) {
+        return res
+          .status(400)
+          .json({ message: `Insufficient Stock For Product ${product.name}` });
+      }
     }
 
     const products = await buyerCart.populate("products.product");
@@ -868,6 +879,7 @@ export const createOrder = async (req, res, next) => {
       orderstatus: "pending",
       orderby: buyer._id,
       seller: sellerId,
+      deliveryaddress: deliveryInfo,
     });
 
     await newOrder.save();

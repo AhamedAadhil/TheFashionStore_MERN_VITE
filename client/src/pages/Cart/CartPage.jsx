@@ -20,7 +20,9 @@ export default function CartPage() {
   const [showMobileNumberModel, setShowMobileNumberModel] = useState(false);
   const buttonText = !selectedAddressId ? "Add New Address" : "Update Address";
   const { currentUser } = useSelector((state) => state.user);
+  // const [deliveryInfo, setDeliveryInfo] = useState({});
   const navigate = useNavigate();
+
   const handleCouponChange = (e) => {
     setCoupon(e.target.value);
   };
@@ -31,7 +33,6 @@ export default function CartPage() {
       ...prevAddress,
       [name]: value,
     }));
-
     // Update formData with the changed attribute
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -305,11 +306,16 @@ export default function CartPage() {
       }
       e.preventDefault();
       setLoading(true);
+      const deliveryInfo = {
+        address: selectedAddress,
+        mobile: currentUser.mobile,
+      };
       const response = await fetch("/api/buyer/actions/order/cod", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ deliveryInfo }),
       });
       const data = await response.json();
       if (!response.ok) {

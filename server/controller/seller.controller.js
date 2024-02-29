@@ -298,10 +298,16 @@ export const updateOrderStatus = async (req, res, next) => {
   validateMongoDbId(sellerId);
   const status = req.body.status;
   try {
-    const order = await Order.findById(orderId);
+    const order = await Order.findOne({ _id: orderId, seller: sellerId });
     if (!order) {
       return next(errorUtil(404, "This Order Is Not Exist!"));
     }
+
+    // Calculate total count of products in the order
+    const totalCount = order.products.reduce((acc, product) => {
+      return acc + product.count;
+    }, 0);
+
     const updateOrder = await Order.findByIdAndUpdate(
       orderId,
       {
@@ -333,7 +339,7 @@ export const updateOrderStatus = async (req, res, next) => {
       const seller = await Seller.findByIdAndUpdate(
         sellerId,
         {
-          $inc: { points: pointsForTheOrder },
+          $inc: { points: pointsForTheOrder, totalsold: totalCount },
         },
         { new: true }
       );
@@ -342,7 +348,7 @@ export const updateOrderStatus = async (req, res, next) => {
       buyer.points += pointsForTheOrder;
       await buyer.save();
     }
-    if (status === "canceled") {
+    if (status === "cancelled") {
       // Restore stock and decrease sold values for products in the order
       const updateStockAndSold = updateOrder.products.map(async (item) => {
         await Product.findByIdAndUpdate(item.product, {
@@ -399,7 +405,19 @@ export const updateOrderStatus = async (req, res, next) => {
     };
     await sendEmail(dataForSeller);
     await sendEmail(dataForBuyer);
-    res.status(200).json("Order Updated!");
+
+    const sellerProducts = await Product.find({ seller: sellerId }).select(
+      "_id"
+    );
+
+    // Extract product IDs
+    const productIds = sellerProducts.map((product) => product._id);
+
+    // Find orders containing those products
+    const allOrders = await Order.find({
+      "products.product": { $in: productIds },
+    }).populate("products.product");
+    res.status(200).json(allOrders);
   } catch (error) {
     next(error);
   }
@@ -409,6 +427,8 @@ export const updateOrderStatus = async (req, res, next) => {
 export const dashboardData = async (req, res, next) => {
   try {
     const sellerId = req.user.id;
+    const seller = await Seller.findById(sellerId);
+
     /* data1 */
     const liveProductsCount = await Product.countDocuments({
       seller: sellerId,
@@ -424,11 +444,12 @@ export const dashboardData = async (req, res, next) => {
       status: "live",
     });
     /* data3 */
-    let totalSold = 0;
-    allProducts.map((product) => {
-      totalSold += product.sold;
-      return product.stock;
-    });
+    // let totalSold = 0;
+    // allProducts.map((product) => {
+    //   totalSold += product.sold;
+    //   return product.stock;
+    // });
+    const totalSold = seller.totalsold;
 
     const allOrders = await Order.find({
       seller: sellerId,

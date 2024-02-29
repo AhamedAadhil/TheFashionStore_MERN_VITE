@@ -30,6 +30,9 @@ var orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Buyer",
     },
+    deliveryaddress: {
+      type: Object,
+    },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Seller",
