@@ -43,7 +43,6 @@ const productSchema = new mongoose.Schema(
       type: [
         {
           type: String,
-          enum: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
         },
       ],
       default: [],
@@ -94,6 +93,10 @@ const productSchema = new mongoose.Schema(
       default: [],
     },
     stars: {
+      type: Number,
+      default: 0,
+    },
+    likes: {
       type: Number,
       default: 0,
     },

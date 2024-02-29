@@ -220,8 +220,8 @@ export const updateProduct = async (req, res, next) => {
           description: req.body.description,
           imageUrls: req.body.imageUrls,
           price: req.body.price,
-          category: productCategory,
-          brand: productBrand,
+          category: category._id,
+          brand: brand._id,
           size: req.body.size,
           color: req.body.color,
           stock: req.body.stock,
@@ -259,7 +259,7 @@ export const deleteProduct = async (req, res, next) => {
     seller.products.pull(deleteProduct._id);
     await seller.save();
 
-    res.status(200).json(seller);
+    res.status(200).json(seller.products);
   } catch (error) {
     next(error);
   }
@@ -273,6 +273,7 @@ export const addToWishList = async (req, res, next) => {
     return next(errorUtil(404, "Please Provide Product Id"));
   }
   try {
+    const product = await Product.findById(productId);
     const buyer = await Buyer.findById(id.toString());
     const alreadyAdded = buyer.wishlist.find(
       (id) => id.toString() === productId
@@ -283,6 +284,8 @@ export const addToWishList = async (req, res, next) => {
         { $pull: { wishlist: productId } },
         { new: true }
       );
+      product.likes -= 1;
+      await product.save();
       res.status(200).json("Removed From Wishlist!");
     } else {
       let addInList = await Buyer.findByIdAndUpdate(
@@ -290,6 +293,9 @@ export const addToWishList = async (req, res, next) => {
         { $push: { wishlist: productId } },
         { new: true }
       );
+
+      product.likes += 1;
+      await product.save();
       res.status(200).json("Added To Wishlist!");
     }
   } catch (error) {

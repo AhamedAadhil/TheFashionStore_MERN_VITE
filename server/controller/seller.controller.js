@@ -451,9 +451,10 @@ export const dashboardData = async (req, res, next) => {
     }
 
     /* data for table 1,2 stock count and sold count */
-    const productStocks = await Product.find({ seller: sellerId }).select(
-      "_id name stock sold"
-    );
+    const productStocks = await Product.find({
+      seller: sellerId,
+      status: "live",
+    }).select("_id name stock sold");
     const sortedProductStocks = productStocks.sort((a, b) => b.stock - a.stock);
     const sortedProductSales = productStocks.sort((a, b) => b.sold - a.sold);
 
