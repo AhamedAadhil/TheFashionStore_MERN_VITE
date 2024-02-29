@@ -12,6 +12,7 @@ import {
   getAllOrders,
   updateOrderStatus,
   dashboardData,
+  getPendingProducts,
 } from "../controller/seller.controller.js";
 
 const router = express.Router();
@@ -27,5 +28,6 @@ router.put("/actions/refresh", isSeller, handleRefreshToken);
 router.get("/actions/getAllOrders", isSeller, getAllOrders);
 router.put("/actions/updateOrderStatus/:id", isSeller, updateOrderStatus);
 router.get("/actions/dashboardData", isSeller, dashboardData);
+router.get("/actions/getPendingProducts", isSeller, getPendingProducts);
 
 export default router;

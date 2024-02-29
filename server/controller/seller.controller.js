@@ -471,3 +471,17 @@ export const dashboardData = async (req, res, next) => {
     next(error);
   }
 };
+
+/* GET OWN PENDING ORDERS */
+export const getPendingProducts = async (req, res, next) => {
+  const sellerId = req.user.id;
+  try {
+    const pendingProduct = await Product.find({
+      seller: sellerId,
+      status: "hold",
+    });
+    res.status(200).json(pendingProduct);
+  } catch (error) {
+    next(error);
+  }
+};

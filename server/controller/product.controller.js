@@ -244,15 +244,15 @@ export const deleteProduct = async (req, res, next) => {
   const selletId = req.user.id;
   try {
     const product = await Product.findById(productId);
-    if (!product.status === "live") {
-      return next(errorUtil(403, "This Product is Still Under  Review"));
-    }
+    // if (!product.status === "live") {
+    //   return next(errorUtil(403, "This Product is Still Under  Review"));
+    // }
     if (selletId !== product.seller.toString()) {
       return next(errorUtil(403, "You Can Only Delete Your Products!"));
     }
     const deleteProduct = await Product.findByIdAndDelete(productId);
     if (!deleteProduct)
-      return next(errorUtil(405, "Cannot Update The Product Now!"));
+      return next(errorUtil(405, "Cannot Delete The Product Now!"));
 
     const seller = await Seller.findById(selletId);
 
@@ -279,7 +279,7 @@ export const addToWishList = async (req, res, next) => {
       (id) => id.toString() === productId
     );
     if (alreadyAdded) {
-      let removeFromList = await Buyer.findByIdAndUpdate(
+      await Buyer.findByIdAndUpdate(
         id,
         { $pull: { wishlist: productId } },
         { new: true }
@@ -288,7 +288,7 @@ export const addToWishList = async (req, res, next) => {
       await product.save();
       res.status(200).json("Removed From Wishlist!");
     } else {
-      let addInList = await Buyer.findByIdAndUpdate(
+      await Buyer.findByIdAndUpdate(
         id,
         { $push: { wishlist: productId } },
         { new: true }
