@@ -9,7 +9,7 @@ export default function DealsUnder() {
     <div
       className="category-section style-4 py-4"
       style={{
-        backgroundImage: `url("https://i.ibb.co/VM9MBDF/Blue-Neon-Glow-Texture-Background-Zoom-Virtual-Background.png")`,
+        backgroundImage: `url("https://i.ibb.co/2nLMr8s/Product-Special-Offer-Sale-Advertising-Aesthetic-Flyer.png")`,
       }}
     >
       <div className="container">
@@ -20,7 +20,7 @@ export default function DealsUnder() {
           <h2 className="title">Categories</h2> */}
         {/* </div> */}
         {/* Section card */}
-        <div className="section-wrapper shadow">
+        <div className="section-wrapper ">
           <Swiper
             slidesPerView={3}
             spaceBetween={20}
@@ -33,16 +33,16 @@ export default function DealsUnder() {
                 slidesPerView: 3,
               },
               1024: {
-                slidesPerView: 4,
+                slidesPerView: 5,
               },
             }}
           >
             <SwiperSlide>
               <Link to="/shop" className="category-item">
                 <div>
-                  <div className="category-thumb">
+                  <div className="category-thumb shadow">
                     <Image
-                      src="https://i.ibb.co/zxNRY3L/big-sale-banner-design-template-vector-9351949.jpg"
+                      src="https://i.ibb.co/YWmNMh2/999.png"
                       alt="deals"
                       rounded
                     />
@@ -53,9 +53,9 @@ export default function DealsUnder() {
             <SwiperSlide>
               <Link to="/shop" className="category-item">
                 <div>
-                  <div className="category-thumb">
+                  <div className="category-thumb shadow">
                     <Image
-                      src="https://i.ibb.co/7K77DLh/deal-2000.jpg"
+                      src="https://i.ibb.co/QkT9F7k/1999.png"
                       alt="alt"
                       rounded
                     />
@@ -66,9 +66,9 @@ export default function DealsUnder() {
             <SwiperSlide>
               <Link to="/shop" className="category-item">
                 <div>
-                  <div className="category-thumb">
+                  <div className="category-thumb shadow">
                     <Image
-                      src="https://img.freepik.com/free-vector/dollar-one-deal-sale-banner_1017-31780.jpg?w=740&t=st=1708148849~exp=1708149449~hmac=8b0c1d338515c6347d9eb19236c58d319f77db50b5ec1e02d4743d9ed95813a4"
+                      src="https://i.ibb.co/mXjfGB1/3999.png"
                       alt="alt"
                       rounded
                     />
@@ -79,9 +79,22 @@ export default function DealsUnder() {
             <SwiperSlide>
               <Link to="/shop" className="category-item">
                 <div>
-                  <div className="category-thumb">
+                  <div className="category-thumb shadow">
                     <Image
-                      src="https://img.freepik.com/free-vector/dollar-one-deal-sale-banner_1017-31780.jpg?w=740&t=st=1708148849~exp=1708149449~hmac=8b0c1d338515c6347d9eb19236c58d319f77db50b5ec1e02d4743d9ed95813a4"
+                      src="https://i.ibb.co/Prhj8ft/6999.png"
+                      alt="alt"
+                      rounded
+                    />
+                  </div>
+                </div>
+              </Link>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Link to="/shop" className="category-item">
+                <div>
+                  <div className="category-thumb shadow">
+                    <Image
+                      src="https://i.ibb.co/MMxb40x/9999.png"
                       alt="alt"
                       rounded
                     />

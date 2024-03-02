@@ -4,29 +4,34 @@ import { Link } from "react-router-dom";
 export default function BeautyCollections() {
   // Assuming you have an array of image URLs
   const imageUrls = [
-    "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/beauty-poster-design-template-edb3f4c4e415f98158b6090ee8ac0b28_screen.jpg?ts=1657098318",
-    "https://i.ibb.co/rwDr9tk/81-Du-GFbqki-L-SL1500.jpg",
-    "https://i.ibb.co/LZrsZGQ/westin-hotel-bath-body-set-HB-308-WT-xlrg.jpg",
-    "https://i.ibb.co/bBvXk0w/wholesale-fragrances-main-banner.jpg",
-    "https://i.ibb.co/F53PHQP/06-09-2023-maybelline-makeup-products-23523263.jpg",
-    "https://i.ibb.co/3F3fRdc/1e5db2bd00a69-hp-most-loved-fs-2column-4.jpg",
-    "https://i.ibb.co/vvvQTGC/instant-skin-care-results-main-1522856094.jpg",
-    "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/beauty-poster-design-template-edb3f4c4e415f98158b6090ee8ac0b28_screen.jpg?ts=1657098318",
+    "https://i.ibb.co/W0McFMc/Black-Modern-Elegant-Perfume-Instagram-Story-4.png",
+    "https://i.ibb.co/BTzLFMr/Black-Modern-Elegant-Perfume-Instagram-Story-6.png",
+    "https://i.ibb.co/0VFp30f/Black-Modern-Elegant-Perfume-Instagram-Story-1.png",
+    "https://i.ibb.co/RYD7kV6/Black-Modern-Elegant-Perfume-Instagram-Story-8.png",
+    "https://i.ibb.co/smJ9NT1/Black-Modern-Elegant-Perfume-Instagram-Story-7.png",
+    "https://i.ibb.co/pjyZCf5/Black-Modern-Elegant-Perfume-Instagram-Story.png",
+    "https://i.ibb.co/yqLyG0k/Black-Modern-Elegant-Perfume-Instagram-Story-2.png",
+    "https://i.ibb.co/K0WbY1b/Black-Modern-Elegant-Perfume-Instagram-Story-5.png",
   ];
 
   return (
     <div
       className="container mt-4 py-2"
       style={{
-        backgroundImage: `url("https://i.ibb.co/TtFxYzL/Untitled-design.png")`,
+        backgroundImage: `url("https://i.ibb.co/Jczqtbg/Black-Modern-Elegant-Perfume-Instagram-Story-9.png")`,
       }}
     >
-      <h6 className="mb-2 px-2">Beauty Collections</h6>
-      <div className="row row-cols-4 row-cols-sm-4 row-cols-md-4 row-cols-lg-4 g-3">
+      <h6 className="mb-2 px-2 text-white">Beauty Collections</h6>
+      <div className="row row-cols-4 row-cols-sm-4 row-cols-md-4 row-cols-lg-4 g-3 ">
         {imageUrls.map((url, index) => (
-          <div key={index} className="col mb-2 shadow">
+          <div key={index} className="col mb-2 ">
             <Link to="/shop">
-              <Image src={url} alt={`Beauty Collection ${index + 1}`} fluid />
+              <Image
+                src={url}
+                alt={`Beauty Collection ${index + 1}`}
+                fluid
+                className="rounded"
+              />
             </Link>
           </div>
         ))}

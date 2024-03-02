@@ -629,3 +629,21 @@ export const getAllCarousels = async (req, res, next) => {
     next(error);
   }
 };
+
+/* ADMIN DASHBOARD DATA */
+export const dashboardData = async (req, res, next) => {
+  try {
+    const liveProducts = await Product.find({ status: "live" });
+    const liveProductsCount = liveProducts.length;
+    const pendingProducts = await Product.find({ status: "hold" });
+    const pendingProductsCount = pendingProducts.length;
+    const liveSellers = await Seller.find({ status: "active" });
+    const liveSellersCount = liveSellers.length;
+    const pendingSellers = await Seller.find({ status: "pending" });
+    const pendingSellersCount = pendingSellers.length;
+    const buyers = await Buyer.find();
+    const buyersCount = buyers.length;
+  } catch (error) {
+    next(error);
+  }
+};

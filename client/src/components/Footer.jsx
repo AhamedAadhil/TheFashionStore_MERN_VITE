@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 const title = "About Gallery Glam (GG)";
 const desc =
   "Explore GG Gallery Glam: Your go-to source for fashion and beauty inspiration. Elevate your style with us – for all fashionistas!";
-const ItemTitle = "Quick Links";
-const quickTitle = "Categories";
-const tweetTitle = "Policy";
+// const ItemTitle = "Quick Links";
+// const quickTitle = "Categories";
+// const tweetTitle = "Policy";
 
 const addressList = [
   { iconName: "icofont-google-map", text: "Akkaraipattu, SRILANKA" },
@@ -21,38 +21,38 @@ const socialList = [
   { iconName: "icofont-pinterest", siteLink: "#", className: "pinterest" },
 ];
 
-const policies = [
-  { policy: "Return Policy", siteLink: "#" },
-  { policy: "Payment Policy", siteLink: "#" },
-  { policy: "Terms of Use", siteLink: "#" },
-  { policy: "Shipping Policy", siteLink: "#" },
-];
+// const policies = [
+//   { policy: "Return Policy", siteLink: "#" },
+//   { policy: "Payment Policy", siteLink: "#" },
+//   { policy: "Terms of Use", siteLink: "#" },
+//   { policy: "Shipping Policy", siteLink: "#" },
+// ];
 
-const ItemList = [
-  { text: "All Products", link: "/shop" },
-  { text: "Shop", link: "/shop" },
-  { text: "My Orders", link: "/my-orders" },
-  { text: "WishList", link: "/wishlist" },
-  { text: "Account", link: "/profile" },
-  { text: "About", link: "/about" },
-  { text: "Help", link: "/help" },
-];
+// const ItemList = [
+//   { text: "All Products", link: "/shop" },
+//   { text: "Shop", link: "/shop" },
+//   { text: "My Orders", link: "/my-orders" },
+//   { text: "WishList", link: "/wishlist" },
+//   { text: "Account", link: "/profile" },
+//   { text: "About", link: "/about" },
+//   { text: "Help", link: "/help" },
+// ];
 
-const quickList = [
-  { text: "Summer Sessions", link: "#" },
-  { text: "Events", link: "#" },
-  { text: "Gallery", link: "#" },
-  { text: "Forums", link: "#" },
-  { text: "Privacy Policy", link: "#" },
-  { text: "Terms of Use", link: "#" },
-];
+// const quickList = [
+//   { text: "Summer Sessions", link: "#" },
+//   { text: "Events", link: "#" },
+//   { text: "Gallery", link: "#" },
+//   { text: "Forums", link: "#" },
+//   { text: "Privacy Policy", link: "#" },
+//   { text: "Terms of Use", link: "#" },
+// ];
 
 export default function Footer() {
   return (
     <footer className="style-2">
       <div className="footer-top dark-view padding-tb">
         <div className="container">
-          <div className="row g-4 row-cols-xl-4 row-cols-sm-2 row-cols-1 justify-content-center">
+          <div className="row g-4 row-cols-xl-1 row-cols-sm-2 row-cols-1 justify-content-center">
             <div className="col">
               <div className="footer-item our-address">
                 <div className="footer-inner">
@@ -83,7 +83,7 @@ export default function Footer() {
                 </div>
               </div>
             </div>
-            <div className="col">
+            {/* <div className="col">
               <div className="footer-item our-address">
                 <div className="footer-inner">
                   <div className="footer-content">
@@ -91,7 +91,7 @@ export default function Footer() {
                       <h4>{ItemTitle}</h4>
                     </div>
                     <div className="content">
-                      {/* <p>{desc}</p> */}
+                     
                       <ul className="lab-ul office-address">
                         {ItemList.map((val, index) => (
                           <li key={index}>
@@ -103,8 +103,9 @@ export default function Footer() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="col">
+            </div> */}
+            {/* line 2 */}
+            {/* <div className="col">
               <div className="footer-item our-address">
                 <div className="footer-inner">
                   <div className="footer-content">
@@ -112,7 +113,7 @@ export default function Footer() {
                       <h4>{quickTitle}</h4>
                     </div>
                     <div className="content">
-                      {/* <p>{desc}</p> */}
+                    
                       <ul className="lab-ul office-address">
                         {quickList.map((val, index) => (
                           <li key={index}>
@@ -124,8 +125,9 @@ export default function Footer() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="col">
+            </div> */}
+            {/* line 3 */}
+            {/* <div className="col">
               <div className="footer-item our-address">
                 <div className="footer-inner">
                   <div className="footer-content">
@@ -133,11 +135,11 @@ export default function Footer() {
                       <h4>{tweetTitle}</h4>
                     </div>
                     <div className="content">
-                      {/* <p>{desc}</p> */}
+                    
                       <ul className="lab-ul office-address">
                         {policies.map((val, index) => (
                           <li key={index}>
-                            {/* <i className={val.iconName}> </i> */}
+                         
                             <Link to={val.siteLink}>{val.policy}</Link>
                           </li>
                         ))}
@@ -146,7 +148,7 @@ export default function Footer() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
