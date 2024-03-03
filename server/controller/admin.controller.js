@@ -72,8 +72,8 @@ export const adminLogout = async (req, res, next) => {
       { refreshtoken: "" },
       { new: true }
     );
-    res.clearCookie("access-token", { expires: new Date(0) });
-    res.clearCookie("refresh-token", { expires: new Date(0) });
+    res.clearCookie("access_token", { expires: new Date(0) });
+    res.clearCookie("refresh_token", { expires: new Date(0) });
     res.status(200).json("Admin Signout Successfully!");
   } catch (error) {
     next(error);
@@ -633,16 +633,45 @@ export const getAllCarousels = async (req, res, next) => {
 /* ADMIN DASHBOARD DATA */
 export const dashboardData = async (req, res, next) => {
   try {
-    const liveProducts = await Product.find({ status: "live" });
+    const liveProducts = await Product.find({ status: "live" }).select(
+      "sold name _id"
+    );
     const liveProductsCount = liveProducts.length;
     const pendingProducts = await Product.find({ status: "hold" });
     const pendingProductsCount = pendingProducts.length;
-    const liveSellers = await Seller.find({ status: "active" });
+    const liveSellers = await Seller.find({ status: "active" }).select(
+      "points shopname _id"
+    );
     const liveSellersCount = liveSellers.length;
     const pendingSellers = await Seller.find({ status: "pending" });
     const pendingSellersCount = pendingSellers.length;
-    const buyers = await Buyer.find();
-    const buyersCount = buyers.length;
+    const liveBuyers = await Buyer.find({ status: "active" }).select(
+      "points username _id"
+    );
+    const liveBuyersCount = liveBuyers.length;
+    const holdBuyers = await Buyer.find({ status: "hold" });
+    const holdBuyersCount = holdBuyers.length;
+    const topBuyers = liveBuyers
+      .sort((a, b) => b.points - a.points)
+      .slice(0, 5);
+    const topSellers = liveSellers
+      .sort((a, b) => b.points - a.points)
+      .slice(0, 5);
+    const topProducts = liveProducts
+      .sort((a, b) => b.sold - a.sold)
+      .slice(0, 5);
+
+    res.status(200).json({
+      liveProductsCount,
+      pendingProductsCount,
+      liveSellersCount,
+      pendingSellersCount,
+      liveBuyersCount,
+      holdBuyersCount,
+      topBuyers,
+      topSellers,
+      topProducts,
+    });
   } catch (error) {
     next(error);
   }
