@@ -46,7 +46,10 @@ export default function NewProducts({ data: newProducts }) {
               className="col mb-3 text-decoration-none"
             >
               {/* Add margin-bottom to create space between cards */}
-              <Card style={{ width: "auto" }} className="mx-2 shadow">
+              <Card
+                style={{ width: "auto", height: "18rem" }}
+                className="mx-2 shadow"
+              >
                 <Card.Img
                   variant="top"
                   src={product.imageUrls[0]}
@@ -56,7 +59,16 @@ export default function NewProducts({ data: newProducts }) {
                 <Card.Body className="p-2">
                   {/* Add padding to the card body */}
                   <Card.Title
-                    style={{ fontSize: "1rem", fontWeight: "600" }}
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      maxHeight: "3rem", // Adjust the value according to your requirement
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2, // Adjust the value to limit the lines
+                      WebkitBoxOrient: "vertical",
+                    }}
                     className="text-center"
                   >
                     {product.name}

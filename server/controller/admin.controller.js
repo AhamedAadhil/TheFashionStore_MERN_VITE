@@ -2,12 +2,14 @@ import Admin from "../models/admin.model.js";
 import Seller from "../models/seller.model.js";
 import Buyer from "../models/buyer.model.js";
 import Carousel from "../models/carousel.model.js";
+import Category from "../models/category.model.js";
+import Brand from "../models/brand.model.js";
+import Product from "../models/product.model.js";
 import bcryptjs from "bcryptjs";
 import { generateRefreshToken } from "../config/refreshToken.js";
 import { generateToken } from "../config/jwtToken.js";
 import { errorUtil } from "../utils/error.utils.js";
 import PendingApproval from "../models/pending.approval.model.js";
-import Product from "../models/product.model.js";
 import { sendEmail } from "../utils/sendEmail.utils.js";
 
 /* ADMIN LOGIN */
@@ -189,7 +191,9 @@ export const getAllSellers = async (req, res, next) => {
     return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
   }
   try {
-    const allSellers = await Seller.find({ status: "active" });
+    const allSellers = await Seller.find({
+      status: { $in: ["active", "blocked"] },
+    });
     res.status(200).json(allSellers);
   } catch (error) {
     next(error);
@@ -254,7 +258,10 @@ export const blockSeller = async (req, res, next) => {
       },
       { new: true }
     );
-    res.status(200).json("Seller Blocked!");
+    const allSellers = await Seller.find({
+      status: { $in: ["active", "blocked"] },
+    });
+    res.status(200).json(allSellers);
   } catch (error) {
     next(error);
   }
@@ -278,7 +285,10 @@ export const unBlockSeller = async (req, res, next) => {
       { new: true }
     );
 
-    res.status(200).json("Seller Unblocked!");
+    const allSellers = await Seller.find({
+      status: { $in: ["active", "blocked"] },
+    });
+    res.status(200).json(allSellers);
   } catch (error) {
     next(error);
   }
@@ -427,7 +437,7 @@ export const getAllPendingProductApprovals = async (req, res, next) => {
   try {
     const pendingApprovals = await PendingApproval.find({
       purpose: "product",
-    });
+    }).populate("seller");
     res.status(200).json(pendingApprovals);
   } catch (error) {
     next(error);
@@ -474,6 +484,76 @@ export const getSinglePendingProductApproval = async (req, res, next) => {
   }
 };
 
+/*  UPDATE A PRODUCT BY ID */
+export const updateProduct = async (req, res, next) => {
+  const productId = req.params.id;
+  const productCategory = req.body.category;
+  const productBrand = req.body.brand;
+  try {
+    const product = await Product.findById(productId);
+    if (!product.status === "live") {
+      return next(errorUtil(403, "This Product is Still Under  Review"));
+    }
+    const category = await Category.findOne({ title: productCategory });
+    if (!category) {
+      return next(errorUtil(404, "This Category Is Not Found!"));
+    }
+    const brand = await Brand.findOne({ title: productBrand });
+    if (!brand) {
+      return next(errorUtil(404, "This Brand Is Not Found!"));
+    }
+
+    const updateProduct = await Product.findByIdAndUpdate(
+      productId,
+      {
+        $set: {
+          name: req.body.name,
+          description: req.body.description,
+          imageUrls: req.body.imageUrls,
+          price: req.body.price,
+          category: category._id,
+          brand: brand._id,
+          size: req.body.size,
+          color: req.body.color,
+          stock: req.body.stock,
+        },
+      },
+      { new: true }
+    );
+    if (!updateProduct)
+      return next(errorUtil(405, "Cannot Update The Product Now!"));
+
+    res.status(200).json(updateProduct);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/*  DELETE A PRODUCT BY ID */
+export const deleteProduct = async (req, res, next) => {
+  const productId = req.params.id;
+
+  try {
+    const product = await Product.findById(productId);
+    const deleteProduct = await Product.findByIdAndDelete(productId);
+    if (!deleteProduct)
+      return next(errorUtil(405, "Cannot Delete The Product Now!"));
+
+    const selletId = product.seller;
+
+    const seller = await Seller.findById(selletId);
+
+    seller.products.pull(deleteProduct._id);
+    await seller.save();
+
+    const products = await Product.find({ status: "live" });
+
+    res.status(200).json(products);
+  } catch (error) {
+    next(error);
+  }
+};
+
 /* ACCEPT PRODUCT REQUEST */
 export const acceptProductRequest = async (req, res, next) => {
   const user = req.user;
@@ -514,7 +594,10 @@ export const acceptProductRequest = async (req, res, next) => {
     };
     await sendEmail(data);
     await PendingApproval.findByIdAndDelete(requestId);
-    res.status(200).json("Product Approved!");
+    const pendingApprovals = await PendingApproval.find({
+      purpose: "product",
+    }).populate("seller");
+    res.status(200).json(pendingApprovals);
   } catch (error) {
     next(error);
   }
@@ -562,7 +645,10 @@ export const declineProductRequest = async (req, res, next) => {
     await sendEmail(data);
     await PendingApproval.findByIdAndDelete(requestId);
     await Product.findByIdAndDelete(productId);
-    res.status(200).json("Product Rejected!");
+    const pendingApprovals = await PendingApproval.find({
+      purpose: "product",
+    }).populate("seller");
+    res.status(200).json(pendingApprovals);
   } catch (error) {
     next(error);
   }
@@ -591,13 +677,15 @@ export const verifySeller = async (req, res, next) => {
         )
       );
     }
-    res
-      .status(200)
-      .json(
-        `${seller.shopname} ${
-          isVerified ? "Verified" : "Unverified"
-        } Successfully!`
-      );
+    const allSellers = await Seller.find({
+      status: { $in: ["active", "blocked"] },
+    });
+    res.status(200).json({
+      message: `${seller.shopname} ${
+        isVerified ? "Verified" : "Unverified"
+      } Successfully!`,
+      sellers: allSellers,
+    });
   } catch (error) {
     next(error);
   }
@@ -633,17 +721,19 @@ export const getAllCarousels = async (req, res, next) => {
 /* ADMIN DASHBOARD DATA */
 export const dashboardData = async (req, res, next) => {
   try {
-    const liveProducts = await Product.find({ status: "live" }).select(
-      "sold name _id"
-    );
+    const liveProducts = await Product.find({ status: "live" })
+      .select("sold seller name _id")
+      .populate("seller");
     const liveProductsCount = liveProducts.length;
-    const pendingProducts = await Product.find({ status: "hold" });
+    const pendingProducts = await PendingApproval.find({
+      purpose: "product",
+    });
     const pendingProductsCount = pendingProducts.length;
-    const liveSellers = await Seller.find({ status: "active" }).select(
-      "points shopname _id"
-    );
+    const liveSellers = await Seller.find({
+      status: { $in: ["active", "blocked"] },
+    }).select("points shopname _id");
     const liveSellersCount = liveSellers.length;
-    const pendingSellers = await Seller.find({ status: "pending" });
+    const pendingSellers = await PendingApproval.find({ purpose: "seller" });
     const pendingSellersCount = pendingSellers.length;
     const liveBuyers = await Buyer.find({ status: "active" }).select(
       "points username _id"

@@ -91,7 +91,7 @@ export default function BecomeASeller() {
             </div>
             {/* Content for Becoming a Seller */}
             <div className="col mb-4">
-              <div className="instructor-content text-center">
+              <div className="instructor-content text-center pt-2">
                 <span className="subtitle" style={{ fontSize: "0.8rem" }}>
                   {subtitle}
                 </span>

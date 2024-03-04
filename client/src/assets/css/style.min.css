@@ -5099,6 +5099,7 @@ button {
   .header-section.style-4 .menu > ul li a {
     color: #101115;
     border-top: 1px solid rgba(16, 17, 21, 0.1);
+    background-color: #f16126;
   }
   .header-section.style-4 .menu > ul li a:hover {
     background: #ffdf40;
@@ -11584,7 +11585,7 @@ footer.style-2 .footer-top.dark-view * {
 .heart-icon {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 30px;
 }
 
 .heart-icon2 {

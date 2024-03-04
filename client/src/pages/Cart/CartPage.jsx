@@ -415,19 +415,6 @@ export default function CartPage() {
                       onClick={applyCoupon}
                     />
                   </form>
-                  <form className="cart-checkout">
-                    {/* <input type="text" value="Update Cart" /> */}
-                    <div>
-                      <Button
-                        variant="primary"
-                        className="py-2"
-                        onClick={placeOrder}
-                        style={{ width: "9rem" }}
-                      >
-                        Place Order
-                      </Button>
-                    </div>
-                  </form>
                 </div>
                 {/* checkout box end */}
                 {/* Shopping box */}
@@ -563,7 +550,7 @@ export default function CartPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="col-md-6 col-12">
+                    <div className="col-md-6 col-12 ">
                       <div className="cart-overview">
                         <h3>Cart Totals</h3>
                         <ul className="lab-ul">
@@ -602,6 +589,19 @@ export default function CartPage() {
                         </ul>
                       </div>
                     </div>
+                    <form className="cart-checkout text-end">
+                      {/* <input type="text" value="Update Cart" /> */}
+                      <div>
+                        <Button
+                          variant="primary"
+                          className="py-2"
+                          onClick={placeOrder}
+                          style={{ width: "9rem" }}
+                        >
+                          Place Order
+                        </Button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

@@ -27,8 +27,11 @@ export default function Pagination({ totalPages, currentPage, paginate }) {
       </li>
       {pageNumbers.map((number) => (
         <li
+          style={{
+            backgroundColor: `${number === currentPage ? "#F16126" : ""}`,
+          }}
           key={number}
-          className={`page-item ${number === currentPage ? "bg-warning" : ""}`}
+          className={`page-item `}
         >
           <button
             onClick={() => handlePageClick(number)}

@@ -109,6 +109,7 @@ export default function CarouselHome() {
         activeIndex={index}
         onSelect={handleSelect}
         controls={false}
+        indicators={false}
       >
         {carousels &&
           carousels.map((carousel, index) => (

@@ -207,33 +207,41 @@ export default function SingleProduct() {
                             {product &&
                               product.imageUrls.map((imageUrl, index) => (
                                 <SwiperSlide key={index}>
-                                  <div className="single-thumb"></div>
-                                  <div className="heart-icon">
-                                    <>
-                                      {isOnWishList ? (
-                                        <FaHeart
-                                          style={{ color: "red" }}
-                                          onClick={() => addToWishlist(id)}
-                                        />
-                                      ) : (
-                                        <FaRegHeart
-                                          style={{ color: "red" }}
-                                          onClick={() => addToWishlist(id)}
-                                        />
-                                      )}
-                                    </>
+                                  <div className="single-thumb text-center">
+                                    <div className="heart-icon">
+                                      <>
+                                        {isOnWishList ? (
+                                          <FaHeart
+                                            style={{ color: "red" }}
+                                            onClick={() => addToWishlist(id)}
+                                          />
+                                        ) : (
+                                          <FaRegHeart
+                                            style={{ color: "red" }}
+                                            onClick={() => addToWishlist(id)}
+                                          />
+                                        )}
+                                      </>
+                                    </div>
+                                    <img
+                                      src={imageUrl}
+                                      alt="product"
+                                      style={{
+                                        maxHeight: "326px",
+                                        maxWidth: "326px",
+                                      }}
+                                    />
                                   </div>
-                                  <img src={imageUrl} alt="product" />
                                 </SwiperSlide>
                               ))}
                           </Swiper>
                         )}
-                        <div className="pro-single-prev">
+                        {/* <div className="pro-single-prev">
                           <i className="icofont-rounded-right"></i>
                         </div>
                         <div className="pro-single-next">
                           <i className="icofont-rounded-left"></i>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>

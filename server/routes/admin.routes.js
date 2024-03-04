@@ -24,6 +24,8 @@ import {
   createCarousel,
   getAllCarousels,
   dashboardData,
+  updateProduct,
+  deleteProduct,
 } from "../controller/admin.controller.js";
 import { isAdmin } from "../middlewares/authentication.middleware.js";
 
@@ -61,6 +63,8 @@ router.put("/actions/declineSellerRequest/:id", isAdmin, declineSellerRequest);
 router.put("/actions/toggleVerifySeller/:id", isAdmin, verifySeller);
 
 /* PRODUCT ACTIONS */
+router.put("/action/product/update/:id", isAdmin, updateProduct);
+router.delete("/action/product/delete/:id", isAdmin, deleteProduct);
 router.get(
   "/actions/getAllPendingProductApprovals",
   isAdmin,

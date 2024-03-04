@@ -8,6 +8,7 @@ import {
   updateProduct,
 } from "../controller/product.controller.js";
 import {
+  isAdmin,
   isSeller,
   verifyToken,
 } from "../middlewares/authentication.middleware.js";

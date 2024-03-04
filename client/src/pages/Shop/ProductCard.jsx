@@ -19,13 +19,26 @@ export default function ProductCard({ gridList, products }) {
                 {/* product images */}
                 <div className="product-thumb">
                   <div className="pro-thumb">
-                    <img src={product.imageUrls[0]} alt="" />
+                    <Link to={`/shop/${product._id}`}>
+                      <img src={product.imageUrls[0]} alt="" />
+                    </Link>
                   </div>
                   {/* product actions */}
                 </div>
                 {/* product content */}
                 <div className="product-content">
-                  <h5>
+                  <h5
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      maxHeight: "3rem", // Adjust the value according to your requirement
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2, // Adjust the value to limit the lines
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
                     <Link to={`/shop/${product._id}`}>{product.name}</Link>
                   </h5>
                   <p className="productRating d-flex align-items-center justify-content-center">

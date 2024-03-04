@@ -128,7 +128,7 @@ export default function Navbar() {
             {/* menu area */}
             <div className="menu-area">
               <div className="menu">
-                <ul className={`lab-ul ${menuToggle ? "active" : ""}`}>
+                <ul className={`lab-ul ${menuToggle ? "active" : ""} `}>
                   <li onClick={handlePageLinkClick}>
                     <Link to="/">Home</Link>
                   </li>
