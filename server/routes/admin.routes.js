@@ -38,14 +38,14 @@ router.post("/auth/logout", isAdmin, adminLogout);
 /* BUYER ACTIONS */
 router.get("/actions/allBuyers", isAdmin, getAllBuyers);
 router.get("/actions/getBuyer/:id", isAdmin, getSingleBuyer);
-router.delete("/actions/deleteBuyer", isAdmin, deleteSingleBuyer);
+router.delete("/actions/deleteBuyer/:id", isAdmin, deleteSingleBuyer);
 router.put("/actions/blockBuyer/:id", isAdmin, blockBuyer);
 router.put("/actions/unblockBuyer/:id", isAdmin, unBlockBuyer);
 
 /* SELLER ACTIONS */
 router.get("/actions/allSellers", isAdmin, getAllSellers);
 router.get("/actions/getSeller/:id", isAdmin, getSingleSeller);
-router.delete("/actions/deleteSeller", isAdmin, deleteSingleSeller);
+router.delete("/actions/deleteSeller/:id", isAdmin, deleteSingleSeller);
 router.put("/actions/blockSeller/:id", isAdmin, blockSeller);
 router.put("/actions/unblockSeller/:id", isAdmin, unBlockSeller);
 router.get(

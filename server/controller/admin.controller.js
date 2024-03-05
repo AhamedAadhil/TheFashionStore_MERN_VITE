@@ -235,7 +235,10 @@ export const deleteSingleSeller = async (req, res, next) => {
     if (!deleteSeller) {
       return next(errorUtil(404, "Something Went Wrong, Please Try Again!"));
     }
-    res.status(200).json("Account Deleted!");
+    const allSellers = await Seller.find({
+      status: { $in: ["active", "blocked"] },
+    });
+    res.status(200).json(allSellers);
   } catch (error) {
     next(error);
   }
@@ -303,7 +306,7 @@ export const getAllPendingSellerApprovals = async (req, res, next) => {
   try {
     const pendingApprovals = await PendingApproval.find({
       purpose: "registration",
-    });
+    }).populate("seller");
     res.status(200).json(pendingApprovals);
   } catch (error) {
     next(error);
@@ -377,7 +380,10 @@ export const acceptSellerRequest = async (req, res, next) => {
        If you have any questions or need assistance, please feel free to contact our support team.<br/><br/>Best regards,<br/>TFS Fashions`,
     };
     await sendEmail(data);
-    res.status(200).json("Seller Approved!");
+    const pendingApprovals = await PendingApproval.find({
+      purpose: "registration",
+    }).populate("seller");
+    res.status(200).json(pendingApprovals);
   } catch (error) {
     next(error);
   }
@@ -422,7 +428,10 @@ export const declineSellerRequest = async (req, res, next) => {
     };
     await sendEmail(data);
     const deleteSeller = await Seller.findByIdAndDelete(sellerId);
-    res.status(200).json("Seller Rejected!");
+    const pendingApprovals = await PendingApproval.find({
+      purpose: "registration",
+    }).populate("seller");
+    res.status(200).json(pendingApprovals);
   } catch (error) {
     next(error);
   }
@@ -620,7 +629,7 @@ export const declineProductRequest = async (req, res, next) => {
       productId,
       {
         $set: {
-          status: "live",
+          status: "hold",
         },
       },
       { new: true }
@@ -733,7 +742,9 @@ export const dashboardData = async (req, res, next) => {
       status: { $in: ["active", "blocked"] },
     }).select("points shopname _id");
     const liveSellersCount = liveSellers.length;
-    const pendingSellers = await PendingApproval.find({ purpose: "seller" });
+    const pendingSellers = await PendingApproval.find({
+      purpose: "registration",
+    });
     const pendingSellersCount = pendingSellers.length;
     const liveBuyers = await Buyer.find({ status: "active" }).select(
       "points username _id"
