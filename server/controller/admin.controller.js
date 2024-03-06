@@ -5,6 +5,7 @@ import Carousel from "../models/carousel.model.js";
 import Category from "../models/category.model.js";
 import Brand from "../models/brand.model.js";
 import Product from "../models/product.model.js";
+import Order from "../models/order.model.js";
 import bcryptjs from "bcryptjs";
 import { generateRefreshToken } from "../config/refreshToken.js";
 import { generateToken } from "../config/jwtToken.js";
@@ -112,7 +113,10 @@ export const deleteSingleBuyer = async (req, res, next) => {
     if (!deleteBuyer) {
       return next(errorUtil(404, "Something Went Wrong, Please Try Again!"));
     }
-    res.status(200).json("Account Deleted!");
+    const allBuyers = await Buyer.find({
+      status: { $in: ["active", "blocked"] },
+    });
+    res.status(200).json(allBuyers);
   } catch (error) {
     next(error);
   }
@@ -126,7 +130,7 @@ export const getSingleBuyer = async (req, res, next) => {
   }
   try {
     const { id } = req.params;
-    const buyer = await Buyer.findById(id);
+    const buyer = await Buyer.findById(id).populate("orderhistory");
     if (!buyer) {
       return next(errorUtil(404, "No User found with given id"));
     }
@@ -154,7 +158,10 @@ export const blockBuyer = async (req, res, next) => {
       },
       { new: true }
     );
-    res.status(200).json("Buyer Blocked!");
+    const allBuyes = await Buyer.find({
+      status: { $in: ["blocked", "active"] },
+    });
+    res.status(200).json(allBuyes);
   } catch (error) {
     next(error);
   }
@@ -178,7 +185,10 @@ export const unBlockBuyer = async (req, res, next) => {
       { new: true }
     );
 
-    res.status(200).json("Buyer Unblocked!");
+    const allBuyes = await Buyer.find({
+      status: { $in: ["blocked", "active"] },
+    });
+    res.status(200).json(allBuyes);
   } catch (error) {
     next(error);
   }
@@ -750,8 +760,6 @@ export const dashboardData = async (req, res, next) => {
       "points username _id"
     );
     const liveBuyersCount = liveBuyers.length;
-    const holdBuyers = await Buyer.find({ status: "hold" });
-    const holdBuyersCount = holdBuyers.length;
     const topBuyers = liveBuyers
       .sort((a, b) => b.points - a.points)
       .slice(0, 5);
@@ -768,11 +776,22 @@ export const dashboardData = async (req, res, next) => {
       liveSellersCount,
       pendingSellersCount,
       liveBuyersCount,
-      holdBuyersCount,
       topBuyers,
       topSellers,
       topProducts,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET SINGLE ORDER BY ID */
+export const getSingleOrder = async (req, res, next) => {
+  const orderId = req.params.id;
+  try {
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).send("No order with that id");
+    res.status(200).json(order);
   } catch (error) {
     next(error);
   }
