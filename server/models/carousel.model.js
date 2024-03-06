@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 // Declare the Schema of the Mongo model
 var carouselSchema = new mongoose.Schema({
-  name: {
+  url: {
     type: String,
     required: true,
-    unique: true,
     index: true,
   },
   imageUrl: {

@@ -27,6 +27,7 @@ import {
   updateProduct,
   deleteProduct,
   getSingleOrder,
+  deleteCarousel,
 } from "../controller/admin.controller.js";
 import { isAdmin } from "../middlewares/authentication.middleware.js";
 
@@ -87,6 +88,7 @@ router.put(
 /* CAROUSEL CREATE */
 router.post("/actions/createCarousel", isAdmin, createCarousel);
 router.get("/actions/getAllCarousels", getAllCarousels);
+router.delete("/actions/deleteCarousel/:id", isAdmin, deleteCarousel);
 
 /* DASHBOARD */
 router.get("/actions/dashboardData", isAdmin, dashboardData);

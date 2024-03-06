@@ -715,7 +715,7 @@ export const createCarousel = async (req, res, next) => {
   try {
     const carousel = new Carousel({
       imageUrl: req.body.imageUrl,
-      name: req.body.name,
+      url: req.body.url,
     });
     await carousel.save();
     res.status(201).json(carousel);
@@ -731,6 +731,21 @@ export const getAllCarousels = async (req, res, next) => {
     if (!allCarousels) {
       return next(errorUtil(404, "No Carousels Found!"));
     }
+    res.status(200).json(allCarousels);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* DELETE A CAROUSEL BY ID */
+export const deleteCarousel = async (req, res, next) => {
+  try {
+    const carouselId = req.params.id;
+    const carousel = await Carousel.findByIdAndDelete(carouselId);
+    if (!carousel) {
+      return next(errorUtil(400, "Unable to Delete Carousel!"));
+    }
+    const allCarousels = await Carousel.find();
     res.status(200).json(allCarousels);
   } catch (error) {
     next(error);
