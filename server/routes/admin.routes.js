@@ -28,6 +28,7 @@ import {
   deleteProduct,
   getSingleOrder,
   deleteCarousel,
+  getAllOrders,
 } from "../controller/admin.controller.js";
 import { isAdmin } from "../middlewares/authentication.middleware.js";
 
@@ -95,5 +96,6 @@ router.get("/actions/dashboardData", isAdmin, dashboardData);
 
 /* ORDER */
 router.get("/actions/order/:id", isAdmin, getSingleOrder);
+router.get("/actions/getAllOrders", isAdmin, getAllOrders);
 
 export default router;

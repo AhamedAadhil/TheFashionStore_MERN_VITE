@@ -673,6 +673,31 @@ export const declineProductRequest = async (req, res, next) => {
   }
 };
 
+/* GET ALL ORDERS */
+export const getAllOrders = async (req, res, next) => {
+  try {
+    const allOrders = await Order.find();
+    if (!allOrders) {
+      return next(errorUtil(404, "No  Orders Found!"));
+    }
+    res.status(200).json(allOrders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET SINGLE ORDER BY ID */
+export const getSingleOrder = async (req, res, next) => {
+  const orderId = req.params.id;
+  try {
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).send("No order with that id");
+    res.status(200).json(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
 /* TOGGLE VERIFY SELLER */
 export const verifySeller = async (req, res, next) => {
   const sellerId = req.params.id;
@@ -784,6 +809,10 @@ export const dashboardData = async (req, res, next) => {
     const topProducts = liveProducts
       .sort((a, b) => b.sold - a.sold)
       .slice(0, 5);
+    const allOrders = await Order.countDocuments();
+    const pendingOrdersCount = await Order.countDocuments({
+      orderstatus: "pending",
+    });
 
     res.status(200).json({
       liveProductsCount,
@@ -794,19 +823,9 @@ export const dashboardData = async (req, res, next) => {
       topBuyers,
       topSellers,
       topProducts,
+      allOrders,
+      pendingOrdersCount,
     });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/* GET SINGLE ORDER BY ID */
-export const getSingleOrder = async (req, res, next) => {
-  const orderId = req.params.id;
-  try {
-    const order = await Order.findById(orderId);
-    if (!order) return res.status(404).send("No order with that id");
-    res.status(200).json(order);
   } catch (error) {
     next(error);
   }

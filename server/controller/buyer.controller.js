@@ -85,7 +85,7 @@ export const loginBuyer = async (req, res, next) => {
       if (updateBuyer.cart) {
         await updateBuyer.populate("cart");
       }
-      const { password: pass, role: ro, ...rest } = updateBuyer._doc;
+      const { password: pass, ...rest } = updateBuyer._doc;
       res
         .cookie("access_token", token, {
           httpOnly: true,
