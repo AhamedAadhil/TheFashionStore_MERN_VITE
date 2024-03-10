@@ -26,8 +26,6 @@ export default function Orders() {
     getBuyerOrders();
   }, []);
 
-  console.log(orders);
-
   return (
     <div className="padding-tb">
       <div className="container">

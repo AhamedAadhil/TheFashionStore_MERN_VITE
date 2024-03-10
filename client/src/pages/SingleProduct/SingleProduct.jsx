@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
@@ -9,16 +9,25 @@ import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import Rating from "../../components/Rating";
 import Review from "./Review";
+import SingleProductSkull from "../../components/LoadSkulls/SingleProductSkull";
 
 export default function SingleProduct() {
   const [product, setProduct] = useState({});
   const [isOnWishList, setIsOnWishList] = useState(false);
+  const [useEffectLoading, setUseEffectLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { currentUser } = useSelector((state) => state.user);
 
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const fetchProduct = async () => {
     try {
+      setUseEffectLoading(true);
       const response = await fetch(`/api/product/${id}`, {
         method: "GET",
         headers: {
@@ -26,17 +35,22 @@ export default function SingleProduct() {
         },
       });
       if (!response.ok) {
+        setUseEffectLoading(false);
         console.log(response.message);
+        return;
       }
+      setUseEffectLoading(false);
       const data = await response.json();
       setProduct(data);
     } catch (error) {
+      setUseEffectLoading(false);
       toast.error(error.message);
     }
   };
 
   const getBuyerWishList = async () => {
     try {
+      setUseEffectLoading(true);
       const response = await fetch("/api/buyer/actions/getWishList", {
         method: "GET",
         headers: {
@@ -44,14 +58,16 @@ export default function SingleProduct() {
         },
       });
       if (!response.ok) {
+        setUseEffectLoading(false);
         console.log(response.message);
         return;
       }
       const data = await response.json();
-
       const isProductInWishlist = data.some((item) => item._id === id);
       setIsOnWishList(isProductInWishlist);
+      setUseEffectLoading(false);
     } catch (error) {
+      setUseEffectLoading(false);
       console.log(error.message);
     }
   };
@@ -176,6 +192,10 @@ export default function SingleProduct() {
   const handleProductUpdate = () => {
     fetchProduct();
   };
+
+  if (useEffectLoading) {
+    return <SingleProductSkull />; // Render skeleton component while loading
+  }
 
   return (
     <div className="shop-single padding-tb aside-bg">
@@ -367,7 +387,9 @@ export default function SingleProduct() {
                             className="lab-btn mt-4"
                             disabled={loading}
                           >
-                            <span>{loading ? "Loading" : "Add To Cart"}</span>
+                            <span>
+                              {loading ? "Loading..." : "Add To Cart"}
+                            </span>
                           </button>
                           <Link to="/cart" className="lab-btn bg-primary">
                             <span>Check Out</span>

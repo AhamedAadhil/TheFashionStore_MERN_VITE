@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { FaCartPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import MobileNumberModel from "../../components/MobileNumberModel";
+import CartPageSkull from "../../components/LoadSkulls/CartPageSkull";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
@@ -16,6 +17,7 @@ export default function CartPage() {
   const [cartTotal, setCartTotal] = useState(0);
   const [afterDiscount, setAfterDiscount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [useEffectLoading, setUseEffectLoading] = useState(false);
   const [formData, setFormData] = useState({});
   const [showMobileNumberModel, setShowMobileNumberModel] = useState(false);
   const buttonText = !selectedAddressId ? "Add New Address" : "Update Address";
@@ -42,7 +44,7 @@ export default function CartPage() {
 
   const fetchCartData = async () => {
     try {
-      setLoading(true);
+      setUseEffectLoading(true);
       let response = await fetch("/api/buyer/actions/getUserCart", {
         method: "GET",
         headers: {
@@ -50,24 +52,24 @@ export default function CartPage() {
         },
       });
       if (!response.ok) {
-        setLoading(false);
+        setUseEffectLoading(false);
         console.log(response.message);
         return;
       }
       const data = await response.json();
-      setLoading(false);
+      setUseEffectLoading(false);
       setCartItems(data.products);
       setCartTotal(data.carttotal);
       setAfterDiscount(data.totalafterdiscount);
     } catch (error) {
-      setLoading(false);
+      setUseEffectLoading(false);
       console.log(error.message);
     }
   };
 
   const fetchAddress = async () => {
     try {
-      setLoading(true);
+      setUseEffectLoading(true);
       let response = await fetch("/api/buyer/actions/getAllAddress", {
         method: "GET",
         headers: {
@@ -75,15 +77,15 @@ export default function CartPage() {
         },
       });
       if (!response.ok) {
-        setLoading(false);
+        setUseEffectLoading(false);
         console.log(response.message);
         return;
       }
       const data = await response.json();
-      setLoading(false);
+      setUseEffectLoading(false);
       setAddressList(data);
     } catch (error) {
-      setLoading(false);
+      setUseEffectLoading(false);
       console.log(error.message);
     }
   };
@@ -331,6 +333,10 @@ export default function CartPage() {
       toast.error(error.message);
     }
   };
+
+  if (useEffectLoading) {
+    return <CartPageSkull />;
+  }
 
   return (
     <div className="shop-cart padding-tb">

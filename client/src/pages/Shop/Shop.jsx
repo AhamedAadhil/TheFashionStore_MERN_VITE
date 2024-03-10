@@ -1,10 +1,9 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import PageHeader from "../../components/PageHeader";
+import { useLocation } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import Pagination from "./Pagination";
 import Search from "./Search";
-import ShopCategory from "./ShopCategory";
+import ShopPageSkull from "../../components/LoadSkulls/ShopPageSkull";
 
 export default function Shop() {
   const [gridList, setGridList] = useState(true);
@@ -13,10 +12,18 @@ export default function Shop() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(1);
   const [productsPerPage] = useState(30);
+  const [loading, setLoading] = useState(false);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const response = await fetch(
           `/api/product/allProducts?page=${currentPage}&limit=${productsPerPage}`,
           {
@@ -28,12 +35,15 @@ export default function Shop() {
         );
         const data = await response.json();
         if (!response.ok) {
+          setLoading(false);
           console.log(response.message);
         }
+        setLoading(false);
         setProducts(data.products);
         setTotalProducts(data.totalCount);
         setTotalPages(Math.ceil(data.totalCount / productsPerPage));
       } catch (error) {
+        setLoading(false);
         console.log(error.message);
       }
     };
@@ -45,17 +55,6 @@ export default function Shop() {
     setCurrentPage(pageNumber);
   };
 
-  //   const[selectedCategory,setSelectedCategory]=useState("All")
-  //   const menuItems =[...new Set(Data.map((val)=>val.category))]
-
-  //   const filterItem = (curcat)=>{
-  //     const newItem = Data.filter((newVal)=>{
-  //         return newVal.category===curcat
-  //     })
-  //     setSelectedCategory(curcat)
-  //     setProducts(newItem)
-  //   }
-
   const showResults = `Showing ${currentPage * productsPerPage - 30 + 1} - ${
     currentPage * productsPerPage > totalProducts
       ? totalProducts
@@ -65,25 +64,28 @@ export default function Shop() {
   return (
     <div className="min-vh-100">
       {/* <PageHeader title="Our Shop Page" currentPage="Shop" /> */}
-      <div className="shop-page padding-tb">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-lg-4 col-12">
-              <aside>
-                <Search gridList={gridList} />
-                {/* <ShopCategory
+      {loading ? (
+        <ShopPageSkull />
+      ) : (
+        <div className="shop-page padding-tb">
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-lg-4 col-12">
+                <aside>
+                  <Search gridList={gridList} />
+                  {/* <ShopCategory
                 filterItem={filterItem}
                 setItem = {setProducts}
                 menuItems={menuItems}
                 /> */}
-              </aside>
-            </div>
-            <div className="col-lg-8 col-12">
-              <article>
-                {/* layout and title */}
-                <div className="shop-title d-flex flex-wrap justify-content-between">
-                  <p>{showResults}</p>
-                  {/* <div
+                </aside>
+              </div>
+              <div className="col-lg-8 col-12">
+                <article>
+                  {/* layout and title */}
+                  <div className="shop-title d-flex flex-wrap justify-content-between">
+                    <p>{showResults}</p>
+                    {/* <div
                     className={`product-view-mode ${
                       gridList ? "gridActive" : "listActive"
                     }`}
@@ -101,23 +103,24 @@ export default function Shop() {
                       <i className="icofont-listine-dots"></i>
                     </Link>
                   </div> */}
-                </div>
-                {/* product cards */}
-                <div>
-                  {products && (
-                    <ProductCard gridList={gridList} products={products} />
-                  )}
-                </div>
-                <Pagination
-                  totalPages={totalPages}
-                  currentPage={currentPage}
-                  paginate={paginate}
-                />
-              </article>
+                  </div>
+                  {/* product cards */}
+                  <div>
+                    {products && (
+                      <ProductCard gridList={gridList} products={products} />
+                    )}
+                  </div>
+                  <Pagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    paginate={paginate}
+                  />
+                </article>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

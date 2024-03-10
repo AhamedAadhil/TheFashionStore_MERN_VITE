@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
+import CarouselHomeSkull from "./LoadSkulls/CarouselHomeSkull";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Form from "react-bootstrap/Form";
@@ -11,6 +12,7 @@ export default function CarouselHome() {
   const [category, setCategory] = useState(undefined);
   const [carousels, setCarousels] = useState(undefined);
   const [searchInput, setSearchInput] = useState("");
+  const [useEffectLoading, setUseEffectLoading] = useState(false);
   const [filteredProducts, setfilteredProducts] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
@@ -38,6 +40,7 @@ export default function CarouselHome() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        setUseEffectLoading(true);
         let apiUrl = "/api/product/allProducts";
         if (selectedCategory !== "all") {
           apiUrl += `?category=${selectedCategory._id}`;
@@ -50,15 +53,19 @@ export default function CarouselHome() {
         });
         const data = await response.json();
         if (!response.ok) {
+          setUseEffectLoading(false);
           console.log("if not ok", data.message);
         }
+        setUseEffectLoading(false);
         setProduct(data.products);
       } catch (error) {
+        setUseEffectLoading(false);
         console.log("error: ", error.message);
       }
     };
     const fetchCategory = async () => {
       try {
+        setUseEffectLoading(true);
         const response = await fetch("/api/category/getAllCategory", {
           method: "GET",
           headers: {
@@ -67,15 +74,19 @@ export default function CarouselHome() {
         });
         const dataFromResponse = await response.json();
         if (!response.ok) {
+          setUseEffectLoading(false);
           console.log(response.message);
         }
+        setUseEffectLoading(false);
         setCategory(dataFromResponse);
       } catch (error) {
+        setUseEffectLoading(false);
         console.log(error.message);
       }
     };
     const fetchCarousels = async () => {
       try {
+        setUseEffectLoading(true);
         const response = await fetch("/api/admin/actions/getAllCarousels", {
           method: "GET",
           headers: {
@@ -84,10 +95,13 @@ export default function CarouselHome() {
         });
         const dataFromResponse = await response.json();
         if (!response.ok) {
+          setUseEffectLoading(false);
           console.log(response.message);
         }
+        setUseEffectLoading(false);
         setCarousels(dataFromResponse);
       } catch (error) {
+        setUseEffectLoading(false);
         console.log(error.message);
       }
     };
@@ -104,70 +118,78 @@ export default function CarouselHome() {
 
   return (
     <>
-      <Carousel
-        style={{ paddingTop: "80px" }}
-        activeIndex={index}
-        onSelect={handleSelect}
-        controls={false}
-        indicators={false}
-      >
-        {carousels &&
-          carousels.map((carousel, index) => (
-            <Carousel.Item key={index}>
-              <img
-                src={carousel.imageUrl}
-                alt={carousel.name}
-                className="d-block w-100"
-              />
-            </Carousel.Item>
-          ))}
-      </Carousel>
-      <div className="container mt-4">
-        <div className=" banner-content ">
-          {/* <h5>Without a Search How Can You Find Your Product In The Pool?</h5> */}
-          <InputGroup className="shadow rounded" style={{ height: "45px" }}>
-            <DropdownButton
-              variant="secondary"
-              title={
-                selectedCategory === "all"
-                  ? "All Categories"
-                  : selectedCategory.title
-              }
-              id="input-group-dropdown-1"
-              onSelect={handleCategorySelect}
-            >
-              <Dropdown.Item>All Categories</Dropdown.Item>
-              {category && category.length > 0 ? (
-                category.map((item, index) => (
-                  <Dropdown.Item key={index} eventKey={item._id}>
-                    {item.title}
-                  </Dropdown.Item>
-                ))
-              ) : (
-                <Dropdown.Item disabled>No categories available</Dropdown.Item>
-              )}
-            </DropdownButton>
-            {/* <Search /> */}
-            <Form.Control
-              value={searchInput}
-              onChange={handleChange}
-              placeholder="Product Name..."
-              className="px-3 py-2 shadow-none"
-            />
-            {/* <InputGroup.Text className="bg-transparent ">
+      {useEffectLoading ? (
+        <CarouselHomeSkull />
+      ) : (
+        <>
+          <Carousel
+            style={{ paddingTop: "80px" }}
+            activeIndex={index}
+            onSelect={handleSelect}
+            controls={false}
+            indicators={false}
+          >
+            {carousels &&
+              carousels.map((carousel, index) => (
+                <Carousel.Item key={index}>
+                  <img
+                    src={carousel.imageUrl}
+                    alt={carousel.name}
+                    className="d-block w-100"
+                  />
+                </Carousel.Item>
+              ))}
+          </Carousel>
+          <div className="container mt-4">
+            <div className=" banner-content ">
+              {/* <h5>Without a Search How Can You Find Your Product In The Pool?</h5> */}
+              <InputGroup className="shadow rounded" style={{ height: "45px" }}>
+                <DropdownButton
+                  variant="secondary"
+                  title={
+                    selectedCategory === "all"
+                      ? "All Categories"
+                      : selectedCategory.title
+                  }
+                  id="input-group-dropdown-1"
+                  onSelect={handleCategorySelect}
+                >
+                  <Dropdown.Item>All Categories</Dropdown.Item>
+                  {category && category.length > 0 ? (
+                    category.map((item, index) => (
+                      <Dropdown.Item key={index} eventKey={item._id}>
+                        {item.title}
+                      </Dropdown.Item>
+                    ))
+                  ) : (
+                    <Dropdown.Item disabled>
+                      No categories available
+                    </Dropdown.Item>
+                  )}
+                </DropdownButton>
+                {/* <Search /> */}
+                <Form.Control
+                  value={searchInput}
+                  onChange={handleChange}
+                  placeholder="Product Name..."
+                  className="px-3 py-2 shadow-none"
+                />
+                {/* <InputGroup.Text className="bg-transparent ">
               <FaSearch />
             </InputGroup.Text> */}
-          </InputGroup>
-          <ul className="lab-ul mt-3 px-4">
-            {searchInput &&
-              filteredProducts.map((product, index) => (
-                <li key={index}>
-                  <Link to={`/shop/${product._id}`}>{product.name}</Link>
-                </li>
-              ))}
-          </ul>
-        </div>
-      </div>
+              </InputGroup>
+              <ul className="lab-ul mt-3 px-4">
+                {searchInput &&
+                  filteredProducts.map((product, index) => (
+                    <li key={index}>
+                      <Link to={`/shop/${product._id}`}>{product.name}</Link>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

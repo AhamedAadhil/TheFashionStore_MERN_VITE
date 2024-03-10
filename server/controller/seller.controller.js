@@ -444,11 +444,6 @@ export const dashboardData = async (req, res, next) => {
       status: "live",
     });
     /* data3 */
-    // let totalSold = 0;
-    // allProducts.map((product) => {
-    //   totalSold += product.sold;
-    //   return product.stock;
-    // });
     const totalSold = seller.totalsold;
 
     const allOrders = await Order.find({
@@ -457,6 +452,12 @@ export const dashboardData = async (req, res, next) => {
 
     /* data4 */
     const orderCount = allOrders.length;
+
+    const pendingOrders = allOrders.filter(
+      (order) => order.orderstatus === "pending"
+    );
+    /* data6 */
+    const pendingOrdersCount = pendingOrders.length;
 
     const deliveredOrders = allOrders.filter(
       (order) => order.orderstatus === "delivered"
@@ -487,6 +488,7 @@ export const dashboardData = async (req, res, next) => {
       salesTotal,
       sortedProductStocks,
       sortedProductSales,
+      pendingOrdersCount,
     });
   } catch (error) {
     next(error);
