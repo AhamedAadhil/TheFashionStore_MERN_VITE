@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import dbConnect from "./config/dbConnect.js";
 import buyerRoutes from "./routes/buyer.routes.js";
@@ -19,6 +20,11 @@ const __dirname = path.resolve();
 const app = express();
 
 /* MIDDLEWARES */
+app.use(
+  cors({
+    origin: "https:api.galleryglam.lk",
+  })
+);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
