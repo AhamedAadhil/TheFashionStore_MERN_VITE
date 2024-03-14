@@ -3,6 +3,10 @@ import GoogleMap from "../../components/GoogleMap";
 import { SiMinutemailer } from "react-icons/si";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import officeAddressImg from "../../assets/images/icon/01.png";
+import whatsappImg from "../../assets/images/icon/05.png";
+import emailImg from "../../assets/images/icon/03.png";
+import websiteImg from "../../assets/images/icon/04.png";
 
 export default function Help() {
   const [formData, setFormData] = useState({
@@ -22,27 +26,27 @@ export default function Help() {
 
   const contactList = [
     {
-      imgUrl: "/src/assets/images/icon/01.png",
+      imgUrl: officeAddressImg,
       imgAlt: "contact icon",
       title: "Office Address",
       desc: "No 79, Mudaliyar Road, Akkaraipattu-4, SRILANKA",
     },
     {
-      imgUrl: "/src/assets/images/icon/05.png",
+      imgUrl: whatsappImg,
       imgAlt: "contact icon",
       title: "WhatsApp",
       desc: "+94 7 666 119 17",
       whatsapp: "94766611917",
     },
     {
-      imgUrl: "/src/assets/images/icon/03.png",
+      imgUrl: emailImg,
       imgAlt: "contact icon",
       title: "Send email",
       desc: "galleryglam.contact@gmail.com",
       email: "galleryglam.contact@gmail.com",
     },
     {
-      imgUrl: "/src/assets/images/icon/04.png",
+      imgUrl: websiteImg,
       imgAlt: "contact icon",
       title: "Our website",
       desc: "www.galleryglam.lk",
