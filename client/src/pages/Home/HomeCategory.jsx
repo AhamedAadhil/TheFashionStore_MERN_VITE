@@ -49,49 +49,34 @@ export default function HomeCategory({ data: category }) {
               },
             }}
           >
-            {category.map((category, index) => (
-              <SwiperSlide key={index}>
-                <Link to="/shop" className="category-item">
-                  <div className="category-inner">
-                    <div className="category-thumb">
-                      <img src={category.logo} alt={category.title} />
-                    </div>
-                    {/* <div className="category-content">
-                      <div
-                        className="cate-icons"
+            {category.map(
+              (category, index) =>
+                category.title !== "Others" && (
+                  <SwiperSlide key={index}>
+                    <Link to="/shop" className="category-item">
+                      <div className="category-inner">
+                        <div className="category-thumb">
+                          <img src={category.logo} alt={category.title} />
+                        </div>
+                      </div>
+                      <p
+                        className="text-center .text-truncate lh-1"
                         style={{
-                          display: window.innerWidth > 768 ? "block" : "none",
+                          paddingTop: "0.2rem",
+                          fontWeight: "600",
+                          fontSize: "0.8rem",
                         }}
                       >
-                        <TbCategory
-                          style={{ fontSize: "14px", color: "#ffc107" }}
-                        />
-                      </div>
-
-                      <h6>{category.title}</h6>
-                    </div> */}
-                    {/* <p>Hello</p> */}
-                  </div>
-                  <p
-                    className="text-center .text-truncate lh-1"
-                    style={{
-                      paddingTop: "0.2rem",
-                      fontWeight: "600",
-                      fontSize: "0.8rem",
-                    }}
-                  >
-                    {category.title}
-                  </p>
-                </Link>
-              </SwiperSlide>
-            ))}
+                        {category.title}
+                      </p>
+                    </Link>
+                  </SwiperSlide>
+                )
+            )}
           </Swiper>
-          {/* btn get started */}
-          {/* <div className="text-center"> */}
           <Link to="/shop" className="lab-btn-category ">
             <span>{btnText}</span>
           </Link>
-          {/* </div> */}
         </div>
       </div>
     </div>

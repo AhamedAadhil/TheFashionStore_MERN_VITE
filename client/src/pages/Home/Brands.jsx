@@ -59,20 +59,23 @@ export default function Brands() {
               className="mySwiper"
             >
               {brands &&
-                brands.map((item, index) => (
-                  <SwiperSlide key={index}>
-                    <div className="sponser-item">
-                      <div className="sponser-thumb">
-                        <img
-                          src={item.logo}
-                          alt={item.title}
-                          height="auto"
-                          width="auto"
-                        />
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
+                brands.map(
+                  (item, index) =>
+                    item.title !== "Others" && (
+                      <SwiperSlide key={index}>
+                        <div className="sponser-item">
+                          <div className="sponser-thumb">
+                            <img
+                              src={item.logo}
+                              alt={item.title}
+                              height="auto"
+                              width="auto"
+                            />
+                          </div>
+                        </div>
+                      </SwiperSlide>
+                    )
+                )}
             </Swiper>
           </div>
         </div>
