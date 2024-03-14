@@ -39,7 +39,7 @@ export default function About() {
       {/* <PageHeader currentPage={"About"} title={"About Gallery Glam"} /> */}
       <div
         className="about-section style-3 padding-tb section-bg"
-        style={{ paddingTop: "80px" }}
+        style={{ paddingTop: "100px" }}
       >
         <div className="container">
           <div className="row justify-content-center row-cols-xl-2 row-cols-1 align-items-center">
