@@ -103,7 +103,10 @@ export default function Help() {
   return (
     <div>
       {/* <PageHeader title={"Get In Touch With Us"} currentPage={"Contact Us"} /> */}
-      <div className="map-address-section padding-tb section-bg">
+      <div
+        className="map-address-section padding-tb section-bg"
+        style={{ paddingTop: "80px" }}
+      >
         <div className="container">
           <div className="section-header text-center">
             <span className="subtitle">{subTitle}</span>
