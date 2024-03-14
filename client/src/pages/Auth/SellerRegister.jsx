@@ -19,7 +19,8 @@ export default function SellerRegister() {
     setFormData({ ...formData, showPassword: !formData.showPassword });
   };
 
-  console.log(formData);
+  const phoneNumberRegex =
+    /^(?:\+?94|0)(?:7(?:[1245678]\d{7}|0\d{7})|[1-6]\d{8})$/;
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -45,6 +46,10 @@ export default function SellerRegister() {
       !formData?.address.postalcode
     ) {
       toast.error("All fields are required!");
+      return;
+    }
+    if (phoneNumberRegex.test(formData.mobile)) {
+      toast.error("Invalid Mobile Number!");
       return;
     }
     if (formData?.cpassword !== formData?.password) {
@@ -92,6 +97,8 @@ export default function SellerRegister() {
                 placeholder="Seller Name *"
                 onChange={handleChange}
                 required
+                maxLength={15}
+                minLength={3}
               />
             </div>
             <div className="form-group">
@@ -102,6 +109,8 @@ export default function SellerRegister() {
                 placeholder="Shop Name *"
                 onChange={handleChange}
                 required
+                maxLength={15}
+                minLength={3}
               />
             </div>
             <div className="form-group">
@@ -121,6 +130,7 @@ export default function SellerRegister() {
                 id="password"
                 placeholder="Password *"
                 onChange={handleChange}
+                minLength={8}
                 required
               />
               <span onClick={togglePasswordVisibility}>
@@ -138,6 +148,7 @@ export default function SellerRegister() {
                 id="cpassword"
                 placeholder="Confirm Password *"
                 onChange={handleChange}
+                minLength={8}
                 required
               />
               <span onClick={togglePasswordVisibility}>
@@ -164,7 +175,7 @@ export default function SellerRegister() {
                 type="text"
                 name="label"
                 id="address-label"
-                placeholder="Address Label *"
+                placeholder="Address Label Ex:Home,Office *"
                 onChange={(e) =>
                   handleChange({
                     target: {
@@ -173,6 +184,8 @@ export default function SellerRegister() {
                     },
                   })
                 }
+                maxLength={15}
+                minLength={3}
                 required
               />
             </div>
@@ -193,6 +206,8 @@ export default function SellerRegister() {
                     },
                   })
                 }
+                maxLength={7}
+                minLength={1}
                 required
               />
             </div>
@@ -210,6 +225,8 @@ export default function SellerRegister() {
                     },
                   })
                 }
+                maxLength={15}
+                minLength={3}
                 required
               />
             </div>
@@ -227,6 +244,8 @@ export default function SellerRegister() {
                     },
                   })
                 }
+                maxLength={15}
+                minLength={3}
                 required
               />
             </div>
@@ -244,12 +263,14 @@ export default function SellerRegister() {
                     },
                   })
                 }
+                maxLength={15}
+                minLength={3}
                 required
               />
             </div>
             <div className="form-group">
               <input
-                type="text"
+                type="number"
                 name="postalcode"
                 id="address-postalcode"
                 placeholder="Postal Code *"

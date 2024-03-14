@@ -88,6 +88,8 @@ export default function Register() {
                 placeholder="Enter Your Name *"
                 onChange={handleChange}
                 required
+                maxLength={15}
+                minLength={3}
               />
             </div>
             <div className="form-group">
@@ -117,6 +119,7 @@ export default function Register() {
                 id="password"
                 placeholder="Password *"
                 onChange={handleChange}
+                minLength={8}
                 required
               />
               <span onClick={togglePasswordVisibility}>
@@ -134,6 +137,7 @@ export default function Register() {
                 id="cpassword"
                 placeholder="Confirm Password *"
                 onChange={handleChange}
+                minLength={8}
                 required
               />
               <span onClick={togglePasswordVisibility}>

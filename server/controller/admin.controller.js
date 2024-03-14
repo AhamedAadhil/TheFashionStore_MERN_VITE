@@ -387,7 +387,7 @@ export const acceptSellerRequest = async (req, res, next) => {
       text: `Dear ${sellerDetails.sellername},`,
       html: `Dear ${sellerDetails.sellername},<br/><br/> Thank you for registering with us. We are pleased to inform you that your account has been approved and is now active.<br/><br/>
       You can now start using our platform to list your products and manage your sales.<br/><br/> Shop Name:  ${sellerDetails.shopname} <br/><br/> 
-       If you have any questions or need assistance, please feel free to contact our support team.<br/><br/>Best regards,<br/>TFS Fashions`,
+       If you have any questions or need assistance, please feel free to contact our support team.<br/><br/>Best regards,<br/>Gallery Glam`,
     };
     await sendEmail(data);
     const pendingApprovals = await PendingApproval.find({
@@ -434,7 +434,7 @@ export const declineSellerRequest = async (req, res, next) => {
       subject: "Account Approval Status",
       text: `Dear ${sellerDetails.sellername},`,
       html: `Dear ${sellerDetails.sellername},<br/><br/> Thank you for registering with us. We regret to inform you that your account registration has been denied.<br/><br/> 
-       If you have any questions or need assistance, please feel free to contact our support team.<br/><br/>Best regards,<br/>TFS Fashions`,
+       If you have any questions or need assistance, please feel free to contact our support team.<br/><br/>Best regards,<br/>Gallery Glam`,
     };
     await sendEmail(data);
     const deleteSeller = await Seller.findByIdAndDelete(sellerId);
@@ -609,7 +609,7 @@ export const acceptProductRequest = async (req, res, next) => {
       text: `Dear ${sellerDetails.seller.sellername},`,
       html: `Dear ${sellerDetails.seller.sellername},<br/><br/> We are pleased to inform you that your product, <b>${productName.name}</b>, has been approved and is now live on our platform. Customers can now view and purchase your product.<br/><br/>
      Thank you for listing your product with us. If you have any questions or need further assistance, feel free to contact our support team. <br/><br/> 
-      Best regards,<br/>TFS Fashions`,
+      Best regards,<br/>Gallery Glam`,
     };
     await sendEmail(data);
     await PendingApproval.findByIdAndDelete(requestId);
@@ -659,7 +659,7 @@ export const declineProductRequest = async (req, res, next) => {
       html: `Dear ${sellerDetails.seller.sellername},<br/><br/> We regret to inform you that your product, <b>${productName.name}</b>, has not been approved for listing on our platform. Our team has reviewed your product and determined that it does not meet our quality standards or guidelines.<br/><br/>
      If you have any questions or would like more information about why your product was not approved, please don't hesitate to contact our support team. <br/><br/> 
      Thank you for your understanding.<br/><br/> 
-     Best regards,<br/>TFS Fashions`,
+     Best regards,<br/>Gallery Glam`,
     };
     await sendEmail(data);
     await PendingApproval.findByIdAndDelete(requestId);

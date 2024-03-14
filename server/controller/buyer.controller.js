@@ -422,7 +422,7 @@ export const forgotPasswordToken = async (req, res, next) => {
   try {
     const token = await buyer.createPasswordResetToken();
     await buyer.save();
-    const resetURL = `Hi ${buyer.username}, Please follow this link to reset Your Password. This link is valid for 10 minutes from now. <a href='http://localhost:5173/reset-password/${token}'>Click Here</a>`;
+    const resetURL = `Hi ${buyer.username}, Please follow this link to reset Your Password. This link is valid for 10 minutes from now. <a href='https://galleryglam.lk/reset-password/${token}'>Click Here</a>`;
     const data = {
       to: email,
       subject: "Password Reset Link",
@@ -924,7 +924,7 @@ ${productDetailsHTML}
 <p style="font-size: 16px;">Please review the order details and ensure that you are prepared to fulfill it promptly.</p>
 <p style="font-size: 16px;">If you have any questions or concerns regarding this order, please don't hesitate to contact us. We're here to assist you in any way we can.</p>
 <p style="font-size: 16px;">Thank you for your continued partnership.</p>
-<p style="font-size: 16px;">Best regards,<br>TFS Fashion</p>`,
+<p style="font-size: 16px;">Best regards,<br>Gallery Glam</p>`,
     };
     const dataForBuyer = {
       to: buyer.email,
@@ -949,7 +949,7 @@ ${productDetailsHTML}
 <p style="font-size: 16px;">Please review the order details and ensure that you are prepared to fulfill it promptly.</p>
 <p style="font-size: 16px;">If you have any questions or concerns regarding this order, please don't hesitate to contact us. We're here to assist you in any way we can.</p>
 <p style="font-size: 16px;">Thank you for your continued partnership.</p>
-<p style="font-size: 16px;">Best regards,<br>TFS Fashion</p>`,
+<p style="font-size: 16px;">Best regards,<br>Gallery Glam</p>`,
     };
     await sendEmail(dataForSeller);
     await sendEmail(dataForBuyer);

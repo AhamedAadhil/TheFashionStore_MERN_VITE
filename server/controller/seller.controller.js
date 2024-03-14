@@ -41,7 +41,7 @@ export const registerSeller = async (req, res, next) => {
       to: req.body.email,
       subject: "Account Registration Acknowledgement",
       text: `Dear ${newSeller.sellername},`,
-      html: `Dear ${newSeller.sellername},<br/><br/> Thank you for registering with us. Your account is currently under review by our administrators. You will be notified of the status within the next 8 hours.<br/><br/>Best regards,<br/>TFS Fashions`,
+      html: `Dear ${newSeller.sellername},<br/><br/> Thank you for registering with us. Your account is currently under review by our administrators. You will be notified of the status within the next 8 hours.<br/><br/>Best regards,<br/>Gallery Glam`,
     };
     await sendEmail(data);
     res.status(201).json("Your Profile is Under Review!");
@@ -219,7 +219,7 @@ export const forgotPasswordToken = async (req, res, next) => {
   try {
     const token = await seller.createPasswordResetToken();
     await seller.save();
-    const resetURL = `Hi ${seller.sellername}, Please follow this link to reset Your Password. This link is valid for 10 minutes from now. <a href='http://localhost:3001/api/seller/auth/resetPassword/${token}'>Click Here</a>`;
+    const resetURL = `Hi ${seller.sellername}, Please follow this link to reset Your Password. This link is valid for 10 minutes from now. <a href='https://seller.galleryglam.lk/reset-password/${token}'>Click Here</a>`;
     const data = {
       to: email,
       subject: "Password Reset Link",
@@ -377,7 +377,7 @@ export const updateOrderStatus = async (req, res, next) => {
 <p>Please review the order details and ensure that you are prepared to fulfill it promptly.</p>
 <p>If you have any questions or concerns regarding this order, please don't hesitate to contact us. We're here to assist you in any way we can.</p>
 <p>Thank you for your continued partnership.</p>
-<p>Best regards,<br>TFS Fashion</p>`,
+<p>Best regards,<br>Gallery Glam</p>`,
     };
 
     const dataForBuyer = {
@@ -400,7 +400,7 @@ export const updateOrderStatus = async (req, res, next) => {
 
 <p>Thank you for choosing our platform for your purchase.</p>
 
-<p>Best regards,<br>TFS Fashion</p>
+<p>Best regards,<br>Gallery Glam</p>
 `,
     };
     await sendEmail(dataForSeller);
