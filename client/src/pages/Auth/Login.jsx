@@ -1,4 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
+import { RiLoginCircleFill } from "react-icons/ri";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import toast from "react-hot-toast";
 import {
   signInStart,
@@ -19,6 +21,10 @@ export default function Login() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setFormData({ ...formData, showPassword: !formData.showPassword });
   };
 
   const handleLogin = async (e) => {
@@ -54,7 +60,10 @@ export default function Login() {
       <div className="login-section padding-tb section-bg">
         <div className="container py-4">
           <div className="account-wrapper">
-            <h3 className="title">{title}</h3>
+            <h3 className="title" style={{ color: "#F16126" }}>
+              <RiLoginCircleFill />
+              {title}
+            </h3>
             <form className="account-form" onSubmit={handleLogin}>
               <div className="form-group">
                 <input
@@ -66,15 +75,22 @@ export default function Login() {
                   required
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group password-input">
                 <input
-                  type="password"
+                  type={formData.showPassword ? "text" : "password"}
                   name="password"
                   id="password"
                   placeholder="Password *"
                   onChange={handleChange}
                   required
                 />
+                <span onClick={togglePasswordVisibility}>
+                  {formData.showPassword ? (
+                    <AiOutlineEyeInvisible />
+                  ) : (
+                    <AiOutlineEye />
+                  )}
+                </span>
               </div>
               <div className="form-group">
                 <div className="d-flex justify-content-between flex-wrap pt-sm-2">
@@ -82,7 +98,9 @@ export default function Login() {
                     <input type="checkbox" name="remember" id="remember" />
                     <label htmlFor="remember">Remember Me</label>
                   </div>
-                  <Link to="/forgot-password">Forgot Passwrod?</Link>
+                  <Link to="/forgot-password" style={{ color: "#F16126" }}>
+                    Forgot Passwrod?
+                  </Link>
                 </div>
               </div>
               <div className="form-group">
@@ -98,7 +116,10 @@ export default function Login() {
             {/* account bottom */}
             <div className="account-bottom">
               <span className="d-block cate pt-10">
-                Don&apos;t Have an Account? <Link to="/register">Sign Up</Link>
+                Don&apos;t Have an Account?{" "}
+                <Link to="/register" style={{ color: "#F16126" }}>
+                  Sign Up
+                </Link>
               </span>
               <span className="or">
                 <span>Or</span>

@@ -3183,7 +3183,8 @@ footer.style-2
   li
   .price,
 .yellow-color-section .section-header .course-navi {
-  background: #ffdf40;
+  background: #f16126;
+  color: white;
 }
 .social-icons li a.pinterest {
   background: #bd081c;
@@ -5097,12 +5098,12 @@ button {
     background: #ffdf40;
   }
   .header-section.style-4 .menu > ul li a {
-    color: #101115;
+    color: white;
     border-top: 1px solid rgba(16, 17, 21, 0.1);
     background-color: #f16126;
   }
   .header-section.style-4 .menu > ul li a:hover {
-    background: #ffdf40;
+    background: #d45522;
   }
 }
 .header-section.style-4 .lab-btn:hover {
@@ -11596,4 +11597,24 @@ footer.style-2 .footer-top.dark-view * {
 
 .product-thumb2 {
   position: relative;
+}
+
+.header-section.style-4 .lab-btn-copy span {
+  color: white;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  padding-right: 40px; /* Adjust padding to accommodate the eye icon */
+}
+
+.password-input span {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Adjust the distance from the input field */
+  transform: translateY(-50%);
+  cursor: pointer;
 }

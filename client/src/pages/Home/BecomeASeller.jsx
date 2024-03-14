@@ -48,7 +48,7 @@ export default function BecomeASeller() {
     },
     {
       icon: <MdSell />,
-      count: 2500,
+      count: 100,
       text: "Successful Sales",
     },
   ];
@@ -98,7 +98,7 @@ export default function BecomeASeller() {
                 <h3 className="title">{title}</h3>
                 <p style={{ fontSize: "0.8rem", fontWeight: "600" }}>{desc}</p>
                 <Link
-                  to="/seller/register"
+                  to="/seller-register"
                   className="lab-btn"
                   style={{ fontSize: "0.8rem" }}
                 >

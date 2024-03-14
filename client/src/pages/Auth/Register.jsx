@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "./OAuth";
 import toast from "react-hot-toast";
+import { RiUserAddFill } from "react-icons/ri";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function Register() {
   const title = "Register";
@@ -14,6 +16,10 @@ export default function Register() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setFormData({ ...formData, showPassword: !formData.showPassword });
   };
 
   const handleRegister = async (e) => {
@@ -69,7 +75,10 @@ export default function Register() {
     <div className="login-section padding-tb section-bg">
       <div className="container py-4">
         <div className="account-wrapper">
-          <h3 className="title">{title}</h3>
+          <h3 className="title" style={{ color: "#F16126" }}>
+            <RiUserAddFill />
+            {title}
+          </h3>
           <form className="account-form" onSubmit={handleRegister}>
             <div className="form-group">
               <input
@@ -101,25 +110,39 @@ export default function Register() {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="form-group password-input">
               <input
-                type="password"
+                type={formData.showPassword ? "text" : "password"}
                 name="password"
                 id="password"
                 placeholder="Password *"
                 onChange={handleChange}
                 required
               />
+              <span onClick={togglePasswordVisibility}>
+                {formData.showPassword ? (
+                  <AiOutlineEyeInvisible />
+                ) : (
+                  <AiOutlineEye />
+                )}
+              </span>
             </div>
-            <div className="form-group">
+            <div className="form-group password-input">
               <input
-                type="password"
+                type={formData.showPassword ? "text" : "password"}
                 name="cpassword"
                 id="cpassword"
                 placeholder="Confirm Password *"
                 onChange={handleChange}
                 required
               />
+              <span onClick={togglePasswordVisibility}>
+                {formData.showPassword ? (
+                  <AiOutlineEyeInvisible />
+                ) : (
+                  <AiOutlineEye />
+                )}
+              </span>
             </div>
 
             <div className="form-group">
@@ -135,7 +158,10 @@ export default function Register() {
           {/* account bottom */}
           <div className="account-bottom">
             <span className="d-block cate pt-10">
-              Have an Account? <Link to="/login">Sign In</Link>
+              Have an Account?{" "}
+              <Link to="/login" style={{ color: "#F16126" }}>
+                Sign In
+              </Link>
             </span>
             <span className="or">
               <span>Or</span>

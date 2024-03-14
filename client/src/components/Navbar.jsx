@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo/Main-Logo.png";
-import { BsFillInfoSquareFill } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
+import { RiLoginCircleFill } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
+import { FaArrowAltCircleUp } from "react-icons/fa";
+import { RiUserAddFill } from "react-icons/ri";
 import {
   MdOutlineManageAccounts,
   MdFavoriteBorder,
@@ -93,13 +95,16 @@ export default function Navbar() {
                   to="/register"
                   onClick={() => setsocialToggle(!socialToggle)}
                 >
-                  <span>Create Account</span>
+                  <span style={{ color: "white" }}>
+                    {" "}
+                    <RiUserAddFill /> &nbsp; Create Account
+                  </span>
                 </Link>
                 <Link
                   to="/login"
                   onClick={() => setsocialToggle(!socialToggle)}
                 >
-                  Login
+                  <RiLoginCircleFill /> Login
                 </Link>
               </>
             )}
@@ -153,10 +158,10 @@ export default function Navbar() {
                     to="/register"
                     className="lab-btn me-3 d-none d-md-block"
                   >
-                    Create Account
+                    <RiUserAddFill /> Create Account
                   </Link>
                   <Link to="/login" className="d-none d-md-block">
-                    Login
+                    <RiLoginCircleFill /> <b>Login</b>
                   </Link>
                 </>
               )}
@@ -253,7 +258,7 @@ export default function Navbar() {
                 className="ellepsis-bar d-md-none"
                 onClick={() => setsocialToggle(!socialToggle)}
               >
-                {!currentUser && <BsFillInfoSquareFill />}
+                {!currentUser && <FaArrowAltCircleUp />}
               </div>
             </div>
           </div>

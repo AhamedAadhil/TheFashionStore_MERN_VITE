@@ -18,6 +18,7 @@ import Orders from "./pages/Orders/Orders";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import "react-loading-skeleton/dist/skeleton.css";
+import SellerRegister from "./pages/Auth/SellerRegister";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/seller-register" element={<SellerRegister />} />
           <Route element={<PrivateRoute />}>
             <Route path="/cart" element={<CartPage />} />
             <Route path="/me" element={<Profile />} />
