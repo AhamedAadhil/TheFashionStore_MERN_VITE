@@ -1,11 +1,21 @@
-import React from "react";
 import PageHeader from "../../components/PageHeader";
 import GoogleMap from "../../components/GoogleMap";
+import { SiMinutemailer } from "react-icons/si";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Help() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    subject: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
   const subTitle = "Get in touch with us";
   const title = "We're Always Eager To Hear From You!";
-  const conSubTitle = "Get in touch with Contact us";
+  const conSubTitle = "Get in touch with us";
   const conTitle =
     "Fill The Form Below So We Can Get To Know You And Your Needs Better.";
   const btnText = "Send Message";
@@ -18,28 +28,77 @@ export default function Help() {
       desc: "No 79, Mudaliyar Road, Akkaraipattu-4, SRILANKA",
     },
     {
-      imgUrl: "/src/assets/images/icon/02.png",
+      imgUrl: "/src/assets/images/icon/05.png",
       imgAlt: "contact icon",
-      title: "Phone number",
+      title: "WhatsApp",
       desc: "+94 7 666 119 17",
+      whatsapp: "94766611917",
     },
     {
       imgUrl: "/src/assets/images/icon/03.png",
       imgAlt: "contact icon",
       title: "Send email",
-      desc: "admin@galleryglam.com",
+      desc: "galleryglam.contact@gmail.com",
+      email: "galleryglam.contact@gmail.com",
     },
     {
       imgUrl: "/src/assets/images/icon/04.png",
       imgAlt: "contact icon",
       title: "Our website",
-      desc: "www.galleryglam.com",
+      desc: "www.galleryglam.lk",
     },
   ];
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name || formData.name === "") {
+      return toast.error("Please Enter Your Name!");
+    }
+    if (!formData.email || formData.email === "") {
+      return toast.error("Please Enter Your Email!");
+    }
+    if (!formData.mobile || formData.mobile === "") {
+      return toast.error("Please Enter Your Mobile Number!");
+    }
+    if (!formData.subject || formData.subject === "") {
+      return toast.error("Please Enter The Subject!");
+    }
+    if (!formData.message || formData.message === "") {
+      return toast.error("Please Enter Your Message!");
+    }
+    try {
+      setLoading(true);
+      const response = await fetch("/api/buyer/actions/contactAdmin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.message);
+        setLoading(false);
+        return;
+      }
+      setLoading(false);
+      setFormData({});
+      toast.success(data);
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div>
-      <PageHeader title={"Get In Touch With Us"} currentPage={"Contact Us"} />
+      {/* <PageHeader title={"Get In Touch With Us"} currentPage={"Contact Us"} /> */}
       <div className="map-address-section padding-tb section-bg">
         <div className="container">
           <div className="section-header text-center">
@@ -57,7 +116,19 @@ export default function Help() {
                       </div>
                       <div className="contact-content">
                         <h6 className="title">{val.title}</h6>
-                        <p>{val.desc}</p>
+                        {val.whatsapp ? (
+                          <a
+                            href={`https://wa.me/${val.whatsapp}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {val.desc}
+                          </a>
+                        ) : val.email ? (
+                          <a href={`mailto:${val.email}`}>{val.desc}</a>
+                        ) : (
+                          <p>{val.desc}</p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -78,13 +149,16 @@ export default function Help() {
             <h2 className="title">{conTitle}</h2>
           </div>
           <div className="section-wrapper">
-            <form className="contact-form">
+            <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <input
                   type="text"
                   name="name"
                   id="name"
                   placeholder="Your Name *"
+                  onChange={handleChange}
+                  value={formData.name || ""}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -93,6 +167,9 @@ export default function Help() {
                   name="email"
                   id="email"
                   placeholder="Your Email *"
+                  onChange={handleChange}
+                  value={formData.email || ""}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -101,6 +178,9 @@ export default function Help() {
                   name="mobile"
                   id="mobile"
                   placeholder="Mobile Number *"
+                  onChange={handleChange}
+                  value={formData.mobile || ""}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -109,6 +189,9 @@ export default function Help() {
                   name="subject"
                   id="subject"
                   placeholder="Subject"
+                  onChange={handleChange}
+                  value={formData.subject || ""}
+                  required
                 />
               </div>
               <div className="form-group w-100">
@@ -117,11 +200,17 @@ export default function Help() {
                   id="message"
                   rows="8"
                   placeholder="Your Message"
+                  onChange={handleChange}
+                  value={formData.message || ""}
+                  required
                 ></textarea>
               </div>
               <div className="form-group w-100 text-center">
-                <button className="lab-btn" type="submit">
-                  <span>{btnText}</span>
+                <button className="lab-btn" type="submit" disabled={loading}>
+                  <span>
+                    <SiMinutemailer /> &nbsp;
+                    {btnText}
+                  </span>
                 </button>
               </div>
             </form>

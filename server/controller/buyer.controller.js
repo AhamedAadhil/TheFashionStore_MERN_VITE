@@ -147,7 +147,7 @@ export const google = async (req, res, next) => {
         if (updateBuyer.cart) {
           await updateBuyer.populate("cart");
         }
-        const { password: pass, role: ro, ...rest } = updateBuyer._doc;
+        const { password: pass, ...rest } = updateBuyer._doc;
         res
           .cookie("access_token", token, {
             httpOnly: true,
@@ -201,7 +201,7 @@ export const google = async (req, res, next) => {
         if (updateBuyer.cart) {
           await updateBuyer.populate("cart");
         }
-        const { password: pass, role: ro, ...rest } = updateBuyer._doc;
+        const { password: pass, ...rest } = updateBuyer._doc;
         res
           .cookie("access_token", token, {
             httpOnly: true,
@@ -987,6 +987,26 @@ export const getCount = async (req, res, next) => {
     const buyerCount = await Buyer.find().countDocuments();
     const sellerCount = await Seller.find().countDocuments();
     res.status(200).json({ buyerCount, sellerCount });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* BUYER CONTACT FORM */
+export const contactAdmin = async (req, res, next) => {
+  try {
+    const { name, email, mobile, subject, message } = req.body;
+    const info = {
+      to: "ahamedaathil.5@gmail.com",
+      subject: `Message From Seller ${subject}`,
+      html: `<b>Email Send From ${email}</b> <br/> <b>Mobile Number ${mobile}</b> <br/> <b>Name Mentioned ${name}</b> <br/> ${message}`,
+    };
+    await sendEmail(info);
+    res
+      .status(200)
+      .json(
+        "Thank you for your email. We have received it and will respond as soon as possible."
+      );
   } catch (error) {
     next(error);
   }

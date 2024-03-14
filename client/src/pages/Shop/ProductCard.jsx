@@ -31,19 +31,20 @@ export default function ProductCard({ gridList, products }) {
                     style={{
                       fontSize: "1rem",
                       fontWeight: "600",
-                      maxHeight: "3rem", // Adjust the value according to your requirement
+                      display: "-webkit-box",
+                      WebkitBoxOrient: "vertical",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2, // Adjust the value to limit the lines
-                      WebkitBoxOrient: "vertical",
+                      WebkitLineClamp: 2,
+                      lineHeight: "1.5rem",
+                      maxHeight: "3rem",
                     }}
                   >
                     <Link to={`/shop/${product._id}`}>{product.name}</Link>
                   </h5>
-                  <p className="productRating d-flex align-items-center justify-content-center">
+                  <div className="productRating d-flex align-items-center justify-content-center">
                     <Rating product={product} />
-                  </p>
+                  </div>
                   <h6>Rs. {product.price}</h6>
                 </div>
               </div>

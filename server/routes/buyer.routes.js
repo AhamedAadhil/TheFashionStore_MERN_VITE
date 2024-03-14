@@ -26,6 +26,7 @@ import {
   getCount,
   deleteProductFromCart,
   google,
+  contactAdmin,
 } from "../controller/buyer.controller.js";
 
 const router = express.Router();
@@ -63,5 +64,6 @@ router.post("/actions/order/cod", verifyToken, createOrder);
 router.get("/actions/getOrders", verifyToken, getOrders);
 /* SPECIAL */
 router.get("/actions/getCount", getCount);
+router.post("/actions/contactAdmin", contactAdmin);
 
 export default router;

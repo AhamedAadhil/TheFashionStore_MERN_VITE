@@ -33,7 +33,6 @@ export default function OAuth() {
         }),
       });
       const data = await response.json();
-      console.log(data);
       if (data.success === false) {
         dispatch(signInFailure(data.message));
         toast.error(data.message);
@@ -43,6 +42,7 @@ export default function OAuth() {
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
+      dispatch(signInFailure(error.message));
       toast.error(error.message);
       console.log("could not sign in with google", error.message);
     }

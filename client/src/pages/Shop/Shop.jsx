@@ -13,7 +13,6 @@ export default function Shop() {
   const [totalProducts, setTotalProducts] = useState(1);
   const [productsPerPage] = useState(30);
   const [loading, setLoading] = useState(false);
-
   const location = useLocation();
 
   useEffect(() => {
@@ -25,7 +24,7 @@ export default function Shop() {
       try {
         setLoading(true);
         const response = await fetch(
-          `/api/product/allProducts?page=${currentPage}&limit=${productsPerPage}`,
+          `/api/product/allProducts?page=${currentPage}&limit=${productsPerPage}&sort=-createdAt`,
           {
             method: "GET",
             headers: {
@@ -72,12 +71,7 @@ export default function Shop() {
             <div className="row justify-content-center">
               <div className="col-lg-4 col-12">
                 <aside>
-                  <Search gridList={gridList} />
-                  {/* <ShopCategory
-                filterItem={filterItem}
-                setItem = {setProducts}
-                menuItems={menuItems}
-                /> */}
+                  <Search products={products} />
                 </aside>
               </div>
               <div className="col-lg-8 col-12">
@@ -85,24 +79,6 @@ export default function Shop() {
                   {/* layout and title */}
                   <div className="shop-title d-flex flex-wrap justify-content-between">
                     <p>{showResults}</p>
-                    {/* <div
-                    className={`product-view-mode ${
-                      gridList ? "gridActive" : "listActive"
-                    }`}
-                  >
-                    <Link
-                      className="grid"
-                      onClick={() => setGridList(!gridList)}
-                    >
-                      <i className="icofont-ghost"></i>
-                    </Link>
-                    <Link
-                      className="list"
-                      onClick={() => setGridList(!gridList)}
-                    >
-                      <i className="icofont-listine-dots"></i>
-                    </Link>
-                  </div> */}
                   </div>
                   {/* product cards */}
                   <div>

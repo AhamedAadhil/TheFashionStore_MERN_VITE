@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { SiMinutemailer } from "react-icons/si";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [res, setRes] = useState("");
-  const navigate = useNavigate();
 
   const forgotPass = async (e) => {
     if (email === "" || !email) {

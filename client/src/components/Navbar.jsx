@@ -183,9 +183,14 @@ export default function Navbar() {
                             to="/me"
                             className="d-flex justify-content-between"
                           >
-                            <li className="list-group-item border-0">
+                            <li
+                              className="list-group-item border-0"
+                              style={{
+                                color: "#F16126",
+                              }}
+                            >
                               <MdOutlineManageAccounts />
-                              My Account
+                              &nbsp; My Account
                             </li>
                           </Link>
                           <Link
@@ -193,9 +198,14 @@ export default function Navbar() {
                             onClick={toggleUserMenu}
                             className="d-flex justify-content-between"
                           >
-                            <li className="list-group-item border-0">
+                            <li
+                              className="list-group-item border-0"
+                              style={{
+                                color: "#F16126",
+                              }}
+                            >
                               <MdOutlineShoppingBag />
-                              My Orders
+                              &nbsp; My Orders
                             </li>
                           </Link>
                           <Link
@@ -203,9 +213,13 @@ export default function Navbar() {
                             to="/my-wishlist"
                             className="d-flex justify-content-between"
                           >
-                            <li className="list-group-item border-0">
-                              <MdFavoriteBorder />
-                              My Wishlist
+                            <li
+                              className="list-group-item border-0"
+                              style={{
+                                color: "#F16126",
+                              }}
+                            >
+                              <MdFavoriteBorder /> &nbsp; My Wishlist
                             </li>
                           </Link>
                           <Link onClick={handleLogout}>
@@ -215,8 +229,8 @@ export default function Navbar() {
                                 color: "red",
                               }}
                             >
-                              <BiLogOut className="mx-1" />
-                              Logout
+                              <BiLogOut />
+                              &nbsp; Logout
                             </li>
                           </Link>
                         </ul>
