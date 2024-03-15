@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Link } from "react-router-dom";
 import "swiper/css";
 
 import { Autoplay } from "swiper/modules";
 
 export default function Brands() {
   const [brands, setBrands] = useState([]);
+  const cat = "brand";
 
   useEffect(() => {
     const fetchBrands = async () => {
@@ -65,12 +67,16 @@ export default function Brands() {
                       <SwiperSlide key={index}>
                         <div className="sponser-item">
                           <div className="sponser-thumb">
-                            <img
-                              src={item.logo}
-                              alt={item.title}
-                              height="auto"
-                              width="auto"
-                            />
+                            <Link
+                              to={`/filter/${cat}/${item._id}/${item.title}`}
+                            >
+                              <img
+                                src={item.logo}
+                                alt={item.title}
+                                height="auto"
+                                width="auto"
+                              />
+                            </Link>
                           </div>
                         </div>
                       </SwiperSlide>

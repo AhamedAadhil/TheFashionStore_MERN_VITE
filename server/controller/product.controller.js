@@ -122,6 +122,7 @@ export const getAllProducts = async (req, res, next) => {
           if (priceParam.lte)
             query.price = { ...query.price, $lte: parseFloat(priceParam.lte) };
         }
+
         if (param === "createdAt") {
           // If 'createdAt' parameter exists, calculate the date 4 days ago
           const fourDaysAgo = new Date();

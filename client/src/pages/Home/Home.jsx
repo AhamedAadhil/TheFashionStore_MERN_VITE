@@ -83,7 +83,7 @@ export default function Home() {
         <>
           {category.length > 0 && <HomeCategory data={category} />}
           {newProducts.length > 0 && <NewProducts data={newProducts} />}
-          <BeautyCollections />
+          {category.length > 0 && <BeautyCollections data={category} />}
           <Brands />
           <DealsUnder />
           <HotCollections />

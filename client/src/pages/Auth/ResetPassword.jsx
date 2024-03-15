@@ -40,6 +40,7 @@ export default function ResetPassword() {
       if (!response.ok) {
         setLoading(false);
         toast.error(data.message);
+        console.log(data.message);
         return;
       }
       setLoading(false);
@@ -47,11 +48,10 @@ export default function ResetPassword() {
       navigate("/login");
     } catch (error) {
       setLoading(false);
+      console.log(error.message);
       toast.error(error.message);
     }
   };
-
-  console.log(password);
 
   return (
     <section className="bg-light pt-4 px-4">
@@ -71,8 +71,8 @@ export default function ResetPassword() {
                   Password Reset
                 </h2>
                 <h3 className="fs-6 fw-normal text-secondary text-center m-3">
-                  Provide the email address associated with your account to
-                  recover your password.
+                  Provide Enter Your New Password. The Password Should Be At
+                  Least 8 Characters Long
                 </h3>
                 <form onSubmit={resetPassword}>
                   <div className="row gy-3 overflow-hidden">
@@ -85,6 +85,7 @@ export default function ResetPassword() {
                           id="password"
                           placeholder="Password"
                           required
+                          minLength={8}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                         />
@@ -100,6 +101,7 @@ export default function ResetPassword() {
                           id="cpassword"
                           placeholder="Confirm Password"
                           required
+                          minLength={8}
                           value={cpassword}
                           onChange={(e) => setcPassword(e.target.value)}
                         />

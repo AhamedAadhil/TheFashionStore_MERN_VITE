@@ -35,8 +35,8 @@ export default function Help() {
       imgUrl: whatsappImg,
       imgAlt: "contact icon",
       title: "WhatsApp",
-      desc: "+94 7 666 119 17",
-      whatsapp: "94766611917",
+      desc: "+94 76 66 65 369",
+      whatsapp: "94766665369",
     },
     {
       imgUrl: emailImg,

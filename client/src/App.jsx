@@ -19,6 +19,9 @@ import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import "react-loading-skeleton/dist/skeleton.css";
 import SellerRegister from "./pages/Auth/SellerRegister";
+import ByCategory from "./pages/LinkFromHome/ByCateogry";
+import ByDeals from "./pages/LinkFromHome/ByDeals";
+import ByCoolCollections from "./pages/LinkFromHome/ByCoolCollections";
 
 function App() {
   return (
@@ -30,6 +33,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<SingleProduct />} />
+          <Route path="/filter/:cat/:val/:name" element={<ByCategory />} />
+          <Route path="/cool/category/:val" element={<ByCoolCollections />} />
+          <Route path="/deals/:max" element={<ByDeals />} />
           <Route path="/about" element={<About />} />
           <Route path="/help" element={<Help />} />
           <Route path="/login" element={<Login />} />

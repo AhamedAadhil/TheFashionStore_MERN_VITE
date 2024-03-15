@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 // const subTitle = "Choose Any Product";
 // const title = "Buy Everything With Us";
 const btnText = "Shop More >";
+const cat = "category";
 
 // eslint-disable-next-line react/prop-types
 export default function HomeCategory({ data: category }) {
@@ -51,9 +52,20 @@ export default function HomeCategory({ data: category }) {
           >
             {category.map(
               (category, index) =>
-                category.title !== "Others" && (
+                category.title !== "Others" &&
+                category.title !== "Face Cares" &&
+                category.title !== "Skin Cares" &&
+                category.title !== "Hair Creams" &&
+                category.title !== "Shampoos" &&
+                category.title !== "Body Sprays" &&
+                category.title !== "Perfumes" &&
+                category.title !== "Makeup Items" &&
+                category.title !== "Personal Cares" && (
                   <SwiperSlide key={index}>
-                    <Link to="/shop" className="category-item">
+                    <Link
+                      to={`/filter/${cat}/${category._id}/${category.title}`}
+                      className="category-item"
+                    >
                       <div className="category-inner">
                         <div className="category-thumb">
                           <img src={category.logo} alt={category.title} />

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import ProductCard from "./ProductCard";
-import Pagination from "./Pagination";
-import Search from "./Search";
+import { Alert } from "react-bootstrap";
+import { useLocation, useParams } from "react-router-dom";
+import ProductCard from "../Shop/ProductCard";
+import Pagination from "../Shop/Pagination";
+import Search from "../Shop/Search";
 import ShopPageSkull from "../../components/LoadSkulls/ShopPageSkull";
 
-export default function Shop() {
+export default function ByDeals() {
   const [gridList, setGridList] = useState(true);
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +15,7 @@ export default function Shop() {
   const [productsPerPage] = useState(30);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
+  const { max } = useParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -24,7 +26,7 @@ export default function Shop() {
       try {
         setLoading(true);
         const response = await fetch(
-          `/api/product/allProducts?page=${currentPage}&limit=${productsPerPage}&sort=-createdAt`,
+          `/api/product/allProducts?page=${currentPage}&limit=${productsPerPage}&sort=-createdAt&price[$lte]=${max}`,
           {
             method: "GET",
             headers: {
@@ -48,7 +50,7 @@ export default function Shop() {
       }
     };
     fetchProducts();
-  }, [currentPage, productsPerPage]);
+  }, [currentPage, productsPerPage, max]);
 
   /* function to change the current page */
   const paginate = (pageNumber) => {
@@ -59,14 +61,14 @@ export default function Shop() {
     currentPage * productsPerPage > totalProducts
       ? totalProducts
       : currentPage * productsPerPage
-  } Products`;
+  } Products Under ${max}`;
 
   return (
     <div className="min-vh-100">
       {/* <PageHeader title="Our Shop Page" currentPage="Shop" /> */}
       {loading ? (
         <ShopPageSkull />
-      ) : (
+      ) : products.length > 0 ? (
         <div className="shop-page padding-tb">
           <div className="container">
             <div className="row justify-content-center">
@@ -94,6 +96,17 @@ export default function Shop() {
                   />
                 </article>
               </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="shop-page padding-tb" style={{ paddingTop: "100px" }}>
+          <div className="container">
+            <div className="row justify-content-center">
+              <Alert variant="info" className="no-products-message">
+                Unfortunately, There Are No Products Available Under {max} At
+                The Moment
+              </Alert>
             </div>
           </div>
         </div>

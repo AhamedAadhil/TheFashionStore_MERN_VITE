@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import ProductCard from "./ProductCard";
-import Pagination from "./Pagination";
-import Search from "./Search";
+import { Alert } from "react-bootstrap";
+import { useLocation, useParams } from "react-router-dom";
+import ProductCard from "../Shop/ProductCard";
+import Pagination from "../Shop/Pagination";
+import Search from "../Shop/Search";
 import ShopPageSkull from "../../components/LoadSkulls/ShopPageSkull";
 
-export default function Shop() {
+export default function ByCoolCollections() {
   const [gridList, setGridList] = useState(true);
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,25 +14,63 @@ export default function Shop() {
   const [totalProducts, setTotalProducts] = useState(1);
   const [productsPerPage] = useState(30);
   const [loading, setLoading] = useState(false);
+  const [allCategories, setAllCategories] = useState([]);
   const location = useLocation();
+  const { val } = useParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
   useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const response = await fetch("/api/category/getAllCategory", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const dataFromResponse = await response.json();
+        if (!response.ok) {
+          console.log(response.message);
+          return;
+        }
+
+        setAllCategories(dataFromResponse);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchCategory();
+  }, []);
+
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          `/api/product/allProducts?page=${currentPage}&limit=${productsPerPage}&sort=-createdAt`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+        const foundCategory = allCategories.find(
+          (category) => category.title === val
         );
+
+        if (!foundCategory) {
+          console.log(`Category "${val}" not found`);
+          setLoading(false);
+          return;
+        }
+
+        // Extract the _id from the found category
+        const categoryId = foundCategory._id;
+
+        const apiEndpoint = "/api/product/allProducts?";
+        const queryParams = `category=${categoryId}&page=${currentPage}&limit=${productsPerPage}&sort=-createdAt`;
+        const apiUrl = `${apiEndpoint}${queryParams}`;
+        const response = await fetch(apiUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const data = await response.json();
         if (!response.ok) {
           setLoading(false);
@@ -48,7 +87,7 @@ export default function Shop() {
       }
     };
     fetchProducts();
-  }, [currentPage, productsPerPage]);
+  }, [currentPage, productsPerPage, val, allCategories]);
 
   /* function to change the current page */
   const paginate = (pageNumber) => {
@@ -59,14 +98,14 @@ export default function Shop() {
     currentPage * productsPerPage > totalProducts
       ? totalProducts
       : currentPage * productsPerPage
-  } Products`;
+  } ${val}`;
 
   return (
     <div className="min-vh-100">
       {/* <PageHeader title="Our Shop Page" currentPage="Shop" /> */}
       {loading ? (
         <ShopPageSkull />
-      ) : (
+      ) : products.length > 0 ? (
         <div className="shop-page padding-tb">
           <div className="container">
             <div className="row justify-content-center">
@@ -94,6 +133,16 @@ export default function Shop() {
                   />
                 </article>
               </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="shop-page padding-tb" style={{ paddingTop: "100px" }}>
+          <div className="container">
+            <div className="row justify-content-center">
+              <Alert variant="info" className="no-products-message">
+                Unfortunately, There Are No {val} Available At The Moment
+              </Alert>
             </div>
           </div>
         </div>

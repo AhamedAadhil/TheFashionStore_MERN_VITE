@@ -1,15 +1,33 @@
+/* eslint-disable react/prop-types */
 import Image from "react-bootstrap/Image";
 import { Link } from "react-router-dom";
 
 export default function HotCollections() {
-  // Assuming you have an array of image URLs
   const imageUrls = [
-    "https://i.ibb.co/KLMjbf0/shoe-arrival-instagram-post.png",
-    "https://i.ibb.co/R7q3pkQ/Blue-and-White-Limited-Edition-Luxury-Handbag-Instagram-Post.png",
-    "https://i.ibb.co/6PjGv7p/Black-and-White-New-Women-Dress-Collection-Instagram-Story.png",
-    "https://i.ibb.co/fQq2HZb/Wallet-Instagram-Post.png",
-    "https://i.ibb.co/6Dc551r/Green-and-Black-Streetwear-New-Arrival-T-Shirt-Instagram-Story.png",
-    "https://i.ibb.co/dDBRcg1/Green-Grey-Simple-Modern-New-Arrival-Instagram-Post.png",
+    {
+      url: "https://i.ibb.co/KLMjbf0/shoe-arrival-instagram-post.png",
+      cat: "Shoes",
+    },
+    {
+      url: "https://i.ibb.co/R7q3pkQ/Blue-and-White-Limited-Edition-Luxury-Handbag-Instagram-Post.png",
+      cat: "Hand Bags",
+    },
+    {
+      url: "https://i.ibb.co/6PjGv7p/Black-and-White-New-Women-Dress-Collection-Instagram-Story.png",
+      cat: "Habayas",
+    },
+    {
+      url: "https://i.ibb.co/fQq2HZb/Wallet-Instagram-Post.png",
+      cat: "Gadgets",
+    },
+    {
+      url: "https://i.ibb.co/6Dc551r/Green-and-Black-Streetwear-New-Arrival-T-Shirt-Instagram-Story.png",
+      cat: "Shirts",
+    },
+    {
+      url: "https://i.ibb.co/dDBRcg1/Green-Grey-Simple-Modern-New-Arrival-Instagram-Post.png",
+      cat: "Backpacks",
+    },
   ];
 
   return (
@@ -21,16 +39,68 @@ export default function HotCollections() {
     >
       <h6 className="mb-2 px-2">Coolest Finds</h6>
       <div className="row row-cols-3 row-cols-sm-3 row-cols-md-3 row-cols-lg-3 g-3">
-        {imageUrls.map((url, index) => (
+        {imageUrls.map((item, index) => (
           <div key={index} className="col mb-2">
-            <Link to="/shop">
-              <Image
-                src={url}
-                alt={`Beauty Collection ${index + 1}`}
-                fluid
-                rounded
-              />
-            </Link>
+            {item.cat === "Shoes" && (
+              <Link to={`/cool/category/Men Shoes`}>
+                <Image
+                  src={item.url}
+                  alt={`Beauty Collection ${index + 1}`}
+                  fluid
+                  rounded
+                />
+              </Link>
+            )}
+            {item.cat === "Hand Bags" && (
+              <Link to={`/cool/category/Hand Bags`}>
+                <Image
+                  src={item.url}
+                  alt={`Beauty Collection ${index + 1}`}
+                  fluid
+                  rounded
+                />
+              </Link>
+            )}
+            {item.cat === "Habayas" && (
+              <Link to={`/cool/category/Habayas`}>
+                <Image
+                  src={item.url}
+                  alt={`Beauty Collection ${index + 1}`}
+                  fluid
+                  rounded
+                />
+              </Link>
+            )}
+            {item.cat === "Gadgets" && (
+              <Link to={`/cool/category/Gadgets`}>
+                <Image
+                  src={item.url}
+                  alt={`Beauty Collection ${index + 1}`}
+                  fluid
+                  rounded
+                />
+              </Link>
+            )}
+            {item.cat === "Shirts" && (
+              <Link to={`/cool/category/Shirts`}>
+                <Image
+                  src={item.url}
+                  alt={`Beauty Collection ${index + 1}`}
+                  fluid
+                  rounded
+                />
+              </Link>
+            )}
+            {item.cat === "Backpacks" && (
+              <Link to={`/cool/category/Backpacks`}>
+                <Image
+                  src={item.url}
+                  alt={`Beauty Collection ${index + 1}`}
+                  fluid
+                  rounded
+                />
+              </Link>
+            )}
           </div>
         ))}
       </div>

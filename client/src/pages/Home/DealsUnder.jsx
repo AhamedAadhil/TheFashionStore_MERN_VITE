@@ -38,7 +38,7 @@ export default function DealsUnder() {
             }}
           >
             <SwiperSlide>
-              <Link to="/shop" className="category-item">
+              <Link to={`/deals/999`} className="category-item">
                 <div>
                   <div className="category-thumb shadow">
                     <Image
@@ -51,7 +51,7 @@ export default function DealsUnder() {
               </Link>
             </SwiperSlide>
             <SwiperSlide>
-              <Link to="/shop" className="category-item">
+              <Link to={`/deals/1999`} className="category-item">
                 <div>
                   <div className="category-thumb shadow">
                     <Image
@@ -64,7 +64,7 @@ export default function DealsUnder() {
               </Link>
             </SwiperSlide>
             <SwiperSlide>
-              <Link to="/shop" className="category-item">
+              <Link to={`/deals/3999`} className="category-item">
                 <div>
                   <div className="category-thumb shadow">
                     <Image
@@ -77,7 +77,7 @@ export default function DealsUnder() {
               </Link>
             </SwiperSlide>
             <SwiperSlide>
-              <Link to="/shop" className="category-item">
+              <Link to={`/deals/6999`} className="category-item">
                 <div>
                   <div className="category-thumb shadow">
                     <Image
@@ -90,7 +90,7 @@ export default function DealsUnder() {
               </Link>
             </SwiperSlide>
             <SwiperSlide>
-              <Link to="/shop" className="category-item">
+              <Link to={`/deals/9999`} className="category-item">
                 <div>
                   <div className="category-thumb shadow">
                     <Image

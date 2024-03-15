@@ -40,8 +40,8 @@ export default function NewProducts({ data: newProducts }) {
         </div>
         <div className="row g-1 row-cols-xl-4 row-cols-lg-3 row-cols-md-3 row-cols-2 course-filter">
           {newProducts.map((product, index) => (
-            <div
-              to={`shop/${product._id}`}
+            <Link
+              to={`/shop/${product._id}`}
               key={index}
               className="col mb-3 text-decoration-none"
             >
@@ -76,7 +76,9 @@ export default function NewProducts({ data: newProducts }) {
                   {/* <Card.Text>{product.description}</Card.Text> */}
                   <Card.Text style={{ fontSize: "1rem" }} className="px-2">
                     <span className="d-block pb-1">
-                      <span style={{ color: "blue" }}>Rs. {product.price}</span>
+                      <span style={{ color: "#F16126" }}>
+                        Rs. {product.price.toFixed(2)}
+                      </span>
                       <span
                         className="px-2 rounded"
                         style={{
@@ -108,7 +110,7 @@ export default function NewProducts({ data: newProducts }) {
                   </ListGroup.Item>
                 </ListGroup> */}
               </Card>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
