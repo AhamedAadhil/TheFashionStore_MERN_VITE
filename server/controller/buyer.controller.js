@@ -452,19 +452,23 @@ export const resetPassword = async (req, res, next) => {
       passwordResetToken: hashedToken,
       passwordResetExpires: { $gt: Date.now() },
     });
-    if (!buyer.passwordResetExpires > Date.now()) {
-      return next(errorUtil(404, "Token Expired Please Try Again!"));
-    }
     if (!buyer) {
       return next(errorUtil(404, "User Not Found!"));
     }
+
+    if (!buyer.passwordResetExpires > Date.now()) {
+      return next(errorUtil(404, "Token Expired Please Try Again!"));
+    }
+
     const genSalt = bcryptjs.genSaltSync(10);
     const hashedPassword = bcryptjs.hashSync(password, genSalt);
     buyer.password = hashedPassword;
     buyer.passwordResetToken = undefined;
     buyer.passwordResetExpires = undefined;
     await buyer.save();
-    res.status(200).send("Your Password Has Been Changed Successfully");
+    res
+      .status(200)
+      .send({ message: "Your Password Has Been Changed Successfully" });
   } catch (error) {
     next(error);
   }

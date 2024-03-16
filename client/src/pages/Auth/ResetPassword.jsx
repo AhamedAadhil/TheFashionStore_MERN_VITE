@@ -44,7 +44,7 @@ export default function ResetPassword() {
         return;
       }
       setLoading(false);
-      toast.success(data);
+      toast.success(data.message);
       navigate("/login");
     } catch (error) {
       setLoading(false);
@@ -89,7 +89,7 @@ export default function ResetPassword() {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                         />
-                        <label htmlFor="email" className="form-label">
+                        <label htmlFor="password" className="form-label">
                           Password
                         </label>
                       </div>
@@ -105,7 +105,7 @@ export default function ResetPassword() {
                           value={cpassword}
                           onChange={(e) => setcPassword(e.target.value)}
                         />
-                        <label htmlFor="email" className="form-label">
+                        <label htmlFor="cpassword" className="form-label">
                           Confirm Password
                         </label>
                       </div>
