@@ -71,8 +71,8 @@ export default function ResetPassword() {
                   Password Reset
                 </h2>
                 <h3 className="fs-6 fw-normal text-secondary text-center m-3">
-                  Provide Enter Your New Password. The Password Should Be At
-                  Least 8 Characters Long
+                  Enter Your New Password. The Password Should Be At Least 8
+                  Characters Long
                 </h3>
                 <form onSubmit={resetPassword}>
                   <div className="row gy-3 overflow-hidden">

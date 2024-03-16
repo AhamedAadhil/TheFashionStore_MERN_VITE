@@ -99,7 +99,7 @@ export default function Login() {
                     <label htmlFor="remember">Remember Me</label>
                   </div>
                   <Link to="/forgot-password" style={{ color: "#F16126" }}>
-                    Forgot Passwrod?
+                    Forgot Password?
                   </Link>
                 </div>
               </div>

@@ -13,7 +13,7 @@ export default function HotCollections() {
       cat: "Hand Bags",
     },
     {
-      url: "https://i.ibb.co/6PjGv7p/Black-and-White-New-Women-Dress-Collection-Instagram-Story.png",
+      url: "https://i.ibb.co/3vDdVCp/Black-and-White-New-Women-Dress-Collection-Instagram-Story-1.png",
       cat: "Habayas",
     },
     {
