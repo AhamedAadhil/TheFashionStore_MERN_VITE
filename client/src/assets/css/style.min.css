@@ -11618,3 +11618,27 @@ footer.style-2 .footer-top.dark-view * {
   transform: translateY(-50%);
   cursor: pointer;
 }
+
+.lws {
+  position: relative;
+}
+
+.low-stock-banner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.shop-single .product-details .post-content form .lab-btn,
+:disabled {
+  background-color: #cccccc; /* Grey color */
+  color: #666666; /* Darker grey color for text */
+  cursor: not-allowed; /* Change cursor to not-allowed */
+}

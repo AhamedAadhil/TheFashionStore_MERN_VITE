@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
 import CarouselHomeSkull from "./LoadSkulls/CarouselHomeSkull";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -15,6 +15,7 @@ export default function CarouselHome() {
   const [useEffectLoading, setUseEffectLoading] = useState(false);
   const [filteredProducts, setfilteredProducts] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const navigate = useNavigate();
 
   /* search function */
   const handleChange = (e) => {
@@ -26,6 +27,7 @@ export default function CarouselHome() {
       product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // setfilteredProducts(filtered);
     setfilteredProducts(filtered);
   };
 
@@ -133,8 +135,9 @@ export default function CarouselHome() {
               carousels.map((carousel, index) => (
                 <Carousel.Item key={index}>
                   <img
+                    onClick={() => navigate(carousel.url)}
                     src={carousel.imageUrl}
-                    alt={carousel.name}
+                    alt={carousel.url}
                     className="d-block w-100"
                   />
                 </Carousel.Item>
@@ -178,14 +181,57 @@ export default function CarouselHome() {
               <FaSearch />
             </InputGroup.Text> */}
               </InputGroup>
-              <ul className="lab-ul mt-3 px-4">
-                {searchInput &&
-                  filteredProducts.map((product, index) => (
-                    <li key={index}>
-                      <Link to={`/shop/${product._id}`}>{product.name}</Link>
-                    </li>
-                  ))}
-              </ul>
+              {searchInput &&
+                searchInput.trim() !== "" &&
+                filteredProducts.length > 0 && (
+                  <ul className="lab-ul mt-3 px-4 border py-2 shadow">
+                    {searchInput &&
+                      filteredProducts.map((product, index) => (
+                        <li
+                          key={index}
+                          className="search-result-item border-bottom py-3"
+                        >
+                          <Link
+                            to={`/shop/${product._id}`}
+                            className="search-result-link"
+                          >
+                            <div className="d-flex align-items-center">
+                              <img
+                                src={product.imageUrls[0]}
+                                alt={product.name}
+                                className="mr-3 rounded"
+                                style={{
+                                  width: "60px",
+                                  height: "60px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                              <div className="flex-grow-1">
+                                {" "}
+                                {/* Added flex-grow-1 class */}
+                                <p
+                                  className="mb-1"
+                                  style={{
+                                    fontSize: "0.9rem",
+                                    color: "#F16126",
+                                  }}
+                                >
+                                  &nbsp; {product.name}
+                                </p>
+                                <p
+                                  className="text-muted mb-1"
+                                  style={{ fontSize: "0.8rem" }}
+                                >
+                                  &nbsp;&nbsp;
+                                  <b>Rs{product.price.toFixed(2)}</b>
+                                </p>
+                              </div>
+                            </div>
+                          </Link>
+                        </li>
+                      ))}
+                  </ul>
+                )}
             </div>
           </div>
         </>

@@ -44,7 +44,7 @@ export default function Home() {
       try {
         setUseEffectLoading(true);
         const response = await fetch(
-          `/api/product/allProducts?createdAt=${fourDaysAgo.toISOString()}&limit=6`,
+          `/api/product/allProducts?createdAt=${fourDaysAgo.toISOString()}&limit=6&sort=-createdAt`,
           {
             method: "GET",
             headers: {

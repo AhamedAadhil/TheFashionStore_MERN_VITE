@@ -61,7 +61,9 @@ export default function Search({ products }) {
                 }}
               />
               <div>
-                <p style={{ fontSize: "1rem" }}>{product.name}</p>
+                <p style={{ fontSize: "1rem", color: "#F16126" }}>
+                  {product.name}
+                </p>
               </div>
             </div>
           </Link>

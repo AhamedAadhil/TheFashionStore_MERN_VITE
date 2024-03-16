@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import Spinner from "react-bootstrap/Spinner";
 import toast from "react-hot-toast";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
@@ -13,6 +14,7 @@ import SingleProductSkull from "../../components/LoadSkulls/SingleProductSkull";
 
 export default function SingleProduct() {
   const [product, setProduct] = useState({});
+  const [wload, setWload] = useState(false);
   const [isOnWishList, setIsOnWishList] = useState(false);
   const [useEffectLoading, setUseEffectLoading] = useState(false);
   const navigate = useNavigate();
@@ -80,9 +82,11 @@ export default function SingleProduct() {
 
   const addToWishlist = async (id) => {
     try {
+      setWload(true);
       if (!currentUser || currentUser === null) {
         toast.error("Please Login To Add This Product in Wishlist!");
         navigate("/login");
+        setWload(false);
         return;
       }
       const response = await fetch("/api/product/addToWishlist", {
@@ -93,17 +97,31 @@ export default function SingleProduct() {
         body: JSON.stringify({ productId: id }),
       });
       const data = await response.json();
+
+      const response2 = await fetch(`/api/product/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data2 = await response2.json();
+
       if (data.message === "UnAuthorized!") {
+        setWload(false);
         navigate("/login");
         return;
       }
       if (!response.ok) {
+        setWload(false);
         toast.error(data.message);
         return;
       }
+      setWload(false);
       toast.success(data);
       setIsOnWishList(data === "Added To Wishlist!");
+      setProduct(data2);
     } catch (error) {
+      setWload(false);
       toast.error(error.message);
     }
   };
@@ -207,61 +225,98 @@ export default function SingleProduct() {
                 <div className="row align-items-center">
                   <div className="col-md-6 col-12">
                     <div className="product-thumb">
-                      <div className="swiper-container pro-single-top">
-                        {product && product.imageUrls && (
-                          <Swiper
-                            spaceBetween={30}
-                            slidesPerView="1"
-                            loop={true}
-                            autoplay={{
-                              delay: 2000,
-                              disableOnInteraction: false,
-                            }}
-                            modules={[Autoplay]}
-                            navigation={{
-                              prevEl: ".pro-single-prev",
-                              nextEl: ".pro-single-next",
-                            }}
-                            className="mySwiper"
-                          >
-                            {product &&
-                              product.imageUrls.map((imageUrl, index) => (
-                                <SwiperSlide key={index}>
-                                  <div className="single-thumb text-center">
-                                    <div className="heart-icon">
-                                      <>
-                                        {isOnWishList ? (
-                                          <FaHeart
-                                            style={{ color: "red" }}
-                                            onClick={() => addToWishlist(id)}
-                                          />
-                                        ) : (
-                                          <FaRegHeart
-                                            style={{ color: "red" }}
-                                            onClick={() => addToWishlist(id)}
-                                          />
-                                        )}
-                                      </>
-                                    </div>
-                                    <img
-                                      src={imageUrl}
-                                      alt="product"
-                                      style={{
-                                        maxHeight: "326px",
-                                        maxWidth: "326px",
-                                      }}
-                                    />
-                                  </div>
-                                </SwiperSlide>
-                              ))}
-                          </Swiper>
+                      <div className="lws">
+                        {/* Show Low Stock banner if stock is 0 */}
+                        {product.stock === 0 && (
+                          <div className="low-stock-banner">Out Of Stock</div>
                         )}
-                        {/* <div className="pro-single-prev">
+                        <div className="swiper-container pro-single-top">
+                          {product && product.imageUrls && (
+                            <Swiper
+                              spaceBetween={30}
+                              slidesPerView="1"
+                              loop={true}
+                              autoplay={{
+                                delay: 2000,
+                                disableOnInteraction: false,
+                              }}
+                              modules={[Autoplay]}
+                              navigation={{
+                                prevEl: ".pro-single-prev",
+                                nextEl: ".pro-single-next",
+                              }}
+                              className="mySwiper"
+                            >
+                              {product &&
+                                product.imageUrls.map((imageUrl, index) => (
+                                  <SwiperSlide key={index}>
+                                    <div className="single-thumb text-center">
+                                      <div className="heart-icon">
+                                        <>
+                                          {" "}
+                                          {isOnWishList ? (
+                                            <span style={{ color: "red" }}>
+                                              {wload && (
+                                                <Spinner
+                                                  style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                  }}
+                                                  animation="border"
+                                                  variant="primary"
+                                                />
+                                              )}
+                                              <FaHeart
+                                                style={{ color: "red" }}
+                                                onClick={() =>
+                                                  addToWishlist(id)
+                                                }
+                                              />{" "}
+                                              {product.likes}
+                                            </span>
+                                          ) : (
+                                            <span style={{ color: "red" }}>
+                                              {wload && (
+                                                <Spinner
+                                                  style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                  }}
+                                                  animation="border"
+                                                  variant="primary"
+                                                />
+                                              )}
+                                              <FaRegHeart
+                                                style={{ color: "red" }}
+                                                onClick={() =>
+                                                  addToWishlist(id)
+                                                }
+                                              />
+                                              {product.likes}
+                                            </span>
+                                          )}
+                                        </>
+                                      </div>
+                                      <img
+                                        src={imageUrl}
+                                        alt="product"
+                                        style={{
+                                          maxHeight: "326px",
+                                          maxWidth: "326px",
+                                        }}
+                                      />
+                                    </div>
+                                  </SwiperSlide>
+                                ))}
+                            </Swiper>
+                          )}
+                          {/* <div className="pro-single-prev">
                           <i className="icofont-rounded-right"></i>
                         </div>
                         <div className="pro-single-next">
                           <i className="icofont-rounded-left"></i>
                         </div> */}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -273,7 +328,6 @@ export default function SingleProduct() {
                           <h4 className="rating">
                             {product && <Rating product={product} />}
                           </h4>
-
                           <h4>Rs. {product?.price}</h4>
                           {product && product.brand && (
                             <h6>
@@ -309,6 +363,7 @@ export default function SingleProduct() {
                                 product.size &&
                                 product.size.map((size, i) => (
                                   <button
+                                    disabled={product.stock === 0}
                                     type="button"
                                     key={i}
                                     className={`btn btn-outline-secondary ${
@@ -336,7 +391,11 @@ export default function SingleProduct() {
                               {product &&
                                 product.color &&
                                 product.color.map((color, i) => (
-                                  <option value={color} key={i}>
+                                  <option
+                                    value={color}
+                                    key={i}
+                                    disabled={product.stock === 0}
+                                  >
                                     {color}
                                   </option>
                                 ))}
@@ -383,9 +442,9 @@ export default function SingleProduct() {
 
                           {/* button section */}
                           <button
+                            disabled={loading || product.stock === 0}
                             type="submit"
                             className="lab-btn mt-4"
-                            disabled={loading}
                           >
                             <span>
                               {loading ? "Loading..." : "Add To Cart"}

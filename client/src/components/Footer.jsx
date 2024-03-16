@@ -2,22 +2,27 @@ import { Link } from "react-router-dom";
 
 const title = "About Gallery Glam (GG)";
 const desc =
-  "Explore GG Gallery Glam: Your go-to source for fashion and beauty inspiration. Elevate your style with us – for all fashionistas!";
+  "Explore Gallery Glam(GG): Your go-to source for fashion and beauty inspiration. Elevate your style with us – for all fashionistas!";
 // const ItemTitle = "Quick Links";
 // const quickTitle = "Categories";
 // const tweetTitle = "Policy";
 
 const addressList = [
-  { iconName: "icofont-google-map", text: "Akkaraipattu, SRILANKA" },
-  { iconName: "icofont-phone", text: "+94 7 666 119 17" },
-  { iconName: "icofont-envelope", text: "info@galleryglam.com" },
+  { iconName: "icofont-google-map", text: "Akkaraipattu, Srilanka" },
+  { iconName: "icofont-phone", text: "+94 76 66 65 369" },
+  { iconName: "icofont-envelope", text: "galleryglam.contact@gmail.com" },
 ];
 
 const socialList = [
+  {
+    iconName: "icofont-instagram",
+    siteLink:
+      "https://www.instagram.com/galleryglam.lk?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+    className: "instagram",
+  },
   { iconName: "icofont-facebook", siteLink: "#", className: "facebook" },
   { iconName: "icofont-twitter", siteLink: "#", className: "twitter" },
   { iconName: "icofont-linkedin", siteLink: "#", className: "linkedin" },
-  { iconName: "icofont-instagram", siteLink: "#", className: "instagram" },
   { iconName: "icofont-pinterest", siteLink: "#", className: "pinterest" },
 ];
 
@@ -157,7 +162,7 @@ export default function Footer() {
         <div className="container">
           <div className="section-wrapper justify-content-center">
             <p>
-              &copy; {new Date().getFullYear()} <Link to="/">GG</Link>Designed
+              &copy; {new Date().getFullYear()} <Link to="/">GG</Link>Developed
               by{" "}
               <Link
                 to="https://www.linkedin.com/in/ahamed-aathil-0b52b2136/"

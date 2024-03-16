@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
 import { Link } from "react-router-dom";
 
 export default function NewProducts({ data: newProducts }) {

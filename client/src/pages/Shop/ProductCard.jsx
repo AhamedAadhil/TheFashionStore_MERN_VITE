@@ -17,13 +17,21 @@ export default function ProductCard({ gridList, products }) {
             <div key={index} className="col-lg-4 col-md-6 col-6">
               <div className="product-item">
                 {/* product images */}
-                <div className="product-thumb">
+                <div className="product-thumb lws">
                   <div className="pro-thumb">
                     <Link to={`/shop/${product._id}`}>
                       <img src={product.imageUrls[0]} alt="" />
                     </Link>
                   </div>
                   {/* product actions */}
+                  {product.stock === 0 && (
+                    <div
+                      className="low-stock-banner"
+                      style={{ fontSize: "1rem" }}
+                    >
+                      Out Of Stock
+                    </div>
+                  )}
                 </div>
                 {/* product content */}
                 <div className="product-content">
