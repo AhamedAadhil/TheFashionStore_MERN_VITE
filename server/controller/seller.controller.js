@@ -261,7 +261,9 @@ export const resetPassword = async (req, res, next) => {
     seller.passwordResetToken = undefined;
     seller.passwordResetExpires = undefined;
     await seller.save();
-    res.status(200).send("Your Password Has Been Changed Successfully");
+    res
+      .status(200)
+      .send({ message: "Your Password Has Been Changed Successfully!" });
   } catch (error) {
     next(error);
   }
