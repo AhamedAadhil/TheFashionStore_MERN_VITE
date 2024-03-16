@@ -452,11 +452,11 @@ export const resetPassword = async (req, res, next) => {
       passwordResetToken: hashedToken,
       passwordResetExpires: { $gt: Date.now() },
     });
-    if (!buyer) {
-      return next(errorUtil(404, "User Not Found!"));
-    }
     if (!buyer.passwordResetExpires > Date.now()) {
       return next(errorUtil(404, "Token Expired Please Try Again!"));
+    }
+    if (!buyer) {
+      return next(errorUtil(404, "User Not Found!"));
     }
     const genSalt = bcryptjs.genSaltSync(10);
     const hashedPassword = bcryptjs.hashSync(password, genSalt);

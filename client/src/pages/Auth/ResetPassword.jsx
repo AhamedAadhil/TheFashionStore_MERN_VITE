@@ -18,7 +18,7 @@ export default function ResetPassword() {
       return;
     }
     if (cpassword === "" || !cpassword) {
-      toast.error("Please Confirm Your Password!");
+      toast.error("Please Re-Enter Your Password!");
       return;
     }
     if (password !== cpassword) {
@@ -97,7 +97,7 @@ export default function ResetPassword() {
                         <input
                           type="password"
                           className="form-control"
-                          name="cpasswrod"
+                          name="cpassword"
                           id="cpassword"
                           placeholder="Confirm Password"
                           required
