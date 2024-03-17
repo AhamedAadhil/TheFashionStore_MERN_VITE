@@ -46,7 +46,7 @@ export default function NewProducts({ data: newProducts }) {
             >
               {/* Add margin-bottom to create space between cards */}
               <Card
-                style={{ width: "auto", height: "18rem" }}
+                style={{ width: "auto", height: "18rem", position: "relative" }}
                 className="mx-2 shadow"
               >
                 <Card.Img
@@ -55,17 +55,18 @@ export default function NewProducts({ data: newProducts }) {
                   style={{ height: "170px", objectFit: "cover" }}
                   /* ideas are fill,cover,contain and height is auto */
                 />
+                <div className="green-tag">New</div>
                 <Card.Body className="p-2">
                   {/* Add padding to the card body */}
                   <Card.Title
                     style={{
                       fontSize: "1rem",
                       fontWeight: "600",
-                      maxHeight: "3rem", // Adjust the value according to your requirement
+                      maxHeight: "3rem",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       display: "-webkit-box",
-                      WebkitLineClamp: 2, // Adjust the value to limit the lines
+                      WebkitLineClamp: 2,
                       WebkitBoxOrient: "vertical",
                     }}
                     className="text-center"
@@ -74,22 +75,8 @@ export default function NewProducts({ data: newProducts }) {
                   </Card.Title>
                   {/* <Card.Text>{product.description}</Card.Text> */}
                   <Card.Text style={{ fontSize: "1rem" }} className="px-2">
-                    <span className="d-block pb-1">
-                      <span style={{ color: "#F16126" }}>
-                        Rs. {product.price.toFixed(2)}
-                      </span>
-                      <span
-                        className="px-2 rounded"
-                        style={{
-                          float: "right",
-
-                          border: "0.1rem solid green",
-                          color: "green",
-                          fontSize: "0.7rem",
-                        }}
-                      >
-                        New
-                      </span>
+                    <span style={{ color: "#F16126" }}>
+                      Rs. {product.price.toFixed(2)}
                     </span>
 
                     <span style={{ fontSize: "0.8rem" }} className="d-block">

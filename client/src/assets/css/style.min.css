@@ -1617,6 +1617,12 @@ a:active,
 a:visited,
 a {
   color: #101115;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 1.5rem;
+  -webkit-box-orient: vertical;
 }
 footer.style-2 .footer-top.dark-view,
 .skill-section,
@@ -11641,4 +11647,16 @@ footer.style-2 .footer-top.dark-view * {
   background-color: #cccccc; /* Grey color */
   color: #666666; /* Darker grey color for text */
   cursor: not-allowed; /* Change cursor to not-allowed */
+}
+
+/* FOR THE NEW TAG */
+.green-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: green;
+  color: white;
+  padding: 0.3rem 0.7rem; /* Adjust padding as needed */
+  font-size: 0.8rem; /* Adjust font size as needed */
+  z-index: 1; /* Ensure it's above the image */
 }
