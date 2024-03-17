@@ -160,9 +160,8 @@ export default function Navbar() {
                   style={{
                     fontSize: "1.5rem",
                     position: "relative",
-                    marginRight: currentUser ? "" : "1rem", // Add margin only if there is no current user
                   }}
-                  className="px-4 mx-2"
+                  className="px-2 mx-2"
                 >
                   <TiShoppingCart />
                   {/* <Badge
