@@ -11614,17 +11614,18 @@ footer.style-2 .footer-top.dark-view * {
 }
 
 .password-input input {
-  padding-right: 40px; /* Adjust padding to accommodate the eye icon */
+  padding-right: 40px;
 }
 
 .password-input span {
   position: absolute;
   top: 50%;
-  right: 10px; /* Adjust the distance from the input field */
+  right: 10px;
   transform: translateY(-50%);
   cursor: pointer;
 }
 
+/* LOW STOCK INDICATOR */
 .lws {
   position: relative;
 }
@@ -11642,21 +11643,26 @@ footer.style-2 .footer-top.dark-view * {
   white-space: nowrap;
 }
 
+/* DISABLE ADD TO CART BUTTON IN SINGLE PRODUCT PAGE  */
 .shop-single .product-details .post-content form .lab-btn,
 :disabled {
-  background-color: #cccccc; /* Grey color */
-  color: #666666; /* Darker grey color for text */
-  cursor: not-allowed; /* Change cursor to not-allowed */
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
 }
 
-/* FOR THE NEW TAG */
+.shop-single .product-details .post-content form .lab-btn:not(:disabled) {
+  background: #f16126;
+}
+
+/* FOR THE NEW TAG IN HOME PAGE */
 .green-tag {
   position: absolute;
   top: 0;
   right: 0;
   background-color: green;
   color: white;
-  padding: 0.3rem 0.7rem; /* Adjust padding as needed */
-  font-size: 0.8rem; /* Adjust font size as needed */
-  z-index: 1; /* Ensure it's above the image */
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  z-index: 1;
 }

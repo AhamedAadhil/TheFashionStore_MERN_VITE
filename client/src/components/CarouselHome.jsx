@@ -206,7 +206,7 @@ export default function CarouselHome() {
                                   objectFit: "cover",
                                 }}
                               />
-                              <div className="flex-grow-1">
+                              <div className="d-flex flex-grow-1 flex-column px-2">
                                 {" "}
                                 {/* Added flex-grow-1 class */}
                                 <p
@@ -216,13 +216,12 @@ export default function CarouselHome() {
                                     color: "#F16126",
                                   }}
                                 >
-                                  &nbsp; {product.name}
+                                  {product.name}
                                 </p>
                                 <p
                                   className="text-muted mb-1"
                                   style={{ fontSize: "0.8rem" }}
                                 >
-                                  &nbsp;&nbsp;
                                   <b>Rs{product.price.toFixed(2)}</b>
                                 </p>
                               </div>

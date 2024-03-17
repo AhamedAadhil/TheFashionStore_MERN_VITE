@@ -51,6 +51,10 @@ export default function SingleProduct() {
   };
 
   const getBuyerWishList = async () => {
+    if (!currentUser || currentUser === null) {
+      console.log("User Not Login!");
+      return;
+    }
     try {
       setUseEffectLoading(true);
       const response = await fetch("/api/buyer/actions/getWishList", {
@@ -216,7 +220,10 @@ export default function SingleProduct() {
   }
 
   return (
-    <div className="shop-single padding-tb aside-bg">
+    <div
+      className="shop-single padding-tb aside-bg"
+      style={{ paddingTop: "80px" }}
+    >
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-10 col-12">

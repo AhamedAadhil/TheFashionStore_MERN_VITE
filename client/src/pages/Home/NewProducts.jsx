@@ -83,18 +83,7 @@ export default function NewProducts({ data: newProducts }) {
                       By: {product.seller.shopname}
                     </span>
                   </Card.Text>
-                  {/* <Card.Text style={{ fontSize: "1rem" }} className="px-2">
-                    By: {product.seller.shopname}
-                  </Card.Text> */}
                 </Card.Body>
-                {/* <ListGroup className="list-group-flush border-0">
-                  <ListGroup.Item className="border-0">
-                    Rs. {product.price}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="border-0">
-                    {product.seller.shopname}
-                  </ListGroup.Item>
-                </ListGroup> */}
               </Card>
             </Link>
           ))}
