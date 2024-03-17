@@ -6,6 +6,8 @@ import { RiLoginCircleFill } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import { RiUserAddFill } from "react-icons/ri";
+import { TiShoppingCart } from "react-icons/ti";
+import { Badge } from "react-bootstrap";
 import {
   MdOutlineManageAccounts,
   MdFavoriteBorder,
@@ -140,9 +142,9 @@ export default function Navbar() {
                   <li onClick={handlePageLinkClick}>
                     <Link to="/shop">Shop</Link>
                   </li>
-                  <li onClick={handlePageLinkClick}>
+                  {/* <li onClick={handlePageLinkClick}>
                     <Link to="/cart">My Cart</Link>
-                  </li>
+                  </li> */}
                   <li onClick={handlePageLinkClick}>
                     <Link to="/about">About</Link>
                   </li>
@@ -151,6 +153,34 @@ export default function Navbar() {
                   </li>
                 </ul>
               </div>
+              {/* CART ICON */}
+              {currentUser && (
+                <Link
+                  to="/cart"
+                  style={{
+                    fontSize: "1.5rem",
+                    position: "relative",
+                    marginRight: currentUser ? "" : "1rem", // Add margin only if there is no current user
+                  }}
+                  className="px-4 mx-2"
+                >
+                  <TiShoppingCart />
+                  {/* <Badge
+                    style={{
+                      fontSize: "0.7rem",
+                      display:
+                        currentUser?.cart?.products?.length > 0
+                          ? "inline-block"
+                          : "none",
+                    }}
+                    pill
+                    bg="secondary"
+                    className="position-absolute top-0 end-9"
+                  >
+                    {currentUser?.cart?.products?.length}
+                  </Badge> */}
+                </Link>
+              )}
               {/* Sign in and Login */}
               {!currentUser && (
                 <>
@@ -245,6 +275,7 @@ export default function Navbar() {
                 </div>
               )}
               {/* menu toggler */}
+
               <div
                 onClick={() => setMenuToggle(!menuToggle)}
                 className={`header-bar d-lg-none ${menuToggle ? "active" : ""}`}
@@ -253,6 +284,7 @@ export default function Navbar() {
                 <span></span>
                 <span></span>
               </div>
+
               {/* social toggler */}
               <div
                 className="ellepsis-bar d-md-none"

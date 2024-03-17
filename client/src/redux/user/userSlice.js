@@ -58,6 +58,9 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    setCurrentUserCart: (state, action) => {
+      state.currentUser.cart = action.payload;
+    },
   },
 });
 
@@ -74,5 +77,6 @@ export const {
   signOutUserFailure,
   signOutUserStart,
   signOutUserSuccess,
+  setCurrentUserCart,
 } = userSlice.actions;
 export default userSlice.reducer;

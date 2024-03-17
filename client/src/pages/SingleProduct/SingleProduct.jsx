@@ -195,7 +195,6 @@ export default function SingleProduct() {
         },
         body: JSON.stringify(FormData),
       });
-      console.log("res body", JSON.stringify(FormData));
 
       const data = await response.json();
       if (data.success == false) {
