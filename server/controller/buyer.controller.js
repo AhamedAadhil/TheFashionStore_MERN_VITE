@@ -339,7 +339,12 @@ export const getSingleBuyer = async (req, res, next) => {
 export const getWishList = async (req, res, next) => {
   const buyerId = req.user.id;
   try {
-    const buyer = await Buyer.findById(buyerId).populate("wishlist");
+    const buyer = await Buyer.findById(buyerId).populate({
+      path: "wishlist",
+      populate: {
+        path: "seller category brand", // Populate seller, category, and brand for each product in the wishlist
+      },
+    });
     if (!buyer) {
       return next(errorUtil(404, "Buyer not Found!"));
     }

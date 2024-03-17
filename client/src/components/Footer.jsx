@@ -161,7 +161,7 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="container">
           <div className="section-wrapper justify-content-center">
-            <p>
+            <p style={{ display: "contents" }}>
               &copy; {new Date().getFullYear()} <Link to="/">GG</Link>Developed
               by{" "}
               <Link

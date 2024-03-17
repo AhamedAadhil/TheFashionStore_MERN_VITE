@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Alert } from "react-bootstrap";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -67,7 +68,9 @@ export default function Orders() {
             ))
           ) : (
             <div className="d-flex flex-column justify-content-center align-items-center py-2">
-              <p>You Dont Have Any Order History !</p>
+              <Alert variant="warning" className="no-products-message">
+                You Don&apos;t Have Any Order History
+              </Alert>
               <Link to="/shop">
                 <button
                   className="rounded"
@@ -77,7 +80,7 @@ export default function Orders() {
                     width: "10rem",
                   }}
                 >
-                  Shop Now!
+                  Start Shopping
                 </button>
               </Link>
             </div>

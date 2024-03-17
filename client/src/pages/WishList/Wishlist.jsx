@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import { Alert } from "react-bootstrap";
 import WishlistProductCard from "./WishListProductCard";
-import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export default function Wishlist() {
@@ -30,13 +30,15 @@ export default function Wishlist() {
 
   return (
     <div className="container padding-tb">
-      <h4 className="text-center">Your Wishlist</h4>
+      <h4 className="text-center">My Wishlist</h4>
       <div className="row justify-content-center">
         {products && products.length > 0 ? (
           <WishlistProductCard products={products} />
         ) : (
-          <div className="col-lg-6 text-center py-2">
-            <p>There are no Products in your Wishlist!</p>
+          <div className="d-flex flex-column justify-content-center align-items-center py-2">
+            <Alert variant="warning" className="no-products-message">
+              Oops, Your Wishlist is Empty!
+            </Alert>
             <Link to="/shop">
               <button
                 className="rounded"
@@ -46,7 +48,7 @@ export default function Wishlist() {
                   width: "10rem",
                 }}
               >
-                Shop Now!
+                Explore Products
               </button>
             </Link>
           </div>

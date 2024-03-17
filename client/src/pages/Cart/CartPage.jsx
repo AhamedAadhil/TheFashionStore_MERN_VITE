@@ -351,6 +351,7 @@ export default function CartPage() {
                   <thead>
                     <tr>
                       <th className="cat-product">Product</th>
+                      <th className="cat-product">Detail</th>
                       <th className="cat-price">Price</th>
                       <th
                         className="cat-quantity"
@@ -375,12 +376,12 @@ export default function CartPage() {
                               <img src={item.product.imageUrls[0]} alt="" />
                             </Link>
                           </div>
-                          <div className="p-content">
-                            <Link to="/shop">
-                              {item.product.name} <br /> Color: {item.color}{" "}
-                              <br /> Size: {item.size}
-                            </Link>
+                          <div className="p-content whitespace-nowrap">
+                            <Link to="/shop">{item.product.name}</Link>
                           </div>
+                        </td>
+                        <td className="p-thumb">
+                          Color: {item.color} <br /> Size: {item.size}
                         </td>
                         <td className="cat-price">Rs. {item.product.price}</td>
                         <td className="cat-quantity">{item.count}</td>
