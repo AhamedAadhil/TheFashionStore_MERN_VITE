@@ -269,7 +269,6 @@ export default function SingleProduct() {
                                                     height: "1rem",
                                                   }}
                                                   animation="border"
-                                                  variant="primary"
                                                 />
                                               )}
                                               <FaHeart
@@ -289,7 +288,6 @@ export default function SingleProduct() {
                                                     height: "1rem",
                                                   }}
                                                   animation="border"
-                                                  variant="primary"
                                                 />
                                               )}
                                               <FaRegHeart

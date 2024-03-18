@@ -979,7 +979,7 @@ export const getOrders = async (req, res, next) => {
   validateMongoDbId(id);
   try {
     const order = await Order.find({ orderby: id }).populate(
-      "products.product"
+      "products.product seller"
     );
     if (!order) {
       return next(errorUtil(404, "There Is No Orders Link To This Account!"));

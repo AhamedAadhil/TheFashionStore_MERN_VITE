@@ -48,7 +48,7 @@ export default function SellerRegister() {
       toast.error("All fields are required!");
       return;
     }
-    if (phoneNumberRegex.test(formData.mobile)) {
+    if (!phoneNumberRegex.test(formData.mobile)) {
       toast.error("Invalid Mobile Number!");
       return;
     }

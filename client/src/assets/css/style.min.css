@@ -11665,4 +11665,6 @@ footer.style-2 .footer-top.dark-view * {
   padding: 0.3rem 0.7rem;
   font-size: 0.8rem;
   z-index: 1;
+  border-top-right-radius: 10%;
+  border-bottom-left-radius: 10%;
 }
