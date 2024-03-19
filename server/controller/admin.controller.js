@@ -386,7 +386,7 @@ export const acceptSellerRequest = async (req, res, next) => {
       subject: "Account Approval Status",
       text: `Dear ${sellerDetails.sellername},`,
       html: `Dear ${sellerDetails.sellername},<br/><br/> Thank you for registering with us. We are pleased to inform you that your account has been approved and is now active.<br/><br/>
-      You can now start using our platform to list your products and manage your sales.<br/><br/> Shop Name:  ${sellerDetails.shopname} <br/><br/> 
+      You can now start using our platform to list your products and manage your sales.<br/><br/> Shop Name:  ${sellerDetails.shopname} <br/> Seller Portal URL: https://seller.galleryglam.lk/  <br/><br/> Please Use This URL to Access Your Dashboard <br/><br/> 
        If you have any questions or need assistance, please feel free to contact our support team.<br/><br/>Best regards,<br/>Gallery Glam`,
     };
     await sendEmail(data);
@@ -608,6 +608,7 @@ export const acceptProductRequest = async (req, res, next) => {
       subject: "Your Product has been Approved!",
       text: `Dear ${sellerDetails.seller.sellername},`,
       html: `Dear ${sellerDetails.seller.sellername},<br/><br/> We are pleased to inform you that your product, <b>${productName.name}</b>, has been approved and is now live on our platform. Customers can now view and purchase your product.<br/><br/>
+      Product Link : https://www.galleryglam.lk/shop/${productId}  <br/><br/>
      Thank you for listing your product with us. If you have any questions or need further assistance, feel free to contact our support team. <br/><br/> 
       Best regards,<br/>Gallery Glam`,
     };

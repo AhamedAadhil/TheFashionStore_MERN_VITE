@@ -11,6 +11,7 @@ import { Autoplay } from "swiper/modules";
 import Rating from "../../components/Rating";
 import Review from "./Review";
 import SingleProductSkull from "../../components/LoadSkulls/SingleProductSkull";
+import { ButtonGroup, Button } from "react-bootstrap";
 
 export default function SingleProduct() {
   const [product, setProduct] = useState({});
@@ -361,15 +362,17 @@ export default function SingleProduct() {
                         <form onSubmit={handleSubmit}>
                           {/* select size */}
                           <div className="select-product size d-flex align-items-center">
-                            <p className="m-0 me-2">Size:</p>
-                            <div className="btn-group gap-2">
+                            <p className="m-0 me-2">
+                              <b>Size:</b>
+                            </p>
+                            <div className="btn-group horizontal-scroll">
                               {product &&
                                 product.size &&
                                 product.size.map((size, i) => (
                                   <button
+                                    key={i}
                                     disabled={product.stock === 0}
                                     type="button"
-                                    key={i}
                                     className={`btn btn-outline-secondary ${
                                       size === productSize
                                         ? "btn-selected-size"

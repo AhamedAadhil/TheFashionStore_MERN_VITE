@@ -137,17 +137,43 @@ export const getAllProducts = async (req, res, next) => {
 
     // Define sort options based on the 'sort' query parameter
     let sortOptions = {};
+
     if (req.query.sort) {
-      // Split the sort query parameter by comma to handle multiple fields
-      const sortByFields = req.query.sort.split(",");
-      sortByFields.forEach((field) => {
-        // Check if the field starts with '-' indicating descending order
-        if (field.startsWith("-")) {
-          sortOptions[field.substring(1)] = -1; // Use -1 for descending order
-        } else {
-          sortOptions[field] = 1; // Use 1 for ascending order
-        }
-      });
+      // Check if the 'shuffle' query parameter is present
+      if (req.query.sort === "shuffle") {
+        // Additional sorting patterns to provide diverse shuffling
+        const additionalSortOptions = [
+          { createdAt: -1 },
+          { createdAt: 1 },
+          { name: -1 },
+          { name: 1 },
+          { brand: -1 },
+          { brand: 1 },
+          { updatedAt: -1 },
+          { updatedAt: 1 },
+          { price: -1 },
+          { price: 1 },
+        ];
+
+        // Randomly select additional sorting options
+        const randomIndex = Math.floor(
+          Math.random() * additionalSortOptions.length
+        );
+        sortOptions = additionalSortOptions[randomIndex];
+      } else {
+        // Split the sort query parameter by comma to handle multiple fields
+        const sortByFields = req.query.sort.split(",");
+        sortByFields.forEach((field) => {
+          // Check if the field starts with '-' indicating descending order
+          if (field.startsWith("-")) {
+            // Use -1 for descending order
+            sortOptions[field.substring(1)] = -1;
+          } else {
+            // Use 1 for ascending order
+            sortOptions[field] = 1;
+          }
+        });
+      }
     }
 
     // Define the limit based on the 'limit' query parameter (default to 100000 if not provided)

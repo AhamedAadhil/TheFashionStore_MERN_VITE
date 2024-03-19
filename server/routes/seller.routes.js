@@ -13,6 +13,7 @@ import {
   updateOrderStatus,
   dashboardData,
   getPendingProducts,
+  deletePendingProducts,
 } from "../controller/seller.controller.js";
 
 const router = express.Router();
@@ -29,5 +30,10 @@ router.get("/actions/getAllOrders", isSeller, getAllOrders);
 router.put("/actions/updateOrderStatus/:id", isSeller, updateOrderStatus);
 router.get("/actions/dashboardData", isSeller, dashboardData);
 router.get("/actions/getPendingProducts", isSeller, getPendingProducts);
+router.delete(
+  "/actions/deletePendingProducts/:id",
+  isSeller,
+  deletePendingProducts
+);
 
 export default router;

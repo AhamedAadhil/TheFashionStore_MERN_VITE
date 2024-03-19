@@ -86,7 +86,7 @@ export default function HomeCategory({ data: category }) {
                 )
             )}
           </Swiper>
-          <Link to="/shop" className="lab-btn-category ">
+          <Link to="/shop?shuffle" className="lab-btn-category ">
             <span>{btnText}</span>
           </Link>
         </div>

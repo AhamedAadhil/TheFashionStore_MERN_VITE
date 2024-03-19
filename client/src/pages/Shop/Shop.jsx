@@ -24,7 +24,9 @@ export default function Shop() {
       try {
         setLoading(true);
         const response = await fetch(
-          `/api/product/allProducts?page=${currentPage}&limit=${productsPerPage}&sort=-createdAt`,
+          `/api/product/allProducts?page=${currentPage}&limit=${productsPerPage}&sort=${
+            location.search.includes("shuffle") ? "shuffle" : "-createdAt"
+          }`,
           {
             method: "GET",
             headers: {

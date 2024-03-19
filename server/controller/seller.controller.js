@@ -43,7 +43,14 @@ export const registerSeller = async (req, res, next) => {
       text: `Dear ${newSeller.sellername},`,
       html: `Dear ${newSeller.sellername},<br/><br/> Thank you for registering with us. Your account is currently under review by our administrators. You will be notified of the status within the next 8 hours.<br/><br/>Best regards,<br/>Gallery Glam`,
     };
+    const dataForAdmin = {
+      to: "ahamedaathil.5@gmail.com",
+      subject: "New Seller Register In Platform",
+      text: `Dear Admin,`,
+      html: `A New Seller Joined in Our Platform <br/><br/> ${newSeller.sellername},<br/><br/>Please Check The Pending Seller Approval To Approve or Decline This Shop.<br/><br/>Best regards,<br/>Gallery Glam`,
+    };
     await sendEmail(data);
+    await sendEmail(dataForAdmin);
     res.status(201).json("Your Profile is Under Review!");
   } catch (error) {
     next(error);
@@ -141,6 +148,7 @@ export const updateSeller = async (req, res, next) => {
       {
         $set: {
           password: req.body.password,
+          shopname: req.body.shopname,
           mobile: req.body.mobile,
           avatar: req.body.avatar,
           address: req.body.address,
@@ -284,7 +292,7 @@ export const getAllOrders = async (req, res, next) => {
     // Find orders containing those products
     const allOrders = await Order.find({
       "products.product": { $in: productIds },
-    }).populate("products.product");
+    }).populate("products.product orderby seller");
 
     res.status(200).json(allOrders);
   } catch (error) {
@@ -497,7 +505,7 @@ export const dashboardData = async (req, res, next) => {
   }
 };
 
-/* GET OWN PENDING ORDERS */
+/* GET OWN PENDING PRODUCTS */
 export const getPendingProducts = async (req, res, next) => {
   const sellerId = req.user.id;
   try {
@@ -506,6 +514,29 @@ export const getPendingProducts = async (req, res, next) => {
       status: "hold",
     });
     res.status(200).json(pendingProduct);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* DELETE OWN PENDING PRODUCTS */
+export const deletePendingProducts = async (req, res, next) => {
+  const sellerId = req.user.id;
+  const productId = req.params.id;
+  try {
+    const pendingProductToDelete = await PendingApproval.findOne({
+      purpose: "product",
+      product: productId,
+    });
+    if (pendingProductToDelete.seller.toString() !== sellerId.trim()) {
+      return next(errorUtil(400, "You Can Delete Your Products Only!"));
+    }
+    if (!pendingProductToDelete) {
+      return next(
+        errorUtil(400, "Cannot Delete The Pending Product Right Now!")
+      );
+    }
+    res.status(200).json("Deleted!");
   } catch (error) {
     next(error);
   }

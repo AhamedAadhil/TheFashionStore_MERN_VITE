@@ -11668,3 +11668,12 @@ footer.style-2 .footer-top.dark-view * {
   border-top-right-radius: 10%;
   border-bottom-left-radius: 10%;
 }
+
+.horizontal-scroll {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}
