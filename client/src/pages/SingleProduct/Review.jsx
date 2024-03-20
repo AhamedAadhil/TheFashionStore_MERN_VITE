@@ -183,7 +183,7 @@ export default function Review({ id, desc, onUpdate }) {
           </ul>
         </div>
         {/* description */}
-        <div className="description">
+        <div className="description" style={{ whiteSpace: "pre-line" }}>
           <p>{desc}</p>
         </div>
       </div>
