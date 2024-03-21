@@ -27,6 +27,10 @@ export const sendEmail = async (data, req, res) => {
     subject: data.subject,
     text: data.text,
     html: data.html,
+    headers: {
+      "In-Reply-To": null,
+      References: null,
+    },
   };
 
   const sendMail = async (transporter, mailOptions) => {

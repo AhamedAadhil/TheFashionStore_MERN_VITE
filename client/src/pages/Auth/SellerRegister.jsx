@@ -97,7 +97,7 @@ export default function SellerRegister() {
                 placeholder="Seller Name *"
                 onChange={handleChange}
                 required
-                maxLength={15}
+                maxLength={20}
                 minLength={3}
               />
             </div>
@@ -109,7 +109,7 @@ export default function SellerRegister() {
                 placeholder="Shop Name *"
                 onChange={handleChange}
                 required
-                maxLength={15}
+                maxLength={20}
                 minLength={3}
               />
             </div>
@@ -254,7 +254,7 @@ export default function SellerRegister() {
                 type="text"
                 name="state"
                 id="address-state"
-                placeholder="State *"
+                placeholder="District *"
                 onChange={(e) =>
                   handleChange({
                     target: {
