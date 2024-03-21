@@ -12,7 +12,12 @@ export default function SellerRegister() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+    if (id === "email") {
+      setFormData({ ...formData, [id]: value.trim().toLowerCase() });
+    } else {
+      setFormData({ ...formData, [id]: value });
+    }
   };
 
   const togglePasswordVisibility = () => {
