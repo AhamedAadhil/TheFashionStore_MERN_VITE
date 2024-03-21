@@ -109,23 +109,30 @@ export const loginSeller = async (req, res, next) => {
 /* SELLER LOGOUT */
 export const logoutSeller = async (req, res, next) => {
   const user = req.user;
-  if (!user.role === "seller") {
-    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  if (user && user.role === "seller") {
+    try {
+      // Update the refresh token to empty
+      await Seller.findOneAndUpdate(
+        {
+          refreshtoken: req.cookies?.refresh_token,
+        },
+        { refreshtoken: "" },
+        { new: true }
+      );
+      // Clear the cookies
+      res.clearCookie("access_token", { expires: new Date(0) });
+      res.clearCookie("refresh_token", { expires: new Date(0) });
+      // Send success response
+      return res.status(200).json("User Signout Successfully!");
+    } catch (error) {
+      // Handle any errors
+      return next(error);
+    }
   }
-  try {
-    await Seller.findOneAndUpdate(
-      {
-        refreshtoken: req.cookies?.refresh_token,
-      },
-      { refreshtoken: "" },
-      { new: true }
-    );
-    res.clearCookie("access_token", { expires: new Date(0) });
-    res.clearCookie("refresh_token", { expires: new Date(0) });
-    res.status(200).json("User Signout Successfully!");
-  } catch (error) {
-    next(error);
-  }
+  // If user is not a seller or there is no user object, still clear cookies and send success response
+  res.clearCookie("access_token", { expires: new Date(0) });
+  res.clearCookie("refresh_token", { expires: new Date(0) });
+  return res.status(200).json("User Signout Successfully!");
 };
 
 /* UPDATE SELLER BY ID */

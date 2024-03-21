@@ -247,23 +247,31 @@ export const handleRefreshToken = async (req, res, next) => {
 /* LOGOUT BUYER */
 export const logoutBuyer = async (req, res, next) => {
   const user = req.user;
-  if (!user.role === "buyer") {
-    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  // Check if there is a user and the user is a buyer
+  if (user && user.role === "buyer") {
+    try {
+      // Update the refresh token to empty
+      await Buyer.findOneAndUpdate(
+        {
+          refreshtoken: req.cookies?.refresh_token,
+        },
+        { refreshtoken: "" },
+        { new: true }
+      );
+      // Clear the cookies
+      res.clearCookie("access_token", { expires: new Date(0) });
+      res.clearCookie("refresh_token", { expires: new Date(0) });
+      // Send success response
+      return res.status(200).json("User Signout Successfully!");
+    } catch (error) {
+      // Handle any errors
+      return next(error);
+    }
   }
-  try {
-    await Buyer.findOneAndUpdate(
-      {
-        refreshtoken: req.cookies?.refresh_token,
-      },
-      { refreshtoken: "" },
-      { new: true }
-    );
-    res.clearCookie("access_token", { expires: new Date(0) });
-    res.clearCookie("refresh_token", { expires: new Date(0) });
-    res.status(200).json("User Signout Successfully!");
-  } catch (error) {
-    next(error);
-  }
+  // If user is not a buyer or there is no user object, still clear cookies and send success response
+  res.clearCookie("access_token", { expires: new Date(0) });
+  res.clearCookie("refresh_token", { expires: new Date(0) });
+  return res.status(200).json("User Signout Successfully!");
 };
 
 /* UPDATE A BUYER BY ID */

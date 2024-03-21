@@ -4,6 +4,11 @@ import { errorUtil } from "../utils/error.utils.js";
 /* VERIFT BUYER */
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
+
+  if (req.path === "/logout") {
+    return next(); // Skip authentication for the logout route
+  }
+
   if (!token) {
     return next(errorUtil(401, "UnAuthorized!"));
   }
@@ -21,6 +26,11 @@ export const verifyToken = (req, res, next) => {
 /* VERIFY ADMIN */
 export const isAdmin = (req, res, next) => {
   const token = req.cookies.access_token;
+
+  if (req.path === "/logout") {
+    return next(); // Skip authentication for the logout route
+  }
+
   if (!token) {
     return next(errorUtil(401, "UnAuthorized!"));
   }
@@ -38,6 +48,11 @@ export const isAdmin = (req, res, next) => {
 /* VERIFY SELLER */
 export const isSeller = (req, res, next) => {
   const token = req.cookies.access_token;
+
+  if (req.path === "/logout") {
+    return next(); // Skip authentication for the logout route
+  }
+
   if (!token) {
     return next(errorUtil(401, "UnAuthorized!"));
   }
