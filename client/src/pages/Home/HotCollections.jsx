@@ -14,7 +14,7 @@ export default function HotCollections() {
     },
     {
       url: "https://i.ibb.co/3vDdVCp/Black-and-White-New-Women-Dress-Collection-Instagram-Story-1.png",
-      cat: "Habayas",
+      cat: "Abayas",
     },
     {
       url: "https://i.ibb.co/fQq2HZb/Wallet-Instagram-Post.png",
@@ -61,8 +61,8 @@ export default function HotCollections() {
                 />
               </Link>
             )}
-            {item.cat === "Habayas" && (
-              <Link to={`/cool/category/Habayas`}>
+            {item.cat === "Abayas" && (
+              <Link to={`/cool/category/Abayas`}>
                 <Image
                   src={item.url}
                   alt={`Beauty Collection ${index + 1}`}

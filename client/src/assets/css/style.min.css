@@ -11560,8 +11560,15 @@ footer.style-2 .footer-top.dark-view * {
 }
 
 .btn-selected-size {
-  background-color: orange; /* Apply a different background color for selected size */
+  background-color: #f16126; /* Apply a different background color for selected size */
   color: white; /* Apply white text color for better visibility */
+}
+
+/* Apply a different border color for selected size */
+.btn-selected-size.btn {
+  border-color: #f16126 !important; /* Override default border color */
+  background-color: #f16126; /* Apply a different background color for selected size */
+  color: white;
 }
 
 .buyer-rating {

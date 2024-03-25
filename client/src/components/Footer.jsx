@@ -162,8 +162,7 @@ export default function Footer() {
         <div className="container">
           <div className="section-wrapper justify-content-center">
             <p style={{ display: "contents" }}>
-              &copy; {new Date().getFullYear()} <Link to="/">GG</Link>Developed
-              by{" "}
+              &copy; {new Date().getFullYear()} <Link to="/">GG</Link>Powered by{" "}
               <Link
                 to="https://www.linkedin.com/in/ahamed-aathil-0b52b2136/"
                 target="_blank"

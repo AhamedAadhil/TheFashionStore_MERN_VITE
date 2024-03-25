@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { TbTruckDelivery } from "react-icons/tb";
+import { BsCash } from "react-icons/bs";
 import Spinner from "react-bootstrap/Spinner";
 import toast from "react-hot-toast";
 import "swiper/css";
@@ -11,7 +13,6 @@ import { Autoplay } from "swiper/modules";
 import Rating from "../../components/Rating";
 import Review from "./Review";
 import SingleProductSkull from "../../components/LoadSkulls/SingleProductSkull";
-import { ButtonGroup, Button } from "react-bootstrap";
 
 export default function SingleProduct() {
   const [product, setProduct] = useState({});
@@ -273,7 +274,10 @@ export default function SingleProduct() {
                                                 />
                                               )}
                                               <FaHeart
-                                                style={{ color: "red" }}
+                                                style={{
+                                                  color: "red",
+                                                  cursor: "pointer",
+                                                }}
                                                 onClick={() =>
                                                   addToWishlist(id)
                                                 }
@@ -292,7 +296,10 @@ export default function SingleProduct() {
                                                 />
                                               )}
                                               <FaRegHeart
-                                                style={{ color: "red" }}
+                                                style={{
+                                                  color: "red",
+                                                  cursor: "pointer",
+                                                }}
                                                 onClick={() =>
                                                   addToWishlist(id)
                                                 }
@@ -337,7 +344,10 @@ export default function SingleProduct() {
                           {product && product.brand && (
                             <h6>
                               {" "}
-                              <b>Brand:</b> {product?.brand.title.toUpperCase()}
+                              <b>Brand:</b>{" "}
+                              {product?.brand?.title === "Others"
+                                ? "Non-Specified"
+                                : product?.brand?.title?.toUpperCase()}
                             </h6>
                           )}
                           <h6>
@@ -353,13 +363,13 @@ export default function SingleProduct() {
                           )}
 
                           {/* <p>
-                          <b>Description:</b> {product?.description}
-                        </p> */}
+                            <b>Description:</b> {product?.description}
+                          </p> */}
                         </div>
                       )}
                       {/* cart component */}
                       <div>
-                        <form onSubmit={handleSubmit}>
+                        <form>
                           {/* select size */}
                           <div className="select-product size d-flex align-items-center">
                             <p className="m-0 me-2">
@@ -370,10 +380,11 @@ export default function SingleProduct() {
                                 product.size &&
                                 product.size.map((size, i) => (
                                   <button
+                                    style={{ borderColor: "#F16126" }}
                                     key={i}
                                     disabled={product.stock === 0}
                                     type="button"
-                                    className={`btn btn-outline-secondary ${
+                                    className={`btn btn-outline ${
                                       size === productSize
                                         ? "btn-selected-size"
                                         : ""
@@ -385,10 +396,10 @@ export default function SingleProduct() {
                                 ))}
                             </div>
                           </div>
-
                           {/* select color */}
                           <div className="select-product color">
                             <select
+                              style={{ borderColor: "#F16126" }}
                               onChange={handleColorChange}
                               value={productColor}
                             >
@@ -409,10 +420,13 @@ export default function SingleProduct() {
                             </select>
                             <i className="icofont-rounded-down"></i>
                           </div>
-
                           {/* select quantity */}
-                          <div className="cart-plus-minus">
+                          <div
+                            className="cart-plus-minus"
+                            style={{ borderColor: "#F16126" }}
+                          >
                             <div
+                              style={{ borderRightColor: " #F16126" }}
                               className="dec qtybutton"
                               onClick={handleDecreseCount}
                             >
@@ -431,6 +445,7 @@ export default function SingleProduct() {
                               }
                             />
                             <div
+                              style={{ borderLeftColor: " #F16126" }}
                               className="inc qtybutton"
                               onClick={handleIncreaseCount}
                             >
@@ -442,25 +457,43 @@ export default function SingleProduct() {
                             <input
                               type="text"
                               placeholder="Coupon Code"
-                              style={{ textTransform: "uppercase" }}
+                              style={{
+                                textTransform: "uppercase",
+                                borderColor: " #F16126",
+                              }}
                               onChange={(e) => setProductCoupon(e.target.value)}
                             />
                           </div>
-
-                          {/* button section */}
-                          <button
-                            disabled={loading || product.stock === 0}
-                            type="submit"
-                            className="lab-btn mt-4"
-                          >
-                            <span>
-                              {loading ? "Loading..." : "Add To Cart"}
-                            </span>
-                          </button>
-                          <Link to="/cart" className="lab-btn bg-primary">
-                            <span>Check Out</span>
-                          </Link>
                         </form>
+                      </div>
+                      <div
+                        style={{
+                          borderTop: "1px solid lightgrey",
+                        }}
+                        className="mt-3 pt-3"
+                      >
+                        <p style={{ color: "green" }}>
+                          <TbTruckDelivery /> &nbsp; All island free delivery
+                          within 3 to 5 working days
+                        </p>
+                        <p style={{ color: "green" }}>
+                          <BsCash /> &nbsp; Cash-on-delivery Available
+                        </p>
+                      </div>
+
+                      {/* button section */}
+                      <div className="d-flex justify-content-between align-items-center">
+                        <button
+                          disabled={loading || product.stock === 0}
+                          type="submit"
+                          className="lab-btn mt-4"
+                          onClick={handleSubmit}
+                        >
+                          <span>{loading ? "Loading..." : "Add To Cart"}</span>
+                        </button>
+                        <Link to="/cart" className="lab-btn bg-primary mt-4">
+                          <span>Check Out</span>
+                        </Link>
                       </div>
                     </div>
                   </div>

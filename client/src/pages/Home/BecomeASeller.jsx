@@ -48,7 +48,7 @@ export default function BecomeASeller() {
     },
     {
       icon: <MdSell />,
-      count: 100,
+      count: 50,
       text: "Successful Sales",
     },
   ];
