@@ -13,11 +13,12 @@ export default function CartPage() {
   const [coupon, setCoupon] = useState("");
   const [addressList, setAddressList] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState("");
-  const [selectedAddress, setSelectedAddress] = useState({});
+  const [selectedAddress, setSelectedAddress] = useState({ label: "" });
   const [cartTotal, setCartTotal] = useState(0);
   const [afterDiscount, setAfterDiscount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [useEffectLoading, setUseEffectLoading] = useState(false);
+  const [useEffectDone, setUseEffectDone] = useState(false);
   const [formData, setFormData] = useState({});
   const [showMobileNumberModel, setShowMobileNumberModel] = useState(false);
   const buttonText = !selectedAddressId ? "Add New Address" : "Update Address";
@@ -44,7 +45,9 @@ export default function CartPage() {
 
   const fetchCartData = async () => {
     try {
-      setUseEffectLoading(true);
+      {
+        !useEffectDone && setUseEffectLoading(true);
+      }
       let response = await fetch("/api/buyer/actions/getUserCart", {
         method: "GET",
         headers: {
@@ -53,11 +56,12 @@ export default function CartPage() {
       });
       if (!response.ok) {
         setUseEffectLoading(false);
-        console.log(response.message);
+        console.log(response?.message);
         return;
       }
       const data = await response.json();
       setUseEffectLoading(false);
+      setUseEffectDone(true);
       setCartItems(data.products);
       setCartTotal(data.carttotal);
       setAfterDiscount(data.totalafterdiscount);
@@ -119,7 +123,10 @@ export default function CartPage() {
       setLoading(false);
       toast.success("Product Deleted From Cart!");
       // Refetch cart data after successful deletion
-      fetchCartData();
+      await fetchCartData();
+      cartItems.length === 1 &&
+        navigate("/shop") &&
+        toast.success("Your Cart is Empty!");
     } catch (error) {
       setLoading(false);
       toast.error(error.message);
@@ -334,6 +341,39 @@ export default function CartPage() {
     }
   };
 
+  const getLocation = async () => {
+    try {
+      if ("geolocation" in navigator) {
+        // Get user's current location
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            console.log("Latitude:", latitude);
+            console.log("Longitude:", longitude);
+
+            // Fetch location details using latitude and longitude
+            const location = await fetch(
+              `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${latitude},${longitude}&lang=en-US&apiKey=XrvcqTiLSNB7ORviOLHJc376TTC1YCqGkTXX_3pfo04`
+            );
+            const response = await location.json();
+            console.log(response);
+          },
+          (error) => {
+            console.error("Error getting location:", error.message);
+            toast.error(error.message); // Notify user of the error
+          }
+        );
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+        toast.error("Geolocation is not supported by this browser.");
+      }
+    } catch (error) {
+      console.error("Error getting location:", error.message);
+      toast.error(error.message); // Notify user of the error
+    }
+  };
+
   if (useEffectLoading) {
     return <CartPageSkull />;
   }
@@ -448,6 +488,10 @@ export default function CartPage() {
                                 setFormData({});
                                 setSelectedAddress(selectedAddress);
                                 setSelectedAddressId(selectedId);
+
+                                if (selectedValue === "my location") {
+                                  getLocation();
+                                }
                               }
                             }}
                           >
@@ -458,6 +502,14 @@ export default function CartPage() {
                             >
                               Add New Address
                             </option>
+                            {/* <option
+                              value="my location"
+                              style={{
+                                fontWeight: "500",
+                              }}
+                            >
+                              Get Current Location
+                            </option> */}
                             <option
                               style={{ backgroundColor: "lightgray" }}
                               disabled
@@ -481,7 +533,7 @@ export default function CartPage() {
                             id="label"
                             className="cart-page-input-text"
                             placeholder="Label *"
-                            value={selectedAddress.label || ""}
+                            value={selectedAddress?.label || ""}
                             onChange={handleAddressChange}
                           />
                           <input
@@ -490,7 +542,7 @@ export default function CartPage() {
                             id="housenumber"
                             className="cart-page-input-text"
                             placeholder="House Number *"
-                            value={selectedAddress.housenumber || ""}
+                            value={selectedAddress?.housenumber || ""}
                             onChange={handleAddressChange}
                           />
                         </div>
@@ -500,7 +552,7 @@ export default function CartPage() {
                           id="street"
                           placeholder="Street *"
                           className="mb-4"
-                          value={selectedAddress.street || ""}
+                          value={selectedAddress?.street || ""}
                           onChange={handleAddressChange}
                         />
                         <div className="d-flex  align-items-center justify-content-between">
@@ -510,7 +562,7 @@ export default function CartPage() {
                             id="city"
                             className="cart-page-input-text"
                             placeholder="City *"
-                            value={selectedAddress.city || ""}
+                            value={selectedAddress?.city || ""}
                             onChange={handleAddressChange}
                           />
                           <input
@@ -519,7 +571,7 @@ export default function CartPage() {
                             id="state"
                             className="cart-page-input-text"
                             placeholder="District *"
-                            value={selectedAddress.state || ""}
+                            value={selectedAddress?.state || ""}
                             onChange={handleAddressChange}
                           />
                         </div>

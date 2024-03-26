@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import Card from "react-bootstrap/Card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { VscVerifiedFilled } from "react-icons/vsc";
+import { useRef, useEffect, useState } from "react";
 
 export default function NewProducts({ data: newProducts }) {
   NewProducts.propTypes = {
@@ -17,6 +19,16 @@ export default function NewProducts({ data: newProducts }) {
       })
     ).isRequired,
   };
+
+  const [isTruncated, setIsTruncated] = useState(false);
+  const spanRef = useRef();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (spanRef.current) {
+      setIsTruncated(spanRef.current.offsetWidth < spanRef.current.scrollWidth);
+    }
+  }, []);
 
   if (newProducts === undefined || !Array.isArray(newProducts)) {
     return null;
@@ -39,20 +51,21 @@ export default function NewProducts({ data: newProducts }) {
         </div>
         <div className="row g-1 row-cols-xl-4 row-cols-lg-3 row-cols-md-3 row-cols-2 course-filter">
           {newProducts.map((product, index) => (
-            <Link
-              to={`/shop/${product._id}`}
-              key={index}
-              className="col mb-3 text-decoration-none"
-            >
+            <div key={index} className="col mb-3 text-decoration-none">
               {/* Add margin-bottom to create space between cards */}
               <Card
                 style={{ width: "auto", height: "18rem", position: "relative" }}
                 className="mx-2 shadow"
               >
                 <Card.Img
+                  onClick={() => navigate(`/shop/${product._id}`)}
                   variant="top"
                   src={product.imageUrls[0]}
-                  style={{ height: "170px", objectFit: "cover" }}
+                  style={{
+                    height: "170px",
+                    objectFit: "cover",
+                    cursor: "pointer",
+                  }}
                   /* ideas are fill,cover,contain and height is auto */
                 />
                 <div className="green-tag">New</div>
@@ -68,24 +81,57 @@ export default function NewProducts({ data: newProducts }) {
                       display: "-webkit-box",
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: "vertical",
+                      cursor: "pointer",
                     }}
-                    className="text-center"
+                    onClick={() => navigate(`/shop/${product._id}`)}
                   >
                     {product.name}
                   </Card.Title>
                   {/* <Card.Text>{product.description}</Card.Text> */}
-                  <Card.Text style={{ fontSize: "1rem" }} className="px-2">
+                  <Card.Text style={{ fontSize: "1rem" }}>
                     <span style={{ color: "#F16126" }}>
                       Rs. {product.price.toFixed(2)}
                     </span>
 
-                    <span style={{ fontSize: "0.8rem" }} className="d-block">
-                      By: {product.seller.shopname}
+                    <span
+                      style={{
+                        fontSize: "0.8rem",
+                        borderTop: "1px solid lightgrey",
+                        cursor: "pointer",
+                        display: "inline-block",
+                        maxWidth: "100%",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: isTruncated ? "ellipsis" : "unset",
+                        color: "#000000",
+                      }}
+                      className="d-block mt-2 pt-1"
+                    >
+                      <span
+                        onClick={() =>
+                          navigate(`/seller/${product.seller._id}`, {
+                            state: { seller: product.seller },
+                          })
+                        }
+                        style={{
+                          marginRight: "0.2rem",
+                          textDecoration: "underline",
+                        }}
+                        ref={spanRef}
+                      >
+                        {product.seller.shopname}
+                      </span>
+                      {product.seller.verified && (
+                        <VscVerifiedFilled
+                          style={{ color: "blue", verticalAlign: "middle" }}
+                        />
+                      )}
+                      &gt;
                     </span>
                   </Card.Text>
                 </Card.Body>
               </Card>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

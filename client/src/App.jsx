@@ -22,11 +22,11 @@ import SellerRegister from "./pages/Auth/SellerRegister";
 import ByCategory from "./pages/LinkFromHome/ByCateogry";
 import ByDeals from "./pages/LinkFromHome/ByDeals";
 import ByCoolCollections from "./pages/LinkFromHome/ByCoolCollections";
+import SingleShop from "./pages/SingleShops/SingleShop";
 
 function App() {
   return (
     <BrowserRouter>
-      {/* 313131 525252 */}
       <SkeletonTheme>
         <Navbar />
         <Routes>
@@ -43,6 +43,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/seller-register" element={<SellerRegister />} />
+          <Route path="/seller/:id" element={<SingleShop />} />
           <Route element={<PrivateRoute />}>
             <Route path="/cart" element={<CartPage />} />
             <Route path="/me" element={<Profile />} />

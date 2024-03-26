@@ -6242,8 +6242,8 @@ button {
   border-radius: 3px 3px 0 0;
 }
 .pageheader-section {
-  padding: 250px 0 100px;
-  background-image: url(../images/pageheader/bg/01.jpg);
+  padding: 100px 0 10px;
+  background-image: url(../../assets/wavesOpacity.svg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

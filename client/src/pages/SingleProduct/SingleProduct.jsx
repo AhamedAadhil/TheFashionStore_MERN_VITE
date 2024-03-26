@@ -5,6 +5,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { TbTruckDelivery } from "react-icons/tb";
+import { VscVerifiedFilled } from "react-icons/vsc";
+import { MdDateRange } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 import Spinner from "react-bootstrap/Spinner";
 import toast from "react-hot-toast";
@@ -340,27 +342,26 @@ export default function SingleProduct() {
                           <h4 className="rating">
                             {product && <Rating product={product} />}
                           </h4>
-                          <h4>Rs. {product?.price}</h4>
+                          <h4>Rs. {product?.price?.toFixed(2)}</h4>
                           {product && product.brand && (
                             <h6>
                               {" "}
-                              <b>Brand:</b>{" "}
-                              {product?.brand?.title === "Others"
-                                ? "Non-Specified"
-                                : product?.brand?.title?.toUpperCase()}
+                              <b>Brand:</b>&nbsp;
+                              <span style={{ color: "#F16126" }}>
+                                {product?.brand?.title === "Others"
+                                  ? "Non-Specified"
+                                  : product?.brand?.title?.toUpperCase()}
+                              </span>
                             </h6>
                           )}
                           <h6>
-                            <b> Quality:</b>
-                            {product?.quality === "a_grade"
-                              ? "A-GRADE"
-                              : "ORIGINAL"}
+                            <b> Quality:</b>&nbsp;
+                            <span style={{ color: "#F16126" }}>
+                              {product?.quality === "a_grade"
+                                ? "A-GRADE"
+                                : "ORIGINAL"}
+                            </span>
                           </h6>
-                          {product && product.seller && (
-                            <h6>
-                              <b>Seller:</b> {product?.seller.shopname}
-                            </h6>
-                          )}
 
                           {/* <p>
                             <b>Description:</b> {product?.description}
@@ -472,14 +473,54 @@ export default function SingleProduct() {
                         }}
                         className="mt-3 pt-3"
                       >
-                        <p style={{ color: "green" }}>
-                          <TbTruckDelivery /> &nbsp; All island free delivery
-                          within 3 to 5 working days
-                        </p>
-                        <p style={{ color: "green" }}>
-                          <BsCash /> &nbsp; Cash-on-delivery Available
+                        <p
+                          style={{
+                            color: "white",
+                            backgroundColor: "green",
+                            fontSize: "1rem",
+                          }}
+                          className="py-2 px-2 "
+                        >
+                          <BsCash /> &nbsp; Cash-On-Delivery Available. <br />
+                          <TbTruckDelivery /> &nbsp; All Island Free Delivery.
+                          <br />
+                          <MdDateRange /> &nbsp;Deliver Within 3 to 5 Working
+                          Days.
                         </p>
                       </div>
+                      {product && product.seller && (
+                        <h6
+                          onClick={() =>
+                            navigate(`/seller/${product.seller._id}`, {
+                              state: { seller: product.seller },
+                            })
+                          }
+                          style={{
+                            borderTop: "1px solid lightgrey",
+                          }}
+                          className="mt-3 pt-3"
+                        >
+                          <b>Seller:</b> &nbsp;
+                          <span
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              color: "#F16126",
+                            }}
+                          >
+                            {product?.seller.shopname}
+                            {product?.seller.verified && (
+                              <VscVerifiedFilled
+                                style={{
+                                  margin: "0 5px",
+                                  color: "blue",
+                                  verticalAlign: "middle",
+                                }}
+                              />
+                            )}
+                          </span>
+                        </h6>
+                      )}
 
                       {/* button section */}
                       <div className="d-flex justify-content-between align-items-center">
