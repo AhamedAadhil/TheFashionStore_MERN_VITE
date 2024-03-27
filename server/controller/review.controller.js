@@ -8,9 +8,24 @@ import { validateMongoDbId } from "../utils/validateMongoDbId.utils.js";
 /* CREATE NEW REVIEW FOR PRODUCT */
 export const createReviewForProduct = async (req, res, next) => {
   const { id } = req.params;
+  const buyerId = req.user.id;
   if (!id) {
-    return next(errorUtil(404, "The Product is Not Found"));
+    return next(errorUtil(404, "Product Not Found"));
   }
+  const buyer = await Buyer.findById(buyerId);
+
+  if (!buyer) {
+    return next(errorUtil(404, "Buyer Not Found"));
+  }
+
+  const productIndexInReviewableList = buyer.reviewable.findIndex(
+    (item) => String(item.product) === id && item.status === true
+  );
+
+  if (productIndexInReviewableList === -1) {
+    return next(errorUtil(405, "You are not allowed to review this product."));
+  }
+
   try {
     const review = new Review({
       type: "product",
@@ -36,6 +51,7 @@ export const createReviewForProduct = async (req, res, next) => {
         }
         // Add the review to the products's reviews array field
         buyer.reviewhistory.push(review._id);
+        buyer.reviewable[productIndexInReviewableList].status = false;
         await buyer.save();
       }
       await product.calculateStars();

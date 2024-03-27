@@ -72,7 +72,11 @@ export const getSingleProduct = async (req, res, next) => {
     if (getProduct.orderhistory.length > 0) {
       await getProduct.populate("orderhistory");
     }
-    await getProduct.populate("seller");
+    await getProduct.populate({
+      path: "seller",
+      select:
+        "-mobile -email -address -password -orderhistory -createdAt -passwordResetExpires -passwordResetToken -refreshtoken -reviewhistory -sellername -verified -updatedAt",
+    });
     await getProduct.populate("brand");
     await getProduct.populate("category");
     res.status(200).json(getProduct);
@@ -193,7 +197,11 @@ export const getAllProducts = async (req, res, next) => {
     const allProducts = await Product.find(query)
       .select(selectFields)
       .populate("brand")
-      .populate("seller")
+      .populate({
+        path: "seller",
+        select:
+          "-mobile -email -address -password -orderhistory -createdAt -passwordResetExpires -passwordResetToken -refreshtoken -reviewhistory -sellername -verified -updatedAt", // Exclude mobile and email fields
+      })
       .populate("category")
       .sort(sortOptions)
       .limit(limit)

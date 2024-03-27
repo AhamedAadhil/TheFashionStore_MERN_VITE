@@ -21,7 +21,7 @@ export default function CartPage() {
   const [useEffectDone, setUseEffectDone] = useState(false);
   const [formData, setFormData] = useState({});
   const [showMobileNumberModel, setShowMobileNumberModel] = useState(false);
-  const buttonText = !selectedAddressId ? "Add New Address" : "Update Address";
+  const buttonText = !selectedAddressId ? "Add This Address" : "Update Address";
   const { currentUser } = useSelector((state) => state.user);
   // const [deliveryInfo, setDeliveryInfo] = useState({});
   const navigate = useNavigate();
@@ -237,6 +237,7 @@ export default function CartPage() {
       setLoading(false);
       setAddressList(data);
       toast.success("New Address Added!");
+      setSelectedAddressId(data[data.length - 1]._id);
     } catch (error) {
       setLoading(false);
       toast.error(error.message);
@@ -263,6 +264,10 @@ export default function CartPage() {
       }
       setLoading(false);
       toast.success(data.message);
+      setAddressList(data);
+      setSelectedAddress({});
+      setSelectedAddressId("");
+      setFormData({});
     } catch (error) {
       setLoading(false);
       toast.error(error.message);
@@ -333,7 +338,7 @@ export default function CartPage() {
         return;
       }
       setLoading(false);
-      navigate("/");
+      navigate("/my-orders");
       toast.success("Your Order Has Been Placed!");
     } catch (error) {
       setLoading(false);
@@ -533,7 +538,7 @@ export default function CartPage() {
                             id="label"
                             className="cart-page-input-text"
                             placeholder="Label *"
-                            value={selectedAddress?.label || ""}
+                            value={selectedAddress?.label || "Home"}
                             onChange={handleAddressChange}
                           />
                           <input
@@ -586,9 +591,10 @@ export default function CartPage() {
                             }}
                             type="submit"
                             style={{
-                              display: Object.keys(formData).length
-                                ? "block"
-                                : "none",
+                              display:
+                                Object.keys(formData).length > 0
+                                  ? "block"
+                                  : "none",
                             }}
                           >
                             {buttonText}

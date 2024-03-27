@@ -363,8 +363,16 @@ export const updateOrderStatus = async (req, res, next) => {
 
       // Increase points for buyer
       buyer.points += pointsForTheOrder;
-      await buyer.save();
+
+      const productsToAddToReview = order.products.map((product) => ({
+        product: product.product,
+        status: true,
+      }));
+      await Buyer.findByIdAndUpdate(buyer._id, {
+        $push: { reviewable: { $each: productsToAddToReview } },
+      });
     }
+
     if (status === "cancelled") {
       // Restore stock and decrease sold values for products in the order
       const updateStockAndSold = updateOrder.products.map(async (item) => {
@@ -374,6 +382,7 @@ export const updateOrderStatus = async (req, res, next) => {
       });
       await Promise.all(updateStockAndSold);
     }
+
     const sellerInfo = await Seller.findById(sellerId).select("email shopname");
     const orderInfo = await Order.findById(orderId);
     const buyerInfo = await Buyer.findOne({ _id: orderInfo.orderby }).select(

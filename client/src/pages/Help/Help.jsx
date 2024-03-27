@@ -1,4 +1,3 @@
-import PageHeader from "../../components/PageHeader";
 import GoogleMap from "../../components/GoogleMap";
 import { SiMinutemailer } from "react-icons/si";
 import { useState } from "react";
@@ -29,7 +28,7 @@ export default function Help() {
       imgUrl: officeAddressImg,
       imgAlt: "contact icon",
       title: "Office Address",
-      desc: "No 79, Mudaliyar Road, Akkaraipattu-4, SRILANKA",
+      desc: "No 7, Main Street, Akkaraipattu, SRILANKA",
     },
     {
       imgUrl: whatsappImg,

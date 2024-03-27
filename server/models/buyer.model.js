@@ -87,6 +87,18 @@ const buyerSchema = new mongoose.Schema(
       ],
       default: [],
     },
+    reviewable: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+        status: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
     wishlist: {
       type: [
         {

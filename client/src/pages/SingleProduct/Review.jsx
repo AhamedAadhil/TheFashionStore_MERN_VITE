@@ -45,7 +45,14 @@ export default function Review({ id, desc, onUpdate }) {
       });
       const data = await response.json();
       if (response.status === 401) {
+        setLoading(false);
         return toast.error("Please Login To Add Comment!");
+      }
+      if (response.status === 405) {
+        setLoading(false);
+        return toast.error(
+          "You Have To Purchase This Prodcut Before Reviewing It!"
+        );
       }
       if (!response.ok) {
         setLoading(false);

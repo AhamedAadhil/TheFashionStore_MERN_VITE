@@ -5,7 +5,7 @@ import { errorUtil } from "../utils/error.utils.js";
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
 
-  if (req.path === "/logout") {
+  if (req.path === "/auth/logout") {
     return next(); // Skip authentication for the logout route
   }
 
@@ -27,7 +27,7 @@ export const verifyToken = (req, res, next) => {
 export const isAdmin = (req, res, next) => {
   const token = req.cookies.access_token;
 
-  if (req.path === "/logout") {
+  if (req.path === "/auth/logout") {
     return next(); // Skip authentication for the logout route
   }
 
@@ -49,7 +49,7 @@ export const isAdmin = (req, res, next) => {
 export const isSeller = (req, res, next) => {
   const token = req.cookies.access_token;
 
-  if (req.path === "/logout") {
+  if (req.path === "/auth/logout") {
     return next(); // Skip authentication for the logout route
   }
 

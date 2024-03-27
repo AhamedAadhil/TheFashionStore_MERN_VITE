@@ -546,7 +546,9 @@ export const deleteAddress = async (req, res, next) => {
       buyer.address.splice(index, 1);
       await buyer.save();
 
-      return res.status(200).json({ message: "Address deleted successfully" });
+      const buyerAddress = buyer.address;
+
+      return res.status(200).json(buyerAddress);
     }
   } catch (error) {
     next(error);
@@ -987,9 +989,9 @@ export const getOrders = async (req, res, next) => {
   const { id } = req.user;
   validateMongoDbId(id);
   try {
-    const order = await Order.find({ orderby: id }).populate(
-      "products.product seller"
-    );
+    const order = await Order.find({ orderby: id })
+      .populate("products.product seller")
+      .sort({ createdAt: -1 });
     if (!order) {
       return next(errorUtil(404, "There Is No Orders Link To This Account!"));
     }

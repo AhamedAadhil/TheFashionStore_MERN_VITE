@@ -207,11 +207,106 @@ export default function SingleProduct() {
         return;
       }
       toast.success("Product Added To Cart!");
+      navigate("/cart");
       setLoading(false);
     } catch (error) {
       toast.error(error.message);
     }
   };
+
+  // const buyNow = async (e) => {
+  //   try {
+  //     e.preventDefault();
+  //     setLoading(true);
+  //     if (!currentUser) {
+  //       setLoading(false);
+  //       navigate("/login");
+  //       return;
+  //     }
+  //     if (FormData.item.color === "Select Color") {
+  //       setLoading(false);
+  //       toast.error("Please Select a Color!");
+  //       return;
+  //     }
+  //     if (FormData.item.size === "Select Size") {
+  //       setLoading(false);
+  //       toast.error("Please Select a Size!");
+  //       return;
+  //     }
+  //     if (FormData.item.count <= 0) {
+  //       setLoading(false);
+  //       toast.error("Please select a valid quantity");
+  //       return;
+  //     }
+
+  //     // Check if the user has a cart
+  //     let cartInfo = await fetch("/api/buyer/actions/getUserCart", {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     if (!cartInfo.ok) {
+  //       // Add the product to the cart
+  //       const addToCartResponse = await fetch("/api/buyer/actions/addToCart", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(FormData),
+  //       });
+  //       const addToCartData = await addToCartResponse.json();
+  //       if (addToCartData.success === false) {
+  //         setLoading(false);
+  //         toast.error(addToCartData.message);
+  //         return;
+  //       }
+  //       toast.success("Product Added To Cart!");
+  //       navigate("/cart");
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     const cartData = await cartInfo.json();
+  //     console.log(cartData);
+
+  //     // If the user has a cart, delete it
+  //     if (cartData && cartData.length > 0) {
+  //       const deleteCartResponse = await fetch("/api/buyer/actions/emptyCart", {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       });
+  //       const deleteCartData = await deleteCartResponse.json();
+  //       if (deleteCartData.success === false) {
+  //         setLoading(false);
+  //         toast.error(deleteCartData.message);
+  //         return;
+  //       }
+  //     }
+
+  //     // Add the product to the cart
+  //     const addToCartResponse = await fetch("/api/buyer/actions/addToCart", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(FormData),
+  //     });
+  //     const addToCartData = await addToCartResponse.json();
+  //     if (addToCartData.success === false) {
+  //       setLoading(false);
+  //       toast.error(addToCartData.message);
+  //       return;
+  //     }
+  //     toast.success("Product Added To Cart!");
+  //     navigate("/cart");
+  //     setLoading(false);
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
 
   // Function to handle updating product data after adding a review
   const handleProductUpdate = () => {
@@ -532,7 +627,11 @@ export default function SingleProduct() {
                         >
                           <span>{loading ? "Loading..." : "Add To Cart"}</span>
                         </button>
-                        <Link to="/cart" className="lab-btn bg-primary mt-4">
+                        <Link
+                          to="/cart"
+                          // onClick={buyNow}
+                          className="lab-btn bg-primary mt-4"
+                        >
                           <span>Check Out</span>
                         </Link>
                       </div>

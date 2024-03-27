@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { VscVerifiedFilled } from "react-icons/vsc";
 import Rating from "../../components/Rating";
 
 export default function WishlistProductCard({ products }) {
+  const navigate = useNavigate();
   return (
     <section style={{ backgroundColor: "#F16126" }}>
       <div className="container py-5">
@@ -43,8 +45,27 @@ export default function WishlistProductCard({ products }) {
                         <b>Available Sizes:</b> {product.size.join(", ")}
                       </p>
 
-                      <div className="mt-1 mb-2 text-muted small ">
-                        <span>Seller:{product.seller.shopname}</span>
+                      <div
+                        className="mt-1 mb-2 text-muted small "
+                        onClick={() =>
+                          navigate(`/seller/${product.seller._id}`, {
+                            state: { seller: product.seller },
+                          })
+                        }
+                      >
+                        {" "}
+                        Seller:
+                        <span
+                          className="text-decoration-underline"
+                          style={{ color: "#F16126" }}
+                        >
+                          {product.seller.shopname}{" "}
+                          {product.seller.verified && (
+                            <VscVerifiedFilled
+                              style={{ color: "blue", verticalAlign: "middle" }}
+                            />
+                          )}
+                        </span>
                       </div>
                     </div>
                     <div className="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start ">
