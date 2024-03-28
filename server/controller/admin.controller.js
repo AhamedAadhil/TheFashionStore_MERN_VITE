@@ -64,23 +64,25 @@ export const adminLogin = async (req, res, next) => {
 /* ADMIN LOGOUT */
 export const adminLogout = async (req, res, next) => {
   const user = req.user;
-  if (!user.role === "admin") {
-    return next(errorUtil(403, "You Are Not Allowed To Perform This Task!"));
+  if (user && user.role === "admin") {
+    try {
+      await Admin.findOneAndUpdate(
+        {
+          refreshtoken: req.cookies?.refresh_token,
+        },
+        { refreshtoken: "" },
+        { new: true }
+      );
+      res.clearCookie("access_token", { expires: new Date(0) });
+      res.clearCookie("refresh_token", { expires: new Date(0) });
+      res.status(200).json("Admin Signout Successfully!");
+    } catch (error) {
+      return next(error);
+    }
   }
-  try {
-    await Admin.findOneAndUpdate(
-      {
-        refreshtoken: req.cookies?.refresh_token,
-      },
-      { refreshtoken: "" },
-      { new: true }
-    );
-    res.clearCookie("access_token", { expires: new Date(0) });
-    res.clearCookie("refresh_token", { expires: new Date(0) });
-    res.status(200).json("Admin Signout Successfully!");
-  } catch (error) {
-    next(error);
-  }
+  res.clearCookie("access_token", { expires: new Date(0) });
+  res.clearCookie("refresh_token", { expires: new Date(0) });
+  return res.status(200).json("User Signout Successfully!");
 };
 
 /* GET ALL BUYERS */

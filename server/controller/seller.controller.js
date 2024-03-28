@@ -552,6 +552,7 @@ export const deletePendingProducts = async (req, res, next) => {
         errorUtil(400, "Cannot Delete The Pending Product Right Now!")
       );
     }
+    await PendingApproval.deleteOne({ _id: pendingProductToDelete._id });
     res.status(200).json("Deleted!");
   } catch (error) {
     next(error);
