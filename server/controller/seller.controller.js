@@ -558,3 +558,19 @@ export const deletePendingProducts = async (req, res, next) => {
     next(error);
   }
 };
+
+/* GET OWN ALL DELIVERED ORDERS */
+export const getAllDeliveredOrders = async (req, res, next) => {
+  try {
+    const sellerId = req.user.id;
+    const allOrders = await Order.find({
+      seller: sellerId,
+    }).populate("products.product");
+    const deliveredOrders = allOrders.filter(
+      (order) => order.orderstatus === "delivered"
+    );
+    return res.status(200).json(deliveredOrders);
+  } catch (error) {
+    next(error);
+  }
+};

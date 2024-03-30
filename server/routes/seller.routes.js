@@ -14,6 +14,7 @@ import {
   dashboardData,
   getPendingProducts,
   deletePendingProducts,
+  getAllDeliveredOrders,
 } from "../controller/seller.controller.js";
 
 const router = express.Router();
@@ -27,6 +28,7 @@ router.delete("/actions/deleteSeller/:id", isSeller, deleteSingleSeller);
 router.put("/actions/updateSeller/:id", isSeller, updateSeller);
 router.put("/actions/refresh", isSeller, handleRefreshToken);
 router.get("/actions/getAllOrders", isSeller, getAllOrders);
+router.get("/actions/getAllDeliveredOrders", isSeller, getAllDeliveredOrders);
 router.put("/actions/updateOrderStatus/:id", isSeller, updateOrderStatus);
 router.get("/actions/dashboardData", isSeller, dashboardData);
 router.get("/actions/getPendingProducts", isSeller, getPendingProducts);
