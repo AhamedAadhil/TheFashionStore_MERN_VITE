@@ -11684,3 +11684,9 @@ footer.style-2 .footer-top.dark-view * {
 .horizontal-scroll::-webkit-scrollbar {
   display: none; /* Hide scrollbar */
 }
+
+.swiper-pagination-fraction {
+  color: #f16126;
+  font-weight: bold;
+  width: 100%;
+}

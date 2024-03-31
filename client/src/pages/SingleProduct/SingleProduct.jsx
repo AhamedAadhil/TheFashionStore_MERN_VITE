@@ -10,11 +10,13 @@ import { MdDateRange } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 import Spinner from "react-bootstrap/Spinner";
 import toast from "react-hot-toast";
-import "swiper/css";
-import { Autoplay } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import Rating from "../../components/Rating";
 import Review from "./Review";
 import SingleProductSkull from "../../components/LoadSkulls/SingleProductSkull";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import "swiper/css";
 
 export default function SingleProduct() {
   const [product, setProduct] = useState({});
@@ -338,18 +340,11 @@ export default function SingleProduct() {
                         <div className="swiper-container pro-single-top">
                           {product && product.imageUrls && (
                             <Swiper
-                              spaceBetween={30}
-                              slidesPerView="1"
-                              loop={true}
-                              autoplay={{
-                                delay: 2000,
-                                disableOnInteraction: false,
+                              pagination={{
+                                type: "fraction",
+                                style: { color: "red" },
                               }}
-                              modules={[Autoplay]}
-                              navigation={{
-                                prevEl: ".pro-single-prev",
-                                nextEl: ".pro-single-next",
-                              }}
+                              modules={[Pagination]}
                               className="mySwiper"
                             >
                               {product &&

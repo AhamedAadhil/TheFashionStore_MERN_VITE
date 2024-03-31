@@ -55,7 +55,7 @@ export default function PageHeader({
                     style={{ borderRight: "1px solid gray" }}
                   >
                     <HiTrophy style={{ color: "#F16126" }} /> &nbsp;{" "}
-                    <b> Points: {points}</b>
+                    <b> Points: {points.toFixed(0)}</b>
                   </li>
                   &nbsp;
                   <li className="d-flex justify-content-center align-items-center px-2">
