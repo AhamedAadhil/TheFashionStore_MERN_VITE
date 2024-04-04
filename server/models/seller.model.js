@@ -136,6 +136,7 @@ const sellerSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    lastvisittodashboard: Date,
     passwordcChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,

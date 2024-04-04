@@ -39,6 +39,17 @@ export const createQuestion = async (req, res, next) => {
       await product.save();
       await seller.save();
       await product.populate("questions");
+      const data = {
+        to: seller.email,
+        subject: "New Question for Your Product",
+        html: `<p>Dear ${seller.shopname} <br/><br/>  
+        <h3>New Question for Product: ${product.name}</h3>
+        <p>A new question has been asked about your product. Please review and answer it as soon as possible:</p>
+        <p>Question: ${question.qa}</p>
+        <p>Product Name: ${product.name}</p>,
+        <p>Product ID: ${product._id}</p>`,
+      };
+      await sendEmail(data);
       res.status(201).json(product.questions);
     }
   } catch (error) {
@@ -53,10 +64,15 @@ export const getAllQA = async (req, res, next) => {
     return next(errorUtil(404, "Product Not Found"));
   }
   try {
-    const allQA = await Question.find({ product: id }).populate({
-      path: "buyer",
-      select: "username avatar",
-    });
+    const allQA = await Question.find({ product: id })
+      .populate({
+        path: "buyer",
+        select: "username avatar",
+      })
+      .populate({
+        path: "seller",
+        select: "shopname",
+      });
     if (allQA.length === 0) {
       return res.status(200).json("No questions Asked!");
     }
@@ -107,6 +123,28 @@ export const replyAQuestion = async (req, res, next) => {
       await product.populate("questions");
       res.status(201).json(product.questions);
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* GET ALL QUESTIONS OF A SELLER */
+export const getAllQuestions = async (req, res, next) => {
+  try {
+    const sellerId = req.user.id;
+    const questions = await Question.find({
+      seller: sellerId,
+      type: "question",
+    })
+      .populate({
+        path: "buyer",
+        select: "username",
+      })
+      .populate({
+        path: "product",
+        select: "name price",
+      });
+    return res.status(200).json(questions);
   } catch (error) {
     next(error);
   }

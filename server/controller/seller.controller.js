@@ -3,6 +3,7 @@ import Seller from "../models/seller.model.js";
 import Buyer from "../models/buyer.model.js";
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
+import Question from "../models/question.model.js";
 import PendingApproval from "../models/pending.approval.model.js";
 import bcryptjs from "bcryptjs";
 import { validateMongoDbId } from "../utils/validateMongoDbId.utils.js";
@@ -84,6 +85,14 @@ export const loginSeller = async (req, res, next) => {
         },
         { new: true }
       );
+      const updateSellerLastVisit = await Seller.findByIdAndUpdate(
+        isSellerExist._id,
+        {
+          lastvisittodashboard: new Date(),
+        },
+        { new: true }
+      );
+      await updateSellerLastVisit.save();
       await updateSeller.save();
       const token = generateToken(isSellerExist?._id, isSellerExist?.role);
       const { password: pass, ...rest } = updateSeller._doc;
@@ -498,6 +507,12 @@ export const dashboardData = async (req, res, next) => {
       });
     }
 
+    /* data */
+    const questionsCount = await Question.countDocuments({
+      seller: sellerId,
+      type: "question",
+    });
+
     /* data for table 1,2 stock count and sold count */
     const productStocks = await Product.find({
       seller: sellerId,
@@ -515,6 +530,7 @@ export const dashboardData = async (req, res, next) => {
       sortedProductStocks,
       sortedProductSales,
       pendingOrdersCount,
+      questionsCount,
     });
   } catch (error) {
     next(error);

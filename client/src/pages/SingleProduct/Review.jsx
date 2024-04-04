@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import BuyerRating from "./BuyerRating";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { FaQuestionCircle } from "react-icons/fa";
+import { FaQuestionCircle, FaCommentAlt } from "react-icons/fa";
 
 export default function Review({ id, onUpdate }) {
   const [reviewShow, setReviewShow] = useState(false);
@@ -28,16 +28,17 @@ export default function Review({ id, onUpdate }) {
   const postReview = async (e) => {
     try {
       e.preventDefault();
+
+      if (!currentUser || currentUser === "") {
+        toast.error("Please Login to Rate This Product!");
+        navigate("/login");
+        return;
+      }
       if (buyerStarRating === 0 || !buyerStarRating) {
         return toast.error("Please  Rate This Product!");
       }
       if (review === "" || !review) {
         return toast.error("Please Enter Your Comment To Submit!");
-      }
-      if (!currentUser || currentUser === "") {
-        toast.error("Please Login to Rate This Product!");
-        navigate("/login");
-        return;
       }
       setLoading(true);
       const response = await fetch(`/api/review/createReviewForProduct/${id}`, {
@@ -83,14 +84,15 @@ export default function Review({ id, onUpdate }) {
     try {
       e.preventDefault();
 
-      if (qa === "" || !qa) {
-        return toast.error("Please Enter Your Question To Submit!");
-      }
       if (!currentUser || currentUser === "") {
-        toast.error("Please Login to Rate This Product!");
+        toast.error("Please Login Ask Your Question!");
         navigate("/login");
         return;
       }
+      if (qa === "" || !qa) {
+        return toast.error("Please Enter Your Question To Submit!");
+      }
+
       setLoading(true);
       const response = await fetch(`/api/question/createQuestion/${id}`, {
         method: "POST",
@@ -244,7 +246,9 @@ export default function Review({ id, onUpdate }) {
                       <Link to="#" style={{ color: "#F16126" }}>
                         {review.buyer.username}
                       </Link>
-                      <p>{review.date.split("T")[0]}</p>
+                      <p style={{ fontSize: "1rem" }}>
+                        {review.date.split("T")[0]}
+                      </p>
                     </div>
                   </div>
                   <div className="entry-content">
@@ -302,16 +306,32 @@ export default function Review({ id, onUpdate }) {
                     <div className="entry-meta">
                       <div className="posted-on d-flex gap-3 align-items-center justify-content-between">
                         <div>
-                          <FaQuestionCircle style={{ color: "#F16126" }} />
+                          {qa.type === "question" ? (
+                            // Display question icon for questions
+                            <FaQuestionCircle style={{ color: "#F16126" }} />
+                          ) : (
+                            // Display comment icon for answers
+                            <FaCommentAlt style={{ color: "green" }} />
+                          )}
                           <span style={{ marginLeft: "5px" }}>
-                            {qa.buyer.username}
+                            {qa.type === "question"
+                              ? qa.buyer.username
+                              : qa.seller.shopname}
                           </span>
                         </div>
-                        <p>{qa.date.split("T")[0]}</p>
+                        <p style={{ fontSize: "1rem" }}>
+                          {qa.date.split("T")[0]}
+                        </p>
                       </div>
                     </div>
                     <div className="entry-content">
-                      <b>{qa.qa}</b>
+                      <b
+                        style={{
+                          color: qa.type === "question" ? "#F16126" : "green",
+                        }}
+                      >
+                        {qa.qa}
+                      </b>
                     </div>
                   </div>
                 </li>
