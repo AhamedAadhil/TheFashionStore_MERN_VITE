@@ -2,6 +2,7 @@ import Buyer from "../models/buyer.model.js";
 import Product from "../models/product.model.js";
 import Question from "../models/question.model.js";
 import Seller from "../models/seller.model.js";
+import { sendEmail } from "../utils/sendEmail.utils.js";
 
 /* CREATE A QUESTION */
 export const createQuestion = async (req, res, next) => {
