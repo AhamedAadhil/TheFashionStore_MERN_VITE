@@ -75,7 +75,7 @@ export const getSingleProduct = async (req, res, next) => {
     await getProduct.populate({
       path: "seller",
       select:
-        "-mobile -email -address -password -orderhistory -createdAt -passwordResetExpires -passwordResetToken -refreshtoken -reviewhistory -sellername -verified -updatedAt",
+        "-mobile -email -address -password -orderhistory -createdAt -passwordResetExpires -passwordResetToken -refreshtoken -reviewhistory -sellername -verified -updatedAt -questions",
     });
     await getProduct.populate("brand");
     await getProduct.populate("category");

@@ -92,7 +92,15 @@ const sellerSchema = new mongoose.Schema(
       ],
       default: [],
     },
-
+    questions: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Question",
+        },
+      ],
+      default: [],
+    },
     status: {
       type: String,
       default: "pending",

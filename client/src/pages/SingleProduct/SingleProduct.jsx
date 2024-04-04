@@ -8,7 +8,7 @@ import { TbTruckDelivery } from "react-icons/tb";
 import { VscVerifiedFilled } from "react-icons/vsc";
 import { MdDateRange } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
-import Spinner from "react-bootstrap/Spinner";
+import { Spinner, Offcanvas } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { Pagination } from "swiper/modules";
 import Rating from "../../components/Rating";
@@ -23,11 +23,14 @@ export default function SingleProduct() {
   const [wload, setWload] = useState(false);
   const [isOnWishList, setIsOnWishList] = useState(false);
   const [useEffectLoading, setUseEffectLoading] = useState(false);
+  const [showOffcanvas, setShowOffcanvas] = useState(false); // State variable to manage the visibility of the offcanvas
   const navigate = useNavigate();
   const { id } = useParams();
   const { currentUser } = useSelector((state) => state.user);
 
   const location = useLocation();
+
+  const toggleOffcanvas = () => setShowOffcanvas(!showOffcanvas);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -55,6 +58,8 @@ export default function SingleProduct() {
       toast.error(error.message);
     }
   };
+
+  console.log(product);
 
   const getBuyerWishList = async () => {
     if (!currentUser || currentUser === null) {
@@ -453,9 +458,32 @@ export default function SingleProduct() {
                             </span>
                           </h6>
 
-                          {/* <p>
-                            <b>Description:</b> {product?.description}
-                          </p> */}
+                          <h6
+                            onClick={toggleOffcanvas}
+                            style={{
+                              cursor: "pointer",
+                              textDecoration: "underline",
+                              color: "#F16126",
+                            }}
+                          >
+                            View Description &gt;
+                          </h6>
+
+                          {/* Offcanvas component */}
+                          <Offcanvas
+                            show={showOffcanvas}
+                            onHide={toggleOffcanvas}
+                            placement="bottom"
+                          >
+                            <Offcanvas.Header closeButton>
+                              <Offcanvas.Title>
+                                Product Description
+                              </Offcanvas.Title>
+                            </Offcanvas.Header>
+                            <Offcanvas.Body style={{ whiteSpace: "pre-wrap" }}>
+                              <p>{product?.description}</p>
+                            </Offcanvas.Body>
+                          </Offcanvas>
                         </div>
                       )}
                       {/* cart component */}
@@ -636,11 +664,7 @@ export default function SingleProduct() {
               </div>
               {/* review */}
               <div className="review">
-                <Review
-                  id={id}
-                  desc={product?.description}
-                  onUpdate={handleProductUpdate}
-                />
+                <Review id={id} onUpdate={handleProductUpdate} />
               </div>
             </article>
           </div>
