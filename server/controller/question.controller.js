@@ -30,8 +30,7 @@ export const createQuestion = async (req, res, next) => {
       buyer: buyerId,
       product: id,
       seller: seller._id,
-      qa: req.body.qa,
-      type: "question",
+      question: req.body.question,
     });
     await question.save();
     if (question) {
@@ -87,6 +86,7 @@ export const getAllQA = async (req, res, next) => {
 export const replyAQuestion = async (req, res, next) => {
   const { id } = req.params;
   const sellerId = req.user.id;
+  const { answer } = req.body;
 
   if (!id) {
     return next(errorUtil(404, "Product Not Found"));
@@ -108,14 +108,11 @@ export const replyAQuestion = async (req, res, next) => {
     return next(errorUtil(404, "Buyer not found"));
   }
   try {
-    const question = new Question({
-      buyer: buyer._id,
-      product: product,
-      seller: seller._id,
-      qa: req.body.qa,
-      type: "answer",
-    });
-    await question.save();
+    const question = await Question.findByIdAndUpdate(
+      id,
+      { answer },
+      { new: true }
+    );
     if (question) {
       product.questions.push(question._id);
       seller.questions.push(question._id);
@@ -129,13 +126,13 @@ export const replyAQuestion = async (req, res, next) => {
   }
 };
 
-/* GET ALL QUESTIONS OF A SELLER */
+/* GET ALL UNANSWERED QUESTIONS OF A SELLER */
 export const getAllQuestions = async (req, res, next) => {
   try {
     const sellerId = req.user.id;
     const questions = await Question.find({
       seller: sellerId,
-      type: "question",
+      answer: "",
     })
       .populate({
         path: "buyer",
@@ -143,7 +140,7 @@ export const getAllQuestions = async (req, res, next) => {
       })
       .populate({
         path: "product",
-        select: "name price",
+        select: "name",
       });
     return res.status(200).json(questions);
   } catch (error) {

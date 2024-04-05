@@ -100,7 +100,7 @@ export default function Review({ id, onUpdate }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          qa: qa,
+          question: qa,
         }),
       });
       const data = await response.json();
@@ -162,9 +162,8 @@ export default function Review({ id, onUpdate }) {
           // Data is an array of questions
           setQAOfProduct(data);
         } else {
-          // Data is a message indicating no questions
-          console.log(data); // Log the message
-          setQAOfProduct([]); // Set an empty array for questions
+          console.log(data);
+          setQAOfProduct([]);
         }
       } catch (error) {
         console.log(error);
@@ -173,6 +172,8 @@ export default function Review({ id, onUpdate }) {
     fetchReviews();
     fetchQA();
   }, [id]);
+
+  console.log(QAOfProduct);
 
   return (
     <>
@@ -284,9 +285,7 @@ export default function Review({ id, onUpdate }) {
                 <div className="col-12">
                   <button
                     onClick={postQuestion}
-                    className={`default-button lab-btn my-2 ${
-                      loading ? "loading" : ""
-                    }`}
+                    className={`lab-btn my-2`}
                     disabled={loading}
                   >
                     <span>{loading ? "Submitting..." : "Submit Question"}</span>
@@ -306,17 +305,9 @@ export default function Review({ id, onUpdate }) {
                     <div className="entry-meta">
                       <div className="posted-on d-flex gap-3 align-items-center justify-content-between">
                         <div>
-                          {qa.type === "question" ? (
-                            // Display question icon for questions
-                            <FaQuestionCircle style={{ color: "#F16126" }} />
-                          ) : (
-                            // Display comment icon for answers
-                            <FaCommentAlt style={{ color: "green" }} />
-                          )}
                           <span style={{ marginLeft: "5px" }}>
-                            {qa.type === "question"
-                              ? qa.buyer.username
-                              : qa.seller.shopname}
+                            <FaQuestionCircle style={{ color: "#F16126" }} />{" "}
+                            {qa.buyer.username} Asked:
                           </span>
                         </div>
                         <p style={{ fontSize: "1rem" }}>
@@ -325,13 +316,26 @@ export default function Review({ id, onUpdate }) {
                       </div>
                     </div>
                     <div className="entry-content">
-                      <b
-                        style={{
-                          color: qa.type === "question" ? "#F16126" : "green",
-                        }}
-                      >
-                        {qa.qa}
-                      </b>
+                      <b style={{ color: "#F16126" }}>{qa.question}</b>
+                      {qa.answer && (
+                        <div
+                          className="reply my-2"
+                          style={{
+                            paddingLeft: "20px",
+                            borderLeft: "2px solid green",
+                          }}
+                        >
+                          <div>
+                            <FaCommentAlt style={{ color: "green" }} />
+                            <span style={{ marginLeft: "5px" }}>
+                              {qa.seller.shopname} replied:
+                            </span>
+                          </div>
+                          <b style={{ marginLeft: "20px", color: "green" }}>
+                            {qa.answer}
+                          </b>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </li>

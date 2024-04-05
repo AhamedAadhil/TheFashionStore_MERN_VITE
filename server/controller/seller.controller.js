@@ -316,6 +316,20 @@ export const getAllOrders = async (req, res, next) => {
   }
 };
 
+/* GET SINGLE ORDER OF THE SELLER */
+export const getSingleOrder = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const singleOrder = await Order.findById(id).populate(
+      "products.product orderby seller"
+    );
+
+    res.status(200).json(singleOrder);
+  } catch (error) {
+    next(error);
+  }
+};
+
 /* UPDATE ORDER STATUS */
 export const updateOrderStatus = async (req, res, next) => {
   const sellerId = req.user.id;
@@ -507,10 +521,10 @@ export const dashboardData = async (req, res, next) => {
       });
     }
 
-    /* data */
+    /* data7 */
     const questionsCount = await Question.countDocuments({
       seller: sellerId,
-      type: "question",
+      answer: "",
     });
 
     /* data for table 1,2 stock count and sold count */

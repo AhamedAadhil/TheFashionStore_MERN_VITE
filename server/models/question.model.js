@@ -15,14 +15,13 @@ const questionSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Seller",
     },
-    qa: {
+    question: {
       type: String,
       required: true,
     },
-    type: {
+    answer: {
       type: String,
-      required: true,
-      enum: ["question", "answer"],
+      default:""
     },
     date: {
       type: Date,
